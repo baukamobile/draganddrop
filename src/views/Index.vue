@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
 import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vue'
@@ -18,6 +25,12 @@ import Button from '@/components/Button.vue'
         </template>
     </PageWrapper>
 </template>
+
+
+
+
+
+
 <!-- <template>
     <h1>Hello World</h1>
 </template> -->
