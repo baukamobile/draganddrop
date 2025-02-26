@@ -94,7 +94,6 @@ onUnmounted(() => {
                         <img
                             class="h-8 w-8 rounded-md object-cover"
                             src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg"
-                            alt="Ahmed Kamel"
                         />
                     </button>
                 </template>
