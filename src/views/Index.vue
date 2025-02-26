@@ -11,12 +11,16 @@ import Button from '@/components/Button.vue'
         <template #header>
             <h2 class="text-center">Dashboard</h2>
             <div class="flex flex-col gap-4 md:flex-row md:items-center">
-                <div class="dashboard"></div> <!-- Тут закрываю нормально -->
+                <div class="dashboard">
+                    <h1>Hello World</h1>
+                </div> <!-- Тут закрываю нормально -->
             </div>
         </template>
     </PageWrapper>
 </template>
-
+<!-- <template>
+    <h1>Hello World</h1>
+</template> -->
 <style scoped> /* scoped, если нужно применить стили только внутри этого компонента */
 .dashboard {
     width: 100%;
