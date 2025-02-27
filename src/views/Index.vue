@@ -6,11 +6,9 @@ import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
 import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
 import Button from "@/components/Button.vue";
+
 const tasks = ref([
-//         { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
-// description: "", tags: "", documents: null, start_date: "2025-02-12T04:05:35Z", end_date: "2025-02-12T04:05:38Z", status: "АКТИВЕН",
-// priority: "Низкий", agreed_with_managers: false, projects: 1, assigned: 3, department: 1,statusesId:1
-//     },
+
 ]);
 const statuses = ref([]);
 onMounted(async () => {
@@ -19,16 +17,7 @@ onMounted(async () => {
     // statuses
     console.log('Loading data',statuses.value);
 });
-// const tasks = ref([
-//     { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
-// description: "", tags: "", documents: null, start_date: "2025-02-12T04:05:35Z", end_date: "2025-02-12T04:05:38Z", status: "АКТИВЕН",
-// priority: "Низкий", agreed_with_managers: false, projects: 1, assigned: 3, department: 1,statusesId:1
-//     },
-// ]);
 
-// const statuses = ref([
-//     // { id: 0, title: "Список Задач" },
-// ]);
 
 function ondragstart(e, task) {
     e.dataTransfer.dropEffect = "move";
@@ -53,40 +42,18 @@ async function onDrop(e, statusId) {
     }
 }
 
-// async function onDrop(e, statusId) {
-//     e.preventDefault();
-//     const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи
-
-//     try {
-//         await updateTaskStatus(taskID, statusId); // Обновляем статус на бэке
-//         const task = task.value.find(t => t.id === taskID);
-//         if(task){
-//             task.status = statusId;
-//         }
-//         // Локально обновляем таску
-//         // tasks.value = tasks.value.map((task) =>
-//         //     task.id === taskID ? { ...task, status: statusId } : task
-//         // );
-//     } catch (error) {
-//         console.error("Ошибка при обновлении задачи:", error);
-//     }
-// }
-
-
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+// функция переопределяющий время от django RestAPI на день месяц год и час
+console.log(formatDate('2025-02-26T11:43:48.202212Z'))
+// console.log(formatDate('2025-02-29T11:43:48.202212Z'))
 </script>
 
 <template>
     <PageWrapper>
         <h2 class="text-center">Dashboard</h2>
-        <div v-for="task in tasks" :key="task.id">
-            
-            <h1>{{ task.task_name }},{{ task.documents }},
-                {{ task.start_date }},{{ task.end_date }},{{ task.agreed_with_managers }},
-                {{ task.projects }},{{ task.assigned }},status id:{{ task.status }},{{ task.priority }},
-                {{ task.department }}
-                <!-- {{ task.description }}, -->
-            </h1>
-        </div>
 
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
@@ -103,6 +70,8 @@ async function onDrop(e, statusId) {
                             @dragstart="ondragstart($event, task)" 
                             draggable="true" class="draggable">
                             <h5>{{ task.task_name }}</h5>
+                            <!-- <p>{{ task.start_date | formatTime }}</p> -->
+                            <p>{{formatDate(task.end_date) }}</p> 
                         </div>
                     </div>
                 </div>
@@ -143,7 +112,7 @@ async function onDrop(e, statusId) {
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-.droppable h1 {
+.droppable h1, p {
     color: black;
     padding-bottom: 5px;
 }
