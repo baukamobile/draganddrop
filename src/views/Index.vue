@@ -6,9 +6,14 @@ import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
 import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
 import Button from "@/components/Button.vue";
-// import Antd from 'an'
+// import Antd from 'ant-design-vue';
 
-
+const priority = {
+    1: {priority_name:"НИЗКИЙ",color:'green'},
+    2: {priority_name:"СРЕДНИЙ",color:'blue'},
+    3: {priority_name:"ВЫСОКИЙ",color:'orange'},
+    4: {priority_name:"КРИТИЧЕСКИЙ", color: "red"},
+};
 const tasks = ref([
 
 ]);
@@ -19,15 +24,11 @@ onMounted(async () => {
     // statuses
     console.log('Loading data',statuses.value);
 });
-
-
 function ondragstart(e, task) {
     e.dataTransfer.dropEffect = "move";
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("taskID", task.id.toString());
 }
-
-
 async function onDrop(e, statusId) {
     e.preventDefault();
     const taskID = parseInt(e.dataTransfer.getData("taskID"));
@@ -55,7 +56,7 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 
 <template>
     <PageWrapper>
-        <h2 class="text-center">Dashboard</h2>
+        <!-- <h2 class="text-center">Dashboard</h2> -->
 
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
@@ -74,13 +75,24 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
                              :key="task.id"
                             @dragstart="ondragstart($event, task)" 
                             draggable="true" class="draggable">
-                            <p>{{ task.task_name }}</p>
+                            <p>{{ task.task_name }} 
+                                <!-- {{ priority[task.priority] || 'null' }} -->
+                                <span :style="{ color: priority[task.priority]?.color }">
+                                    ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
+    </span>
+                            </p>
+                            
                             <div class="time-part">
-                            <p>от {{ formatDate(task.start_date) }}</p>
-                            <p>до {{ formatDate(task.end_date) }}</p>
+                                
+
+                                <p>от {{ formatDate(task.start_date) }}</p>
+                                <p>до {{ formatDate(task.end_date) }}</p>
+
+                            
                         </div> 
                         
                         </div>
+                    
                         <a href="" class="add-task">Добавить Задачу</a>
                     </div>
                 </div>
@@ -90,6 +102,7 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 </template>
 
 <style scoped>
+
 .add-task{
     color: rgb(0, 0, 0);
     border-radius: 8px;
@@ -103,16 +116,19 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     height: 80vh;
     /* background-color:rgb(8, 133, 222); */
     background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,115,1) 48%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(90deg, rgb(36, 0, 32) 0%, rgb(174, 59, 169) 48%, rgb(149, 68, 243) 100%);
     overflow-x: scroll; /* Горизонтальный скролл */
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */
     /* padding: 10px; Чтоб контент не прилипал к краям */
 }
 .time-part p{
+    /* background-color: rgb(232, 127, 0); */
     line-height: 1;
     font-size: 10px;
     color: rgb(194, 16, 16);
+    /* display: flex; */
+    /* justify-content: space-around; */
 }
 .center {
     display: flex;
@@ -150,6 +166,20 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,115,1) 48%, rgb
 }
 .draggable h5{
     color: black;
+}
+.priority-critical{
+    color: red;
+    font-weight: bold;
+}
+.priority-high {
+  color: orange;
+  font-weight: bold;
+}
+.priority-medium {
+  color: rgb(51, 51, 143);
+}
+.priority-low {
+  color: green;
 }
 </style>
 

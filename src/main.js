@@ -3,9 +3,14 @@ import router from '@/router'
 import App from '@/App.vue'
 import Toast from 'vue-toastification'
 import '@/assets/css/main.css'
+import Antd from 'ant-design-vue';
+// import 'ant-design-vue/dist/antd';
+
+
 
 const app = createApp(App)
-app.use(router)
+app.use(router);
+// app.use(Antd);
 app.use(Toast, {
     hideProgressBar: true,
     closeOnClick: false,
@@ -13,5 +18,5 @@ app.use(Toast, {
     icon: false,
     timeout: false,
     transition: 'Vue-Toastification__fade',
-})
+});
 app.mount('#app')

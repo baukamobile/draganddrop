@@ -21,6 +21,7 @@
     "@headlessui/vue": "^1.7.23",
     "@tabler/icons-vue": "^3.30.0",
     "@vueuse/core": "^11.1.0",
+    "ant-design-vue": "^4.2.6",
     "apexcharts": "^3.35.3",
     "axios": "^1.8.1",
     "date-fns": "^4.1.0",
