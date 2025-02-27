@@ -36,21 +36,41 @@ function ondragstart(e, task) {
     e.dataTransfer.setData("taskID", task.id.toString());
 }
 
+
 async function onDrop(e, statusId) {
     e.preventDefault();
-    const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи
+    const taskID = parseInt(e.dataTransfer.getData("taskID"));
 
     try {
-        await updateTaskStatus(taskID, statusId); // Обновляем статус на бэке
+        await updateTaskStatus(taskID, statusId);  // 👈 Теперь передаем `statusId`, а не `statuses.id`
 
-        // Локально обновляем таску
-        tasks.value = tasks.value.map((task) =>
-            task.id === taskID ? { ...task, status: statusId } : task
-        );
+        const task = tasks.value.find(t => t.id === taskID);
+        if (task) {
+            task.status = statusId; // 🔥 Меняем именно `status`
+        }
     } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
     }
 }
+
+// async function onDrop(e, statusId) {
+//     e.preventDefault();
+//     const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи
+
+//     try {
+//         await updateTaskStatus(taskID, statusId); // Обновляем статус на бэке
+//         const task = task.value.find(t => t.id === taskID);
+//         if(task){
+//             task.status = statusId;
+//         }
+//         // Локально обновляем таску
+//         // tasks.value = tasks.value.map((task) =>
+//         //     task.id === taskID ? { ...task, status: statusId } : task
+//         // );
+//     } catch (error) {
+//         console.error("Ошибка при обновлении задачи:", error);
+//     }
+// }
 
 
 </script>
