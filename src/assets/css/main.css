@@ -38,3 +38,23 @@
   border: 1px solid rgb(21 24 35) !important;
   box-shadow: none !important;
 }
+/*  */
+
+:root {
+  --bg-light: linear-gradient(90deg, rgb(36, 0, 32) 0%, rgb(174, 59, 169) 48%, rgb(149, 68, 243) 100%);
+  --bg-dark: linear-gradient(90deg, rgb(12, 12, 12) 0%, rgb(50, 50, 50) 50%, rgb(20, 20, 20) 100%);
+}
+
+.dashboard {
+  max-width: 165vh;
+  height: 80vh;
+  background: var(linear-gradient(90deg, rgb(36, 0, 32) 0%, rgb(174, 59, 169) 48%, rgb(149, 68, 243) 100%)); /* Фон по умолчанию */
+  overflow-x: scroll;
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Когда включен dark mode */
+.dark .dashboard {
+  background: var(linear-gradient(90deg, rgb(7, 216, 77) 0%, rgb(10, 62, 141) 48%, rgb(248, 72, 116) 100%));
+}

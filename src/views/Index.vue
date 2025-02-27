@@ -2,10 +2,10 @@
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
 import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
-import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vue";
-import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
-import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
+
 import Button from "@/components/Button.vue";
+
+// import { isDark } from '@/main.js';
 // import Antd from 'ant-design-vue';
 
 const priority = {
@@ -29,6 +29,7 @@ function ondragstart(e, task) {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("taskID", task.id.toString());
 }
+// написан логика функции еретаскивании
 async function onDrop(e, statusId) {
     e.preventDefault();
     const taskID = parseInt(e.dataTransfer.getData("taskID"));
@@ -50,7 +51,7 @@ function formatDate(dateString) {
     return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
 }
 // функция переопределяющий время от django RestAPI на день месяц год и час
-console.log(formatDate('2025-02-26T11:43:48.202212Z'))
+// console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 // console.log(formatDate('2025-02-29T11:43:48.202212Z'))
 </script>
 
@@ -60,42 +61,53 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
+                
                 <!-- <h1>Hello World</h1> -->
                 <div class="center">
                     <div v-for="status in statuses" :key="status.id"
                      @drop="onDrop($event, status.id)"
                         class="droppable" @dragover.prevent @dragenter.prevent>
-                        <h1>{{ status.status_name }}</h1>
-                        <br>
-
-                        
+                      <div class="status">
+                          <div class="status-name"><h1 class="status-name" style="">{{ status.status_name }}</h1></div>
+                          <a-button type="primary" style="color: white; " @click="handleClick">Удалит колонку</a-button>
+                        <!-- <a href="#" style="color: black;">card</a> -->
+                        <!-- <span class="iconify" style="color: grey;" data-icon="tabler--message-circle"></span> -->
+                        <!-- <i class="glyphicon glyphicon-remove" style="color: black;"></i> -->
+                <!-- <h1>s;dk;ls</h1> -->
+                      </div>
                         <!-- status id -->
                         <div v-for="task in tasks.filter(x => x.status == status.id)" 
-                            
-                             :key="task.id"
+                             :key="task.task_name"
                             @dragstart="ondragstart($event, task)" 
                             draggable="true" class="draggable">
                             <p>{{ task.task_name }} 
                                 <!-- {{ priority[task.priority] || 'null' }} -->
-                                <span :style="{ color: priority[task.priority]?.color }">
+                                <span :style="{ color: priority[task.priority]?.color} ">
+                                    
                                     ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
     </span>
                             </p>
-                            
                             <div class="time-part">
-                                
-
                                 <p>от {{ formatDate(task.start_date) }}</p>
                                 <p>до {{ formatDate(task.end_date) }}</p>
-
-                            
                         </div> 
                         
                         </div>
                     
-                        <a href="" class="add-task">Добавить Задачу</a>
+                        <a href="#" class="add-task">Добавить Задачу</a>
                     </div>
+                    <div class="add-list">
+                    
+                    <!-- <div class="status"> -->
+                         <a href="#" style="color: black;">Добавить Колонку</a>
+                        
+                         
+                          <!-- <a-button type="primary" style="color: white; " @click="handleClick">Удалит колонку</a-button> -->
+                      <!-- </div> -->
+                      <a href="#" style="color: black;">+</a>
                 </div>
+                </div>
+                
             </div>
         </div>
     </PageWrapper>
@@ -121,6 +133,9 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */
     /* padding: 10px; Чтоб контент не прилипал к краям */
+    /* .dark-theme{
+    background: linear-gradient(90deg, rgb(36, 0, 32) 0%, rgb(35, 215, 225) 48%, rgb(39, 238, 92) 100%);
+    } */
 }
 .time-part p{
     /* background-color: rgb(232, 127, 0); */
@@ -132,8 +147,8 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 }
 .center {
     display: flex;
-    gap: 20px; /* 🔥 Добавляет отступы между колонками */
-    justify-content: center; /* Центрирует колонки */
+    gap: 20px; 
+    /* justify-content: center;  */
     /* align-items: flex-start; Выравнивает сверху */
     padding: 20px;
 }
@@ -154,7 +169,7 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     padding-bottom: 5px;
 }
 .draggable {
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -181,6 +196,36 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 .priority-low {
   color: green;
 }
+.status{
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.add-list{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(233, 229, 229);
+    width: 300px; 
+    height: fit-content;
+    /* margin: 10px; */
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    /* cursor: grabbing; */
+    /* overflow-x: hidden; */
+    user-select: none;
+    
+    /* overflow-wrap: break-word; */
+}
+.status-name {
+    max-width: 150px;
+    display: inline-block;
+    white-space: normal; /* Позволяет переносить слова */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
 </style>
 
 
