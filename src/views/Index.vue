@@ -6,10 +6,18 @@ import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
 import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
 import Button from "@/components/Button.vue";
-const tasks = ref([]);
-
+const tasks = ref([
+//         { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
+// description: "", tags: "", documents: null, start_date: "2025-02-12T04:05:35Z", end_date: "2025-02-12T04:05:38Z", status: "АКТИВЕН",
+// priority: "Низкий", agreed_with_managers: false, projects: 1, assigned: 3, department: 1,statusesId:1
+//     },
+]);
+const statuses = ref([]);
 onMounted(async () => {
     tasks.value = await getTask();
+    statuses.value = await getStatusTask();
+    // statuses
+    console.log('Loading data',statuses.value);
 });
 // const tasks = ref([
 //     { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
@@ -32,6 +40,7 @@ async function onDrop(e, statusId) {
     e.preventDefault();
     const taskID = parseInt(e.dataTransfer.getData("taskID"));
 
+
     try {
         await updateTaskStatus(taskID, statusId);
         tasks.value = tasks.value.map((task) =>
@@ -47,8 +56,21 @@ async function onDrop(e, statusId) {
     <PageWrapper>
         <h2 class="text-center">Dashboard</h2>
         <div v-for="task in tasks" :key="task.id">
-            <h1>{{ task.task_name }} - {{ task.status_name }}</h1>
+            <h1>{{ task.task_name }} - {{ task.status }}</h1>
+            <h1>{{ task.id }},{{ task.task_name }},{{ task.description }},{{ task.documents }},
+                {{ task.start_date }},{{ task.end_date }},{{ task.agreed_with_managers }},
+                {{ task.projects }},{{ task.assigned }},{{ task.status }},{{ task.priority }},
+                {{ task.department }}
+
+            </h1>
         </div>
+        //     { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
+// description: "", tags: "", documents: null, start_date: "2025-02-12T04:05:35Z", end_date: "2025-02-12T04:05:38Z", status: "АКТИВЕН",
+// priority: "Низкий", agreed_with_managers: false, projects: 1, assigned: 3, department: 1,statusesId:1
+//     },
+        <!-- <div v-for="status in statuses" :key="status.id">
+            <h1>{{ status.status_name }}</h1>
+        </div> -->
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <!-- <h1>Hello World</h1> -->
@@ -61,10 +83,10 @@ async function onDrop(e, statusId) {
                             <h5>{{ task.task_name }}</h5>
                         </div>
                     </div>
-                    <h1>getTask</h1>
-                 <div v-for="task in tasks" :key="task.id">
-                <h1>{{ task.task_name }}</h1> <!-- Используй task.title, если API возвращает поле title -->
-                     </div>
+                    <!-- <h1>getTask</h1> -->
+                 <!-- <div v-for="task in tasks" :key="task.id">
+                <h1>{{ task.task_name }}</h1> 
+                     </div> -->
                 </div>
             </div>
         </div>
