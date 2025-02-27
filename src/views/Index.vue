@@ -6,6 +6,8 @@ import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
 import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
 import Button from "@/components/Button.vue";
+// import Antd from 'an'
+
 
 const tasks = ref([
 
@@ -63,6 +65,9 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
                      @drop="onDrop($event, status.id)"
                         class="droppable" @dragover.prevent @dragenter.prevent>
                         <h1>{{ status.status_name }}</h1>
+                        <br>
+
+                        
                         <!-- status id -->
                         <div v-for="task in tasks.filter(x => x.status == status.id)" 
                             
@@ -74,7 +79,9 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
                             <p>от {{ formatDate(task.start_date) }}</p>
                             <p>до {{ formatDate(task.end_date) }}</p>
                         </div> 
+                        
                         </div>
+                        <a href="" class="add-task">Добавить Задачу</a>
                     </div>
                 </div>
             </div>
@@ -83,10 +90,20 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
 </template>
 
 <style scoped>
+.add-task{
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    margin: 10px;
+    border: solid;
+    border-color: white;
+    background-color: white;
+}
 .dashboard {
     max-width: 165vh;
     height: 80vh;
-    background-color:rgb(8, 133, 222);
+    /* background-color:rgb(8, 133, 222); */
+    background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,115,1) 48%, rgba(0,212,255,1) 100%);
     overflow-x: scroll; /* Горизонтальный скролл */
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */
@@ -105,19 +122,15 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     padding: 20px;
 }
 .droppable {
-    padding: 15px;
+    padding: 5px;
     border-radius: 10px;
     background-color: rgb(233, 229, 229);
-    width: 300px; /* 🔥 Задаем фиксированную ширину */
-    /* max-height: 300px; */
-    /* height: auto; */
+    width: 300px; 
     height: fit-content;
-    /* overflow-y: scroll; */
-    /* overflow-x: scroll; */
     text-align: center;
-    cursor: grab;
-    white-space: normal;
-    word-wrap: break-word;
+    cursor: grabbing;
+    overflow-x: hidden;
+    user-select: none;
     overflow-wrap: break-word;
 }
 .droppable h1, p {
