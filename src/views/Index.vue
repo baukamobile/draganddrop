@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
-import { getTask,getStatusTask } from "@/api/tasks";
+import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
 import StatisticsSection from "@/components/pages/dashboard/StatisticsSection.vue";
 import SalesSection from "@/components/pages/dashboard/SalesSection.vue";
 import LatestSection from "@/components/pages/dashboard/LatestSection.vue";
@@ -38,55 +38,53 @@ function ondragstart(e, task) {
 
 async function onDrop(e, statusId) {
     e.preventDefault();
-    const taskID = parseInt(e.dataTransfer.getData("taskID"));
-
+    const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи
 
     try {
-        await updateTaskStatus(taskID, statusId);
+        await updateTaskStatus(taskID, statusId); // Обновляем статус на бэке
+
+        // Локально обновляем таску
         tasks.value = tasks.value.map((task) =>
-            task.id === taskID ? { ...task, statusesId: statusId } : task
+            task.id === taskID ? { ...task, status: statusId } : task
         );
     } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
     }
 }
+
+
 </script>
 
 <template>
     <PageWrapper>
         <h2 class="text-center">Dashboard</h2>
         <div v-for="task in tasks" :key="task.id">
-            <h1>{{ task.task_name }} - {{ task.status }}</h1>
-            <h1>{{ task.id }},{{ task.task_name }},{{ task.description }},{{ task.documents }},
+            
+            <h1>{{ task.task_name }},{{ task.documents }},
                 {{ task.start_date }},{{ task.end_date }},{{ task.agreed_with_managers }},
-                {{ task.projects }},{{ task.assigned }},{{ task.status }},{{ task.priority }},
+                {{ task.projects }},{{ task.assigned }},status id:{{ task.status }},{{ task.priority }},
                 {{ task.department }}
-
+                <!-- {{ task.description }}, -->
             </h1>
         </div>
-        //     { id: 9, title: "Обучение по системе обработки заявок «Тазалык» и «Инватакси».",
-// description: "", tags: "", documents: null, start_date: "2025-02-12T04:05:35Z", end_date: "2025-02-12T04:05:38Z", status: "АКТИВЕН",
-// priority: "Низкий", agreed_with_managers: false, projects: 1, assigned: 3, department: 1,statusesId:1
-//     },
-        <!-- <div v-for="status in statuses" :key="status.id">
-            <h1>{{ status.status_name }}</h1>
-        </div> -->
+
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <!-- <h1>Hello World</h1> -->
                 <div class="center">
-                    <div v-for="status in statuses" :key="status.id" @drop="onDrop($event, status.id)"
+                    <div v-for="status in statuses" :key="status.id"
+                     @drop="onDrop($event, status.id)"
                         class="droppable" @dragover.prevent @dragenter.prevent>
                         <h1>{{ status.status_name }}</h1>
-                        <div v-for="task in tasks.filter(x => x.statusesId == status.id)" :key="task.id"
-                            @dragstart="ondragstart($event, task)" draggable="true" class="draggable">
+                        <!-- status id -->
+                        <div v-for="task in tasks.filter(x => x.status == status.id)" 
+                            
+                             :key="task.id"
+                            @dragstart="ondragstart($event, task)" 
+                            draggable="true" class="draggable">
                             <h5>{{ task.task_name }}</h5>
                         </div>
                     </div>
-                    <!-- <h1>getTask</h1> -->
-                 <!-- <div v-for="task in tasks" :key="task.id">
-                <h1>{{ task.task_name }}</h1> 
-                     </div> -->
                 </div>
             </div>
         </div>
@@ -97,7 +95,7 @@ async function onDrop(e, statusId) {
 .dashboard {
     max-width: 165vh;
     height: 80vh;
-    background-color: rgb(178, 118, 190);
+    background-color:rgb(8, 133, 222);
     overflow-x: scroll; /* Горизонтальный скролл */
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */
@@ -144,3 +142,6 @@ async function onDrop(e, statusId) {
     color: black;
 }
 </style>
+
+
+
