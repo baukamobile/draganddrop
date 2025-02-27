@@ -44,7 +44,7 @@ async function onDrop(e, statusId) {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
 }
 // функция переопределяющий время от django RestAPI на день месяц год и час
 console.log(formatDate('2025-02-26T11:43:48.202212Z'))
@@ -69,9 +69,11 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
                              :key="task.id"
                             @dragstart="ondragstart($event, task)" 
                             draggable="true" class="draggable">
-                            <h5>{{ task.task_name }}</h5>
-                            <!-- <p>{{ task.start_date | formatTime }}</p> -->
-                            <p>{{formatDate(task.end_date) }}</p> 
+                            <p>{{ task.task_name }}</p>
+                            <div class="time-part">
+                            <p>от {{ formatDate(task.start_date) }}</p>
+                            <p>до {{ formatDate(task.end_date) }}</p>
+                        </div> 
                         </div>
                     </div>
                 </div>
@@ -90,6 +92,11 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     white-space: nowrap; /* Запретит перенос элементов */
     /* padding: 10px; Чтоб контент не прилипал к краям */
 }
+.time-part p{
+    line-height: 1;
+    font-size: 10px;
+    color: rgb(194, 16, 16);
+}
 .center {
     display: flex;
     gap: 20px; /* 🔥 Добавляет отступы между колонками */
@@ -103,7 +110,8 @@ console.log(formatDate('2025-02-26T11:43:48.202212Z'))
     background-color: rgb(233, 229, 229);
     width: 300px; /* 🔥 Задаем фиксированную ширину */
     /* max-height: 300px; */
-    height: auto;
+    /* height: auto; */
+    height: fit-content;
     /* overflow-y: scroll; */
     /* overflow-x: scroll; */
     text-align: center;
