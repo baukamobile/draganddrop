@@ -4,8 +4,7 @@
     >
         <p class="text-sm text-gray-500 dark:text-gray-400">
             &#169;
-            <span>{{ new Date().getFullYear() }}</span> K UI, All rights
-            reserved
+            <span>{{ new Date().getFullYear() }}</span> Все права защищены
         </p>
 
         <div
