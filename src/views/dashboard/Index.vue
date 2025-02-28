@@ -2,10 +2,33 @@
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
 import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
-
+import axios from 'axios';
 import Button from "@/components/Button.vue";
+import VueLogger from "vuejs-logger";
 
+// import {handleClick} from StatusManager;
+// import StatusManager from "./StatusManager.vue";
 
+const handleClick = async(statusId) => {
+  try {
+    let response = await axios.delete(`http://127.0.0.1:8000/tasks/status/${statusId}/`);
+    console.log(response.data);
+    // После успешного удаления можно обновить список статусов или задач
+    statuses.value = statuses.value.filter(status => status.id !== statusId); // Удалим колонку из списка
+  } catch (error) {
+    console.error('Ошибка удаления колонки', error);
+  }
+};
+const handleClickTask = async(taskID) => {
+  try {
+    let response = await axios.delete(`http://127.0.0.1:8000/tasks/tasks/${taskID}/`);
+    console.log(response.data);
+    // После успешного удаления можно обновить список статусов или задач
+    tasks.value = tasks.value.filter(task => task.id !== taskID); // Удалим колонку из списка
+  } catch (error) {
+    console.error('Ошибка удаления колонки', error);
+  }
+};
 // import { isDark } from '@/main.js';
 // import Antd from 'ant-design-vue';
 
@@ -24,9 +47,11 @@ onMounted(async () => {
     console.log('Loading data',statuses.value);
 });
 function ondragstart(e, task) {
+    // this.$log.info('test')
     e.dataTransfer.dropEffect = "move";
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("taskID", task.id.toString());
+    this.$log.info('test')
 }
 // написан логика функции еретаскивании
 async function onDrop(e, statusId) {
@@ -64,7 +89,7 @@ function formatDate(dateString) {
                         class="droppable" @dragover.prevent @dragenter.prevent>
                       <div class="status">
                           <div class="status-name"><h1 class="status-name" style="">{{ status.status_name }}</h1></div>
-                          <a-button type="primary" style="color: white; background-color: red; " @click="handleClick">Удалит колонку</a-button>
+                          <a-button type="primary" style="color: white; background-color: red; " @click="handleClick(status.id)">Удалит колонку</a-button>
 
                       </div>
                         <!-- status id -->
@@ -72,7 +97,9 @@ function formatDate(dateString) {
                              :key="task.task_name"
                             @dragstart="ondragstart($event, task)" 
                             draggable="true" class="draggable">
+                            
                             <p>{{ task.task_name }} 
+                                
                                 <!-- {{ priority[task.priority] || 'null' }} -->
                                 <span :style="{ color: priority[task.priority]?.color} ">
                                     
@@ -83,6 +110,7 @@ function formatDate(dateString) {
                                 <p>от {{ formatDate(task.start_date) }}</p>
                                 <p>до {{ formatDate(task.end_date) }}</p>
                         </div> 
+                        <a-button type="primary" style="color: white; background-color: red; " @click="handleClickTask(task.id)">Удалит</a-button>
                         
                         </div>
                     <div class="add-task-container">
@@ -128,7 +156,7 @@ function formatDate(dateString) {
 }
 
 .dashboard {
-    max-width: 165vh;
+    min-width: 165vh;
     height: 80vh;
     /* background-color:rgb(8, 133, 222); */
     background: rgb(2,0,36);

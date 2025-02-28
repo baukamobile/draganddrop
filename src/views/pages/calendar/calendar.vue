@@ -4,12 +4,12 @@ import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from '@/components/pages/dashboard/SalesSection.vue'
 import LatestSection from '@/components/pages/dashboard/LatestSection.vue'
 import Button from '@/components/Button.vue'
+
 </script>
 
 <template>
     <PageWrapper>
         <template #header>
-
             <h2 class="text-center"><b><strong> Календарь</strong></b></h2>
             <div class="flex flex-col gap-4 md:flex-row md:items-center">
                 <div class="dashboard"></div> <!-- Тут закрываю нормально -->
@@ -22,7 +22,8 @@ import Button from '@/components/Button.vue'
 .dashboard {
     width: 100%;
     height: 90vh;
-    background-color: rgb(139, 159, 250);
+	background: rgb(2,0,36);
+	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,86,121,1) 48%, rgba(0,212,255,1) 100%);
 }
 </style>
 
