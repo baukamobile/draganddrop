@@ -5,6 +5,7 @@ import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
 
 import Button from "@/components/Button.vue";
 
+
 // import { isDark } from '@/main.js';
 // import Antd from 'ant-design-vue';
 
@@ -14,9 +15,7 @@ const priority = {
     3: {priority_name:"ВЫСОКИЙ",color:'orange'},
     4: {priority_name:"КРИТИЧЕСКИЙ", color: "red"},
 };
-const tasks = ref([
-
-]);
+const tasks = ref([]);
 const statuses = ref([]);
 onMounted(async () => {
     tasks.value = await getTask();
@@ -35,11 +34,11 @@ async function onDrop(e, statusId) {
     const taskID = parseInt(e.dataTransfer.getData("taskID"));
 
     try {
-        await updateTaskStatus(taskID, statusId);  // 👈 Теперь передаем `statusId`, а не `statuses.id`
+        await updateTaskStatus(taskID, statusId);  //  Теперь передаем `statusId`, а не `statuses.id`
 
         const task = tasks.value.find(t => t.id === taskID);
         if (task) {
-            task.status = statusId; // 🔥 Меняем именно `status`
+            task.status = statusId; //  Меняем именно `status`
         }
     } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
@@ -50,18 +49,14 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
 }
-// функция переопределяющий время от django RestAPI на день месяц год и час
-// console.log(formatDate('2025-02-26T11:43:48.202212Z'))
-// console.log(formatDate('2025-02-29T11:43:48.202212Z'))
+
 </script>
 
 <template>
     <PageWrapper>
         <!-- <h2 class="text-center">Dashboard</h2> -->
-
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
-                
                 <!-- <h1>Hello World</h1> -->
                 <div class="center">
                     <div v-for="status in statuses" :key="status.id"
@@ -70,10 +65,7 @@ function formatDate(dateString) {
                       <div class="status">
                           <div class="status-name"><h1 class="status-name" style="">{{ status.status_name }}</h1></div>
                           <a-button type="primary" style="color: white; background-color: red; " @click="handleClick">Удалит колонку</a-button>
-                        <!-- <a href="#" style="color: black;">card</a> -->
-                        <!-- <span class="iconify" style="color: grey;" data-icon="tabler--message-circle"></span> -->
-                        <!-- <i class="glyphicon glyphicon-remove" style="color: black;"></i> -->
-                <!-- <h1>s;dk;ls</h1> -->
+
                       </div>
                         <!-- status id -->
                         <div v-for="task in tasks.filter(x => x.status == status.id)" 
@@ -102,11 +94,7 @@ function formatDate(dateString) {
                         <DeleteOutlined style="font-size: 24px; color: red;" />
                     <!-- <div class="status"> -->
                          <a href="#" style="color: black;">Добавить Колонку</a>
-                        
-                         
-                          <!-- <a-button type="primary" style="color: white; " @click="handleClick">Удалит колонку</a-button> -->
-                      <!-- </div> -->
-                      <!-- <a href="#" style="color: black;">+</a> -->
+
                       <a-button type="primary" danger>
     <DeleteOutlined />
     Удалить

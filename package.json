@@ -32,6 +32,7 @@
     "vue": "^3.5.7",
     "vue-router": "^4.4.5",
     "vue-toastification": "^2.0.0-rc.5",
+    "vuejs-logger": "1.5.5",
     "vuetify": "^3.7.14"
   },
   "devDependencies": {

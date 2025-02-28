@@ -6,7 +6,7 @@ export default [
             {
                 path: '/',
                 name: 'Dashboard',
-                component: () => import('@/views/Index.vue'),
+                component: () => import('@/views/dashboard/Index.vue'),
             },
             {
                 path: '/pages/chat',

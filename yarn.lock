@@ -1018,6 +1018,11 @@ es-set-tostringtag@^2.1.0:
     has-tostringtag "^1.0.2"
     hasown "^2.0.2"
 
+es6-object-assign@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/es6-object-assign/-/es6-object-assign-1.1.0.tgz"
+  integrity sha512-MEl9uirslVwqQU369iHNWZXsI8yaZYGg/D65aOgZkeyFJwHYSxilf7rQzXKI7DdDuBPrBXbfk3sl9hJhmd5AUw==
+
 esbuild@^0.21.3:
   version "0.21.5"
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.21.5.tgz"
@@ -2147,6 +2152,19 @@ vue-types@^3.0.0:
     "@vue/runtime-dom" "3.5.13"
     "@vue/server-renderer" "3.5.13"
     "@vue/shared" "3.5.13"
+
+vue@2.6.11:
+  version "2.6.11"
+  resolved "https://registry.npmjs.org/vue/-/vue-2.6.11.tgz"
+  integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
+
+vuejs-logger@1.5.5:
+  version "1.5.5"
+  resolved "https://registry.npmjs.org/vuejs-logger/-/vuejs-logger-1.5.5.tgz"
+  integrity sha512-wESz1F4KWk98YANEDg2yeS+fpwk2WrR41ZslLfZgTD+EYFm/7VMMUjRThhHT8CCOLOCQdsS4Ge2C9bIs68v8Ww==
+  dependencies:
+    es6-object-assign "1.1.0"
+    vue "2.6.11"
 
 vuetify@^3.7.14:
   version "3.7.14"

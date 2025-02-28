@@ -7,7 +7,7 @@ import PageFooter from '@/components/PageFooter.vue'
     <div
         class="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-100 py-6 dark:bg-dark-eval-0"
     >
-        <div class="flex-shrink-0">
+        <!-- <div class="flex-shrink-0">
             <router-link :to="{ name: 'Dashboard' }">
                 <Logo class="h-20 w-20" />
                 <span class="sr-only">Dashboard</span>
@@ -20,7 +20,7 @@ import PageFooter from '@/components/PageFooter.vue'
             >
                 <router-view></router-view>
             </div>
-        </main>
+        </main> -->
 
         <PageFooter />
     </div>
