@@ -69,7 +69,7 @@ function formatDate(dateString) {
                         class="droppable" @dragover.prevent @dragenter.prevent>
                       <div class="status">
                           <div class="status-name"><h1 class="status-name" style="">{{ status.status_name }}</h1></div>
-                          <a-button type="primary" style="color: white; " @click="handleClick">Удалит колонку</a-button>
+                          <a-button type="primary" style="color: white; background-color: red; " @click="handleClick">Удалит колонку</a-button>
                         <!-- <a href="#" style="color: black;">card</a> -->
                         <!-- <span class="iconify" style="color: grey;" data-icon="tabler--message-circle"></span> -->
                         <!-- <i class="glyphicon glyphicon-remove" style="color: black;"></i> -->
@@ -183,6 +183,7 @@ function formatDate(dateString) {
 .droppable h1, p {
     color: black;
     padding-bottom: 5px;
+    font-size: 15px;
 }
 .draggable {
     background-color: white;
