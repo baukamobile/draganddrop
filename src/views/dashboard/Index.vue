@@ -119,14 +119,10 @@ function formatDate(dateString) {
                     </div> 
                     </div>
                     <div class="add-list">
-                        <DeleteOutlined style="font-size: 24px; color: red;" />
                     <!-- <div class="status"> -->
                          <a href="#" style="color: black;">Добавить Колонку</a>
 
-                      <a-button type="primary" danger>
-    <DeleteOutlined />
-    Удалить
-  </a-button>
+
                 </div>
                 </div>
                 
@@ -154,10 +150,16 @@ function formatDate(dateString) {
     /* border-color: white; */
     background-color: #d0d4db;
 }
+.flex{
+    min-width: 90%;
+
+}
 
 .dashboard {
-    min-width: 165vh;
-    height: 80vh;
+    /* min-width: 140vh;
+    height: 80vh; */
+    min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
+    height: 100vh;
     /* background-color:rgb(8, 133, 222); */
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgb(65, 38, 171) 0%, rgb(132, 52, 150) 48%, rgb(196, 68, 157) 100%);
@@ -244,7 +246,7 @@ function formatDate(dateString) {
     /* margin: 10px; */
     text-align: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     /* cursor: grabbing; */
     /* overflow-x: hidden; */
     user-select: none;

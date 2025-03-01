@@ -34,11 +34,11 @@ onUnmounted(() => {
     >
         <div class="flex items-center gap-2">
             <nav class="navbar navbar-light bg-light">
-  <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" icon="tabler--search" placeholder="" aria-label="Search">
+  <!-- <form class="form-inline">
+    <input class="form-control" type="search" icon="tabler--search" placeholder="Искать" aria-label="Search">
     
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
+<button class="btn btn-outline-success" type="submit">Search</button> -->
+  <!-- </form>  -->
 </nav>
             <Button
                 class="p-2 md:hidden"
