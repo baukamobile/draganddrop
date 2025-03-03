@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
-import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
+import { getTask,getStatusTask,updateTaskStatus,addColumn,addTask,getUsers } from "@/api/tasks";
 import axios from 'axios';
 import Button from "@/components/Button.vue";
 import VueLogger from "vuejs-logger";
@@ -69,6 +69,39 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
 }
+//добавление колонок 
+const newStatus = ref({ status_name: "", user: null });
+const users = ref([]);
+// const position = ref([]);
+
+const fetchUsers = async () => {
+    try {
+        users.value = await getUsers();
+        console.log("Загруженные пользователи:", users.value); // Проверяем, есть ли пользователи
+    } catch (error) {
+        console.error("Ошибка при загрузке пользователей", error);
+    }
+};
+
+const submitColumn = async () => {
+    try {
+        if (!newStatus.value.user) {
+    console.error("Ошибка: user не выбран!");
+    return;
+}
+        console.log("Выбранный user перед отправкой:", newStatus.value.user);
+        console.log("Выбранный user перед отправкой:", newStatus.value.status_name);
+        await addColumn(newStatus.value);
+        newStatus.value.status_name = ""; 
+        newStatus.value.user = null;
+        statuses.value = await getStatusTask();
+    } catch (error) {
+        console.error("Ошибка при добавлении колонки", error);
+    }
+};
+
+
+onMounted(fetchUsers); // Загружаем пользователей при загрузке страницы
 </script>
 <template>
     <PageWrapper>
@@ -110,9 +143,26 @@ function formatDate(dateString) {
                     </div> 
                     </div>
                     <div class="add-list">
-                    <!-- <div class="status"> -->
-                         <a href="#" style="color: black;">Добавить Колонку</a>
-                </div>
+    <h2 style="color: black">Добавить колонку</h2>
+    <div>
+        <form @submit.prevent="submitColumn">
+            <input v-model="newStatus.status_name" style="color: black;" placeholder="Название колонки" required />
+            
+            <div>
+                <label for="users" style="color: black;">Сотрудник:</label>
+                <select id="users" v-model="newStatus.user">
+    <option v-for="user in users" :key="user.id" :value="Number(user.id)">
+        {{ user.first_name }} (ID: {{ user.id }})
+    </option>
+</select>
+
+
+            </div>
+
+            <button type="submit" style="color: black">Добавить</button>
+        </form>
+    </div>
+</div>
                 </div>
                 
             </div>
@@ -221,8 +271,8 @@ function formatDate(dateString) {
     opacity: 90%;
     /* margin: 10px; */
     text-align: center;
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: space-around; */
     /* cursor: grabbing; */
     /* overflow-x: hidden; */
     user-select: none;

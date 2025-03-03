@@ -1,8 +1,10 @@
 import axios from "axios";
+// import { A } from "dist/assets/index-CaVEL3aJ";
 
 
 const API_URL = "http://127.0.0.1:8000/tasks/tasks";
-
+const API_URL_USERS = "http://127.0.0.1:8000/users/users/";
+// const API_URL_POSITION = "http://127.0.0.1:8000/users/positions/";
 
 export const getTask = async()=>{
     const response = await axios.get(`${API_URL}/`)
@@ -15,26 +17,27 @@ export const getStatusTask = async()=>{
     const response = await axios.get(`${API_URL_STATUS}/`) 
     return response.data
 };
-// export async function updateTaskStatus(id, statusId) {
-//     const response = await axios.patch(`${API_URL_STATUS}/${id}/`, { status: statusId });
-// }
-// export const up
 
 export async function updateTaskStatus(taskId, statusId) {
     const response = await axios.patch(`${API_URL}/${taskId}/`, { status: statusId }); // 👈 Меняем `statusesId` на `status`
     return response.data;
 }
 
-// export async function deleteTask(taskID) {
-//     await axios.delete(`${API_URL}/tasks/${taskID}/`);
-//   }
 export async function addTask(taskID){
-    await axios.post(`${API_URL}/`)
+    const response = await axios.post(`${API_URL}/`);
+    return response.data
 }
-  
-// export async function deleteStatus(statusId) {
-//     await axios.delete(`${API_URL_STATUS}/status/${statusId}/`);
-//   }
-export async function addColumn(statusId){
-    await axios.post(`${API_URL_STATUS}/`)
+
+export async function addColumn(newStatus){
+    const response = await axios.post(`${API_URL_STATUS}/`,newStatus);
+    return response.data;
+    // await axios.get(`${API_URL_USERS}/`)
 }
+export const getUsers = async()=>{
+    const response = await axios.get(`${API_URL_USERS}`); 
+    return response.data;
+}
+// export const getPostion = async()=>{
+//     const response = await axios.get(`${API_URL_POSITION}`);
+//     return response.data;
+// }
