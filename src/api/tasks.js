@@ -37,7 +37,3 @@ export const getUsers = async()=>{
     const response = await axios.get(`${API_URL_USERS}`); 
     return response.data;
 }
-// export const getPostion = async()=>{
-//     const response = await axios.get(`${API_URL_POSITION}`);
-//     return response.data;
-// }
