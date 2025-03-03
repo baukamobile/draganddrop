@@ -6,9 +6,6 @@ import axios from 'axios';
 import Button from "@/components/Button.vue";
 import VueLogger from "vuejs-logger";
 
-// import {handleClick} from StatusManager;
-// import StatusManager from "./StatusManager.vue";
-
 const handleClick = async(statusId) => {
   try {
     let response = await axios.delete(`http://127.0.0.1:8000/tasks/status/${statusId}/`);
@@ -29,8 +26,6 @@ const handleClickTask = async(taskID) => {
     console.error('Ошибка удаления колонки', error);
   }
 };
-// import { isDark } from '@/main.js';
-// import Antd from 'ant-design-vue';
 
 const priority = {
     1: {priority_name:"НИЗКИЙ",color:'green'},
@@ -74,9 +69,7 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
 }
-
 </script>
-
 <template>
     <PageWrapper>
         <!-- <h2 class="text-center">Dashboard</h2> -->
@@ -99,8 +92,6 @@ function formatDate(dateString) {
                             draggable="true" class="draggable">
                             
                             <p>{{ task.task_name }} 
-                                
-                                <!-- {{ priority[task.priority] || 'null' }} -->
                                 <span :style="{ color: priority[task.priority]?.color} ">
                                     
                                     ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
@@ -121,8 +112,6 @@ function formatDate(dateString) {
                     <div class="add-list">
                     <!-- <div class="status"> -->
                          <a href="#" style="color: black;">Добавить Колонку</a>
-
-
                 </div>
                 </div>
                 
@@ -138,8 +127,6 @@ function formatDate(dateString) {
     padding: 5px;
     border-radius: 8px;
     margin: 10px;
-    /* border: solid; */
-    /* border-color: white; */
     background-color: white;
 }.add-task:hover{
     color: rgb(0, 0, 0);
@@ -152,38 +139,26 @@ function formatDate(dateString) {
 }
 .flex{
     min-width: 90%;
-
 }
-
 .dashboard {
-    /* min-width: 140vh;
-    height: 80vh; */
     min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
     height: 100vh;
-    /* background-color:rgb(8, 133, 222); */
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgb(65, 38, 171) 0%, rgb(132, 52, 150) 48%, rgb(196, 68, 157) 100%);
     overflow-x: scroll; /* Горизонтальный скролл */
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */
-    /* padding: 10px; Чтоб контент не прилипал к краям */
-    /* .dark-theme{
-    background: linear-gradient(90deg, rgb(36, 0, 32) 0%, rgb(35, 215, 225) 48%, rgb(39, 238, 92) 100%);
-    } */
+
 }
 .time-part p{
     /* background-color: rgb(232, 127, 0); */
     line-height: 1;
     font-size: 10px;
     color: rgb(194, 16, 16);
-    /* display: flex; */
-    /* justify-content: space-around; */
 }
 .center {
     display: flex;
     gap: 20px; 
-    /* justify-content: center;  */
-    /* align-items: flex-start; Выравнивает сверху */
     padding: 20px;
 }
 .droppable {
@@ -195,6 +170,7 @@ function formatDate(dateString) {
     text-align: center;
     cursor: grabbing;
     overflow-x: hidden;
+    overflow-y: hidden;
     user-select: none;
     overflow-wrap: break-word;
 }
@@ -253,11 +229,7 @@ function formatDate(dateString) {
     
     /* overflow-wrap: break-word; */
 }
-/* .add-task-container{
-display: flex;
-justify-content: space-around;
-background-color: aqua;
-} */
+
 .status-name {
     max-width: 150px;
     display: inline-block;

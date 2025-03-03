@@ -1,0 +1,10 @@
+.droppable h1, p {
+  color: black;
+  padding-bottom: 5px;
+  font-size: 15px;
+}
+.status{
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+}

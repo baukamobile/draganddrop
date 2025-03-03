@@ -1,0 +1,32 @@
+.dashboard {
+    min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
+    height: 100vh;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgb(65, 38, 171) 0%, rgb(132, 52, 150) 48%, rgb(196, 68, 157) 100%);
+    overflow-x: scroll; /* Горизонтальный скролл */
+    display: flex; /* Растянет внутренние элементы в строку */
+    white-space: nowrap; /* Запретит перенос элементов */
+
+}
+.center {
+    display: flex;
+    gap: 20px; 
+    padding: 20px;
+}
+.add-list{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(233, 229, 229);
+    width: 300px; 
+    height: fit-content;
+    opacity: 90%;
+    /* margin: 10px; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    /* cursor: grabbing; */
+    /* overflow-x: hidden; */
+    user-select: none;
+    
+    /* overflow-wrap: break-word; */
+}

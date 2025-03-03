@@ -24,3 +24,17 @@ export async function updateTaskStatus(taskId, statusId) {
     const response = await axios.patch(`${API_URL}/${taskId}/`, { status: statusId }); // 👈 Меняем `statusesId` на `status`
     return response.data;
 }
+
+// export async function deleteTask(taskID) {
+//     await axios.delete(`${API_URL}/tasks/${taskID}/`);
+//   }
+export async function addTask(taskID){
+    await axios.post(`${API_URL}/`)
+}
+  
+// export async function deleteStatus(statusId) {
+//     await axios.delete(`${API_URL_STATUS}/status/${statusId}/`);
+//   }
+export async function addColumn(statusId){
+    await axios.post(`${API_URL_STATUS}/`)
+}
