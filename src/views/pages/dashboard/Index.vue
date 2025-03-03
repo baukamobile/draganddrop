@@ -57,12 +57,38 @@ const showTaskForm = ref(false);
                             <div v-if="showTaskForm">
                                 <h2>Форма</h2>
                                 <form>
-                                    <label for="name1">Название:</label>
+                                    <label class="label-name">Название:</label>
                                     <input type="text" id="name1" name="name1">
                                     <br>
-                                    <label for="email1">Email:</label>
-                                    <input type="email" id="email1" name="email1">
+                                    <label class="label-name">Описание:</label>
+                                    <input type="" id="" name="">
                                     <br>
+                                    <label class="label-name">Прикрепить Файл: </label>
+                                    <input type="file" id="email1" name="email1">
+                                    <br>
+                                    <label class="label-name">Начало:</label>
+                                    <input type="date" id="email1" name="email1">
+                                    <br>
+                                    <label class="label-name">Конец:</label>
+                                    <input type="date" id="email1" name="email1">
+                                    <br>
+                                    <label class="label-name">Согласовано с руководством:</label>
+                                    <input type="checkbox" id="email1" name="email1">
+                                    <br>
+                                    <label class="label-name">Название проекта:</label>
+                                    <select id="users" v-model="newStatus.user">
+                                    <option v-for="user in users" :key="user.id" :value="Number(user.id)">
+                                        {{ user.first_name }} (ID: {{ user.id }})
+                                    </option>
+                                </select>
+                                    <br>
+                                    <label for="">Приоритет</label>
+                                    <select id="users" v-model="newStatus.status_name">
+                                    <option v-for="priorities in priority" :key="priorities.name" :value="Number(priorities.name)">
+                                        {{ priorities.priority_name }}
+                                    </option>
+                                </select>
+                                <br>
                                     <button type="submit">Добавить</button>
                                 </form>
                             </div>

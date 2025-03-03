@@ -1,6 +1,6 @@
 .dashboard {
     min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
-    height: 100vh;
+    height: 85vh;
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgb(65, 38, 171) 0%, rgb(132, 52, 150) 48%, rgb(196, 68, 157) 100%);
     overflow-x: scroll; /* Горизонтальный скролл */
@@ -109,6 +109,7 @@
     justify-content: space-between;
 }
 .add-list{
+    color: black;
     padding: 10px;
     border-radius: 10px;
     background-color: rgb(233, 229, 229);
@@ -134,9 +135,14 @@
     overflow-wrap: break-word;
     text-align: center;
 }
-
-
-
-
+.add-task-container{
+    color: black;
+}
+.red-button{
+    color: red;
+}
+.task-form{
+    color: black;
+}
 
 

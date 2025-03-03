@@ -2,11 +2,30 @@ import { ref, onMounted } from "vue";
 import { getTask, getStatusTask, updateTaskStatus, addColumn, getUsers } from "@/api/tasks";
 import axios from "axios";
 
+
+export default {
+  data() {
+    return {
+      tasks: [
+        { name: "", description: "", start_date: "", end_date: "", approved: false, user: null, priority: null },
+        { name: "", description: "", start_date: "", end_date: "", approved: false, user: null, priority: null }
+      ],
+      showTaskForm: {}
+    };
+  },
+  methods: {
+    toggleTaskForm(index) {
+      this.$set(this.showTaskForm, index, !this.showTaskForm[index]);
+    }
+  }
+}; 
+
 export function useTaskManager() {
     const tasks = ref([]);
     const statuses = ref([]);
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
+    
 
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -75,6 +94,7 @@ export function useTaskManager() {
         }
     };
 
+
     onMounted(async () => {
         tasks.value = await getTask();
         statuses.value = await getStatusTask();
@@ -96,3 +116,5 @@ export function useTaskManager() {
         submitColumn,
     };
 }
+
+
