@@ -2,7 +2,7 @@
     min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
     height: 85vh;
     background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgb(65, 38, 171) 0%, rgb(132, 52, 150) 48%, rgb(196, 68, 157) 100%);
+    background: linear-gradient(90deg, rgb(34, 122, 238) 0%, rgb(14, 68, 174) 48%, rgb(13, 203, 236) 100%);
     overflow-x: scroll; /* Горизонтальный скролл */
     display: flex; /* Растянет внутренние элементы в строку */
     white-space: nowrap; /* Запретит перенос элементов */

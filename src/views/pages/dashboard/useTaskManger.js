@@ -1,64 +1,6 @@
 import { ref, onMounted } from "vue";
-import { getTask, getStatusTask, updateTaskStatus, addColumn, getUsers } from "@/api/tasks";
+import { getTask, getStatusTask,API_URL_STATUS,API_URL_TASK,API_URL_USERS, updateTaskStatus, addColumn, getUsers,addTask } from "@/api/tasks";
 import axios from "axios";
-
-const API_URL_TASK = "http://127.0.0.1:8000/tasks/tasks";
-const API_URL_USERS = "http://127.0.0.1:8000/users/users/";
-const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
-// const API_URL_USERS = "http://127.0.0.1:8000/users/users/";
-// export default {
-//   data() {
-//     return {
-//       tasks: [
-//         { name: "", description: "", start_date: "", end_date: "", approved: false, user: null, priority: null },
-//         { name: "", description: "", start_date: "", end_date: "", approved: false, user: null, priority: null }
-//       ],
-//       showTaskForm: {}
-//     };
-//   },
-//   methods: {
-//     toggleTaskForm(index) {
-//       this.$set(this.showTaskForm, index, !this.showTaskForm[index]);
-//     }
-//   }
-// }; 
-//Добавление Задач
-
-export default {
-    data() {
-      return {
-        showTaskForm: false,
-        task: {
-          name: "",
-          description: "",
-          file: null,
-          deadline: "",
-          agreed_with_managers: false,
-          assignedUser: null,
-          priority: null,
-        },
-        users: [
-          { id: 1, first_name: "John" },
-          { id: 2, first_name: "Jane" },
-        ],
-        priority: [
-          { name: "low", priority_name: "Низкий" },
-          { name: "medium", priority_name: "Средний" },
-          { name: "high", priority_name: "Высокий" },
-        ],
-      };
-    },
-    methods: {
-      handleFileUpload(event) {
-        this.task.file = event.target.files[0];
-      },
-      addTask() {
-        console.log("Добавляем задачу:", this.task);
-        // Здесь можно отправить данные на сервер через API
-        this.showTaskForm = false;
-      },
-    },
-  };
 
 export function useTaskManager() {
     const tasks = ref([]);
@@ -67,9 +9,8 @@ export function useTaskManager() {
     const newStatus = ref({ status_name: "", user: null });
     const newTask = ref({
         task_name: "",projects:"",description:"",documents:null,end_date:"",
-        agreed_with_managers: false,assigned:null,status:2,priority: 3,department: 1
+        agreed_with_managers: false,assigned:null,status:1,priority: 3,department: 1
     })
-    
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -96,22 +37,37 @@ export function useTaskManager() {
         }
     };
 
+/**
+ * 
+ * Обработчик начала перетаскивание задачи
+ * Устанавливает данные для передачи в собитии drag and drop
+ * 
+ * @param {DragEvent} e обьект событии перетаскивания 
+ * @param {object} task Задача которую перетаскивает
+ */
+
     function ondragstart(e, task) {
-        e.dataTransfer.dropEffect = "move";
-        e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setData("taskID", task.id.toString());
+        e.dataTransfer.dropEffect = "move"; //Визуальный эффект перетаскивании
+        e.dataTransfer.effectAllowed = "move"; // разрешено только перемещение
+        e.dataTransfer.setData("taskID", task.id.toString()); // Передаем ID задачи.
         console.log("Начало перетаскивания:", task);
     }
-
+    /**
+ * Обработчик события "drop" — обновляет статус задачи при перетаскивании.
+ *
+ * @param {DragEvent} e - Объект события перетаскивания.
+ * @param {number} statusId - ID нового статуса, в который перетащили задачу.
+ */
     async function onDrop(e, statusId) {
-        e.preventDefault();
-        const taskID = parseInt(e.dataTransfer.getData("taskID"));
+        e.preventDefault(); // Отменяем стандартное поведение браузера.
+        const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи.
+
 
         try {
-            await updateTaskStatus(taskID, statusId);
-            const task = tasks.value.find(t => t.id === taskID);
+            await updateTaskStatus(taskID, statusId); // Обновляем статус задачи на сервере.
+            const task = tasks.value.find(t => t.id === taskID); // Находим задачу в локальном списке.
             if (task) {
-                task.status = statusId;
+                task.status = statusId; // Обновляем статус у клиента.
             }
         } catch (error) {
             console.error("Ошибка при обновлении задачи:", error);
@@ -120,12 +76,15 @@ export function useTaskManager() {
 //Формат дата именено от django формат даты на день месяц и время
     function formatDate(dateString) {
         const date = new Date(dateString);
+        if (!dateString) return "Нет даты"; 
         return date.toLocaleString("ru-RU", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
     }
 
-    const submitColumn = async () => {
+ // логика создание колонок.  
+const submitColumn = async () => {
         try {
             if (!newStatus.value.user) {
+
                 console.error("Ошибка: user не выбран!");
                 return;
             }
@@ -138,13 +97,37 @@ export function useTaskManager() {
         }
     };
 
-
-    onMounted(async () => {
+const submitTask = async () =>{
+    try{
+        if (!newTask.value.task_name.trim()){
+            console.error('Задание должен быть заполненным');
+            return;
+        }
+        await addTask(newTask.value);
+        newTask.value.task_name = "";
+        newTask.value.description = "";
+        newTask.value.documents = null;
+        newTask.value.end_date = "";
+        newTask.value.agreed_with_managers = false;
+        newTask.value.projects = null;
+        newTask.value.status;
         tasks.value = await getTask();
-        statuses.value = await getStatusTask();
-        users.value = await getUsers();
-        console.log("Данные загружены", statuses.value);
-    });
+    }catch (error){
+        console.error('Ошибка при добавлении задании',error);
+    }
+}
+// onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
+onMounted(async () => {
+    const [taskData, statusData, userData] = await Promise.all([
+        getTask(),
+        getStatusTask(),
+        getUsers()
+    ]);
+    tasks.value = taskData;
+    statuses.value = statusData;
+    users.value = userData;
+    console.log("Данные загружены", statuses.value);
+});
 
     return {
         tasks,
@@ -158,6 +141,7 @@ export function useTaskManager() {
         onDrop,
         formatDate,
         submitColumn,
+        submitTask,
     };
 }
 

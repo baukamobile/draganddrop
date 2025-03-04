@@ -14,6 +14,7 @@ const {
     onDrop,
     formatDate,
     submitColumn,
+    submitTask,
 } = useTaskManager();
 
 const showTaskForm = ref(false);
