@@ -17,6 +17,7 @@ const {
 } = useTaskManager();
 
 const showTaskForm = ref(false);
+
 </script>
 
 <template>
@@ -51,68 +52,80 @@ const showTaskForm = ref(false);
                                 <a @click.prevent="handleClickTask(task.id)" class="delete-task">Удалить</a>
                             </div>
                         </transition-group>
-
+<!-- Здсь находиьтся форма для добавление задач с вводимым данными -->
                         <div class="add-task-container">
-                            <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a> -->
+                            <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
                             <div v-if="showTaskForm">
                                 <h2>Форма</h2>
                                 <form>
+ <!-- <form @submit.prevent="submitColumn">
+                                        <input v-model="newStatus.status_name" placeholder="Название колонки" required />                                    -->
                                     <label class="label-name">Название:</label>
-                                    <input type="text" id="name1" name="name1">
-                                    <br>
+                                    <input type="text"v-model="newTask.task_name">
+                                    <br><br>    
                                     <label class="label-name">Описание:</label>
                                     <input type="" id="" name="">
-                                    <br>
+                                    <br><br>
                                     <label class="label-name">Прикрепить Файл: </label>
                                     <input type="file" id="email1" name="email1">
                                     <br>
-                                    <label class="label-name">Начало:</label>
-                                    <input type="date" id="email1" name="email1">
+                                    <!-- <label class="label-name">Начало:</label> -->
+                                    <!-- <input type="date" id="email1" name="email1"> -->
                                     <br>
                                     <label class="label-name">Конец:</label>
                                     <input type="date" id="email1" name="email1">
-                                    <br>
+                                    <br><br>
                                     <label class="label-name">Согласовано с руководством:</label>
                                     <input type="checkbox" id="email1" name="email1">
-                                    <br>
+                                    <br><br>
                                     <label class="label-name">Название проекта:</label>
                                     <select id="users" v-model="newStatus.user">
                                     <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                        {{ user.first_name }} (ID: {{ user.id }})
+                                        {{ user.first_name }} {{ user.last_name }} 
                                     </option>
                                 </select>
-                                    <br>
+                                    <br><br>
                                     <label for="">Приоритет</label>
                                     <select id="users" v-model="newStatus.status_name">
                                     <option v-for="priorities in priority" :key="priorities.name" :value="Number(priorities.name)">
                                         {{ priorities.priority_name }}
                                     </option>
                                 </select>
+
+                                
                                 <br>
-                                    <button type="submit">Добавить</button>
+                                <br>
+                                <a href="#">Добавить</a>
+                                    <!-- <button type="#">Добавить</button> -->
                                 </form>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="add-list">
+
+                     <div class="add-list">
+<!-- Зесь написан форма для доавление колонок -->
                         <h2>Добавить колонку</h2>
                         <form @submit.prevent="submitColumn">
                             <input v-model="newStatus.status_name" placeholder="Название колонки" required />
-                            <div>
-                                <label for="users">Сотрудник:</label>
+                            <div><label for="users">Сотрудник:</label>
                                 <select id="users" v-model="newStatus.user">
                                     <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                        {{ user.first_name }} (ID: {{ user.id }})
+                                        {{ user.first_name }}  {{ user.last_name }}
+                                         <!-- {{ user.department.department_name }} -->
+                                         {{ user.department ? user.department.department_name : 'No department' }}
                                     </option>
                                 </select>
                             </div>
                             <button type="submit">Добавить</button>
                         </form>
+                    </div> 
+
                     </div>
+
                 </div>
             </div>
-        </div>
+        <!-- </div> -->
     </PageWrapper>
 </template>
 
