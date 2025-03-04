@@ -53,7 +53,7 @@ const showTaskForm = ref(false);
                         </transition-group>
 
                         <div class="add-task-container">
-                            <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
+                            <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a> -->
                             <div v-if="showTaskForm">
                                 <h2>Форма</h2>
                                 <form>
