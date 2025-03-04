@@ -4,6 +4,18 @@ import axios from "axios";
 const API_URL = "http://127.0.0.1:8000/tasks/tasks";
 const API_URL_USERS = "http://127.0.0.1:8000/users/users";
 const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
+const API_URL_PROJECTS = "http://127.0.0.1:8000/tasks/projects";
+export const getProject = async () => {
+    try {
+        const response = await axios.get(`${API_URL_PROJECTS}/`);
+        console.log('Загрука проектов')
+        return response.data;
+    } catch (error) {
+        console.error(`Ошибка при получении проекта:`, error);
+        return null;
+    }
+};
+
 
 export function useTaskManager() {
     const tasks = ref([]);
@@ -100,44 +112,57 @@ const submitColumn = async () => {
             console.error("Ошибка при добавлении колонки", error);
         }
     };
-
-const submitTask = async () =>{
-    try{
-        if (!newTask.value.task_name.trim()){
-            console.error('Задание должно быть заполненным');
-            return;
+    const submitTask = async () => {
+        try {
+            console.log("Данные перед отправкой:", newTask.value); // <-- Лог перед валидацией
+            if (!newTask.value.task_name.trim()) {
+                console.error("Задание должно быть заполненным");
+                return;
+            }
+            await addTask(newTask.value);
+            projects.value = await getProject();
+            newTask.value = {
+                task_name: "",
+                description: "",
+                documents: null,
+                end_date: "",
+                agreed_with_managers: false,
+                projects: null,
+                assigned: null,
+                status: null
+            };
+            tasks.value = await getTask();
+        } catch (error) {
+            console.error("Ошибка при добавлении задания", error);
         }
-        await addTask(newTask.value);
-        newTask.value.task_name = "";
-        newTask.value.description = "";
-        newTask.value.documents = null;
-        newTask.value.end_date = "";
-        newTask.value.agreed_with_managers = false;
-        newTask.value.projects = null;
-        newTask.value.assigned =null;
-        newTask.value.status;
-        newTask.value.projects =null;
-        tasks.value = await getTask();
-    }catch (error){
-        console.error('Ошибка при добавлении задании',error);
-    }
-}
+    };
+    
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
 onMounted(async () => {
-    const [taskData, statusData, userData] = await Promise.all([
+    const [taskData, statusData, userData, projectData] = await Promise.all([
         getTask(),
         getStatusTask(),
-        getUsers()
+        getUsers(),
+        getProject(),
     ]);
+
     tasks.value = taskData;
     statuses.value = statusData;
     users.value = userData;
-    console.log("Данные загружены", statuses.value);
+    projects.value = projectData; // Тут теперь правильно
+
+    console.log("Статусы загружены", statuses.value);
+    console.log("Проекты загружены", projects.value);
+
+    if (!projects.value || projects.value.length === 0) {
+        console.error("Ошибка: проекты не загружены! Проверь API.");
+    }
 });
 
     return {
         tasks,
         statuses,
+        projects,
         users,
         newStatus,
         newTask,

@@ -8,6 +8,7 @@ import SidebarContent from "@/components/sidebar/SidebarContent.vue";
 const {
     tasks,
     statuses,
+    projects,
     users,
     newStatus,
     priority,
@@ -25,8 +26,12 @@ const showTaskForm = ref(false);
 const newTask = ref({
     task_name: "",
     description: "",
+    documents: null,
     end_date: "",
-    agreed_with_managers: false
+    agreed_with_managers: false,
+    projects: null,
+    assigned: null,
+    status: null
 });
 
 </script>
@@ -71,7 +76,8 @@ const newTask = ref({
                                 <form @submit.prevent="submitTask">
                                    
                                    <label class="label-name">Название:</label>
-                                   <input v-model="newTask.task_name" placeholder="Название задачи" required>
+                                   <textarea v-model="newTask.task_name" placeholder="Название задачи" required></textarea>
+                                   <!-- <input v-model="newTask.task_name" placeholder="Название задачи" required> -->
                                    <br><br>    
                                    <label class="label-name">Описание:</label>
                                    <input v-model="newTask.description" placeholder="Описание задачи" required>
@@ -88,27 +94,33 @@ const newTask = ref({
                                    <label class="label-name">Согласовано с руководством:</label>
                                    <input type="checkbox" v-model="newTask.agreed_with_managers">
                                    <br><br>
-                                   <label class="label-name">Название проекта:</label> -->
+                                   <label class="label-name">Подписан с :</label>
+                                   <!-- <label class="label-name">Название проекта:</label> -->
+                                   <select id="users" v-model="newTask.assigned">
+                                   <option v-for="user in users" :key="user.id" :value="Number(user.id)">
+                                       {{ user.first_name }}  
+                                   </option>
+                               </select> 
+                                   <br><br>
+                                   <label class="label-name">Название проекта:</label>
                                    <select id="users" v-model="newTask.projects">
                                    <option v-for="project in projects" :key="project.id" :value="Number(project.id)">
-                                       {{ project.projects_name }}  
+                                       {{ project.id }}  {{ project.project_name }}
                                    </option>
                                </select> 
                                    <br><br>
                                    <label for="">Приоритет</label>
-                                   <select id="users" v-model="newStatus.status_name">
-                                   <option v-for="priorities in priority" :key="priorities.name" :value="Number(priorities.name)">
-                                       {{ priorities.priority_name }}
-                                   </option>
+                                   <select v-model="newTask.priority">
+                                    <option v-for="(priority_value, priority_key) in priority" :key="priority_key" :value="priority_key">{{ priority_value.priority_name }}</option>
                                </select>
                                <br><br>
                                <select id="users" v-model="newTask.status">
-                                   <option v-for="status in statuses" :key="status.name" :value="Number(status.status_name)">
-                                       {{ status.status_name }}
-                                   </option>
-                               </select>
+                                <option v-for="status in statuses" :key="status.id" :value="status.id">
+    {{ status.status_name }}
+</option>
 
-                               
+</select>
+
                                <br>
                                <br>
                                <!-- <a href="#">Добавить</a> -->
@@ -117,8 +129,6 @@ const newTask = ref({
                             </div>
                         </div>
                     </div>
-                    
-
                      <div class="add-list">
 <!--  форма для доавление колонок -->
                         <h2>Добавить колонку</h2>
