@@ -1,6 +1,9 @@
 import { ref, onMounted } from "vue";
-import { getTask, getStatusTask,API_URL_STATUS,API_URL_TASK,API_URL_USERS, updateTaskStatus, addColumn, getUsers,addTask } from "@/api/tasks";
+import { getTask, getStatusTask, updateTaskStatus, addColumn, getUsers,addTask } from "@/api/tasks";
 import axios from "axios";
+const API_URL = "http://127.0.0.1:8000/tasks/tasks";
+const API_URL_USERS = "http://127.0.0.1:8000/users/users";
+const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
 
 export function useTaskManager() {
     const tasks = ref([]);
@@ -110,6 +113,7 @@ const submitTask = async () =>{
         newTask.value.end_date = "";
         newTask.value.agreed_with_managers = false;
         newTask.value.projects = null;
+        newTask.value.assigned;
         newTask.value.status;
         tasks.value = await getTask();
     }catch (error){
@@ -134,6 +138,7 @@ onMounted(async () => {
         statuses,
         users,
         newStatus,
+        newTask,
         priority,
         handleClick,
         handleClickTask,

@@ -53,59 +53,58 @@ const showTaskForm = ref(false);
                                 <a @click.prevent="handleClickTask(task.id)" class="delete-task">Удалить</a>
                             </div>
                         </transition-group>
-<!-- Здсь находиьтся форма для добавление задач с вводимым данными -->
+<!-- Здсь форма для добавление задач с вводимым данными -->
                         <div class="add-task-container">
                             <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
                             <div v-if="showTaskForm">
                                 <h2>Форма</h2>
-                                <form>
- <!-- <form @submit.prevent="submitColumn">
-                                        <input v-model="newStatus.status_name" placeholder="Название колонки" required />                                    -->
-                                    <label class="label-name">Название:</label>
-                                    <input type="text">
-                                    <br><br>    
-                                    <label class="label-name">Описание:</label>
-                                    <input type="" id="" name="">
-                                    <br><br>
-                                    <label class="label-name">Прикрепить Файл: </label>
-                                    <input type="file" id="email1" name="email1">
-                                    <br>
-                                    <!-- <label class="label-name">Начало:</label> -->
-                                    <!-- <input type="date" id="email1" name="email1"> -->
-                                    <br>
-                                    <label class="label-name">Конец:</label>
-                                    <input type="date" id="email1" name="email1">
-                                    <br><br>
-                                    <label class="label-name">Согласовано с руководством:</label>
-                                    <input type="checkbox" id="email1" name="email1">
-                                    <br><br>
-                                    <label class="label-name">Название проекта:</label>
-                                    <select id="users" v-model="newStatus.user">
-                                    <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                        {{ user.first_name }} {{ user.last_name }} 
-                                    </option>
-                                </select>
-                                    <br><br>
-                                    <label for="">Приоритет</label>
-                                    <select id="users" v-model="newStatus.status_name">
-                                    <option v-for="priorities in priority" :key="priorities.name" :value="Number(priorities.name)">
-                                        {{ priorities.priority_name }}
-                                    </option>
-                                </select>
+                                <form @submit.prevent="submitTask">
+                                   
+                                   <label class="label-name">Название:</label>
+                                   <input v-model="newTask.task_name" placeholder="Название задачи" required>
+                                   <br><br>    
+                                   <label class="label-name">Описание:</label>
+                                   <input v-model="newTask.description" placeholder="Описание задачи" required>
+                                   <br><br>
+                                   <label class="label-name">Прикрепить Файл: </label>
+                                   <input type="file">
+                                   <br>
+                                   <!-- <label class="label-name">Начало:</label> -->
+                                   <!-- <input type="date" id="email1" name="email1"> -->
+                                   <br>
+                                   <label class="label-name">Конец:</label>
+                                   <input type="date" v-model="newTask.end_date">
+                                   <br><br>
+                                   <label class="label-name">Согласовано с руководством:</label>
+                                   <input type="checkbox" v-model="newTask.agreed_with_managers">
+                                   <br><br>
+                                   <label class="label-name">Название проекта:</label>
+                                   <select id="users" v-model="newStatus.user">
+                                   <option v-for="user in users" :key="user.id" :value="Number(user.id)">
+                                       {{ user.first_name }} {{ user.last_name }} 
+                                   </option>
+                               </select>
+                                   <br><br>
+                                   <label for="">Приоритет</label>
+                                   <select id="users" v-model="newStatus.status_name">
+                                   <option v-for="priorities in priority" :key="priorities.name" :value="Number(priorities.name)">
+                                       {{ priorities.priority_name }}
+                                   </option>
+                               </select>
 
-                                
-                                <br>
-                                <br>
-                                <a href="#">Добавить</a>
-                                    <!-- <button type="#">Добавить</button> -->
-                                </form>
+                               
+                               <br>
+                               <br>
+                               <a href="#">Добавить</a>
+                                   <!-- <button type="#">Добавить</button> -->
+                               </form>
                             </div>
                         </div>
                     </div>
                     
 
                      <div class="add-list">
-<!-- Зесь написан форма для доавление колонок -->
+<!--  форма для доавление колонок -->
                         <h2>Добавить колонку</h2>
                         <form @submit.prevent="submitColumn">
                             <input v-model="newStatus.status_name" placeholder="Название колонки" required />
