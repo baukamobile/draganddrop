@@ -61,7 +61,7 @@ const showTaskForm = ref(false);
  <!-- <form @submit.prevent="submitColumn">
                                         <input v-model="newStatus.status_name" placeholder="Название колонки" required />                                    -->
                                     <label class="label-name">Название:</label>
-                                    <input type="text"v-model="newTask.task_name">
+                                    <input type="text">
                                     <br><br>    
                                     <label class="label-name">Описание:</label>
                                     <input type="" id="" name="">
