@@ -25,6 +25,6 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ['.out'],
     },
-
-    base: '/static/vue/dist/',
+    base: '/',
+    // base: '/static/vue/dist/',
 })

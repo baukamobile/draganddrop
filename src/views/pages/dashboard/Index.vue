@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import './styles/dashboard.css';
+import PageWrapper from '@/components/PageWrapper.vue';
+import SidebarContent from "@/components/sidebar/SidebarContent.vue";
+// C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
     tasks,
     statuses,
@@ -15,9 +18,16 @@ const {
     formatDate,
     submitColumn,
     submitTask,
+    
 } = useTaskManager();
 
 const showTaskForm = ref(false);
+const newTask = ref({
+    task_name: "",
+    description: "",
+    end_date: "",
+    agreed_with_managers: false
+});
 
 </script>
 
@@ -78,12 +88,12 @@ const showTaskForm = ref(false);
                                    <label class="label-name">Согласовано с руководством:</label>
                                    <input type="checkbox" v-model="newTask.agreed_with_managers">
                                    <br><br>
-                                   <label class="label-name">Название проекта:</label>
-                                   <select id="users" v-model="newStatus.user">
-                                   <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                       {{ user.first_name }} {{ user.last_name }} 
+                                   <label class="label-name">Название проекта:</label> -->
+                                   <select id="users" v-model="newTask.projects">
+                                   <option v-for="project in projects" :key="project.id" :value="Number(project.id)">
+                                       {{ project.projects_name }}  
                                    </option>
-                               </select>
+                               </select> 
                                    <br><br>
                                    <label for="">Приоритет</label>
                                    <select id="users" v-model="newStatus.status_name">
@@ -91,12 +101,18 @@ const showTaskForm = ref(false);
                                        {{ priorities.priority_name }}
                                    </option>
                                </select>
+                               <br><br>
+                               <select id="users" v-model="newTask.status">
+                                   <option v-for="status in statuses" :key="status.name" :value="Number(status.status_name)">
+                                       {{ status.status_name }}
+                                   </option>
+                               </select>
 
                                
                                <br>
                                <br>
-                               <a href="#">Добавить</a>
-                                   <!-- <button type="#">Добавить</button> -->
+                               <!-- <a href="#">Добавить</a> -->
+                                   <button type="submit ">Добавить</button>
                                </form>
                             </div>
                         </div>

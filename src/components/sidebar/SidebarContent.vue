@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-// import PerfrectScrollbar from '@/components/PerfectScrollbar.vue'
+import PerfrectScrollbar from '@/components/PerfectScrollbar.vue'
 import SidebarLink from '@/components/sidebar/SidebarLink.vue'
 // import SidebarCollapsible from '@/components/sidebar/SidebarCollapsible.vue'
 // import SidebarCollapsibleItem from '@/components/sidebar/SidebarCollapsibleItem.vue'

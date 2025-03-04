@@ -8,11 +8,12 @@ const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
 export function useTaskManager() {
     const tasks = ref([]);
     const statuses = ref([]);
+    const projects = ref({});
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
     const newTask = ref({
         task_name: "",projects:"",description:"",documents:null,end_date:"",
-        agreed_with_managers: false,assigned:null,status:1,priority: 3,department: 1
+        agreed_with_managers: false,assigned:null,status:1,priority: 3,projects: null,department: 1
     })
 //Приорите  задач
     const priority = {
@@ -103,7 +104,7 @@ const submitColumn = async () => {
 const submitTask = async () =>{
     try{
         if (!newTask.value.task_name.trim()){
-            console.error('Задание должен быть заполненным');
+            console.error('Задание должно быть заполненным');
             return;
         }
         await addTask(newTask.value);
@@ -113,8 +114,9 @@ const submitTask = async () =>{
         newTask.value.end_date = "";
         newTask.value.agreed_with_managers = false;
         newTask.value.projects = null;
-        newTask.value.assigned;
+        newTask.value.assigned =null;
         newTask.value.status;
+        newTask.value.projects =null;
         tasks.value = await getTask();
     }catch (error){
         console.error('Ошибка при добавлении задании',error);
