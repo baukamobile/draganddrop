@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref,watch,reactive } from "vue";
 import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import './styles/dashboard.css';
 import PageWrapper from '@/components/PageWrapper.vue';
@@ -17,21 +17,19 @@ const {
     ondragstart,
     onDrop,
     formatDate,
+    formatDateForBackend,
     submitColumn,
     submitTask,
     
 } = useTaskManager();
 
 const showTaskForm = ref(false);
-const newTask = ref({
-    task_name: "",
-    description: "",
-    documents: null,
-    end_date: "",
-    agreed_with_managers: false,
-    projects: null,
-    assigned: null,
-    status: null
+const newTask = reactive({
+        task_name: "й",description:"ц",documents:null,end_date:"",
+        agreed_with_managers: false,assigned:14,status:1,priority: 3,projects: 2,department: 1
+    })
+watch(() => newTask.projects, (newValue) => {
+    console.log("newTask.projects изменился:", newValue);
 });
 
 </script>
@@ -73,26 +71,27 @@ const newTask = ref({
                             <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
                             <div v-if="showTaskForm">
                                 <h2>Форма</h2>
-                                <form @submit.prevent="submitTask">
+                                <form @submit.prevent="console.log('Форма отправлена!'); submitTask();">
                                    
                                    <label class="label-name">Название:</label>
-                                   <textarea v-model="newTask.task_name" placeholder="Название задачи" required></textarea>
+                                   <textarea v-model="newTask.task_name" placeholder="Название задачи"  @input="console.log('Название изменилось:', newTask.task_name)"  required></textarea>
                                    <!-- <input v-model="newTask.task_name" placeholder="Название задачи" required> -->
                                    <br><br>    
                                    <label class="label-name">Описание:</label>
-                                   <input v-model="newTask.description" placeholder="Описание задачи" required>
+                                   <input v-model="newTask.description" placeholder="Описание задачи"  @input="console.log('Название изменилось:', newTask.description)"  required>
                                    <br><br>
                                    <label class="label-name">Прикрепить Файл: </label>
-                                   <input type="file">
+                                   <input type="file"  @input="console.log('Название изменилось:', newTask.documents)" >
                                    <br>
                                    <!-- <label class="label-name">Начало:</label> -->
                                    <!-- <input type="date" id="email1" name="email1"> -->
                                    <br>
                                    <label class="label-name">Конец:</label>
-                                   <input type="date" v-model="newTask.end_date">
+                                   <input type="date" v-model="newTask.end_date" 
+    @input="newTask.end_date = $event.target.value || null">
                                    <br><br>
                                    <label class="label-name">Согласовано с руководством:</label>
-                                   <input type="checkbox" v-model="newTask.agreed_with_managers">
+                                   <input type="checkbox" v-model="newTask.agreed_with_managers"  @input="console.log('Название изменилось:', newTask.agreed_with_managers)" >
                                    <br><br>
                                    <label class="label-name">Подписан с :</label>
                                    <!-- <label class="label-name">Название проекта:</label> -->
@@ -103,11 +102,11 @@ const newTask = ref({
                                </select> 
                                    <br><br>
                                    <label class="label-name">Название проекта:</label>
-                                   <select id="users" v-model="newTask.projects">
-                                   <option v-for="project in projects" :key="project.id" :value="Number(project.id)">
-                                       {{ project.id }}  {{ project.project_name }}
-                                   </option>
-                               </select> 
+                                   <select v-model="newTask.projects">
+    <option v-for="project in projects" :key="project.id" :value="project.id">
+        {{ project.project_name }}
+    </option>
+</select>
                                    <br><br>
                                    <label for="">Приоритет</label>
                                    <select v-model="newTask.priority">
