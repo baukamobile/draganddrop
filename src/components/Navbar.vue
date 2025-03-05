@@ -11,6 +11,7 @@ import Button from '@/components/Button.vue'
 import Logo from '@/components/Logo.vue'
 import Dropdown from '@/components/Dropdown.vue'
 import DropdownLink from '@/components/DropdownLink.vue'
+import { useRouter } from 'vue-router'
 
 onMounted(() => {
     document.addEventListener('scroll', handleScroll)
@@ -98,7 +99,7 @@ onUnmounted(() => {
                     </button>
                 </template>
                 <template #content>
-                    <DropdownLink to="#">Log Out</DropdownLink>
+                    <DropdownLink :to="{ name: 'auth' }">Log Out</DropdownLink>
                 </template>
             </Dropdown>
         </div>

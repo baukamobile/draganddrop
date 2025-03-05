@@ -33,6 +33,11 @@ export default [
                 name: 'reports',
                 component: ()=> import('@/views/pages/reports/reports.vue')
             },
+            {
+                path: '/pages/auth',
+                name: 'auth',
+                component: ()=> import('@/views/pages/auth/login/LoginPage.vue')
+            },
         ],
     },
     {
