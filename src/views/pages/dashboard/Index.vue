@@ -12,23 +12,24 @@ const {
     projects,
     users,
     newStatus,
+    newTask, //добавили внутри const из за него знечении не принимались
     priority,
     handleClick,
     handleClickTask,
     ondragstart,
     onDrop,
     formatDate,
-    formatDateForBackend,
+    // formatDateForBackend,
     submitColumn,
     submitTask,
     
 } = useTaskManager();
 
 const showTaskForm = ref(false);
-const newTask = reactive({
-        task_name: "",description:"",documents:null,end_date:"",
-        agreed_with_managers: false,assigned: null,status:1,priority: 1,projects: 1,department: 1
-    })
+// const newTask = reactive({
+//         task_name: "",description:"",documents:null,end_date:"",
+//         agreed_with_managers: false,assigned: null,status:1,priority: 1,projects: 1,department: 1
+//     })
 watch(() => newTask, (val) => {
     console.log('newtask изменился: ',JSON,stringify(val,null,2) );
 

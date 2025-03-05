@@ -25,8 +25,8 @@ export function useTaskManager() {
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
     const newTask = reactive({
-        task_name: ref("youtube"),
-        description: ref("e"),
+        task_name: ref(""),
+        description: ref(""),
         documents: ref(null),
         end_date: ref(""),
         agreed_with_managers: ref(false),
@@ -77,7 +77,7 @@ export function useTaskManager() {
         e.dataTransfer.dropEffect = "move"; //Визуальный эффект перетаскивании
         e.dataTransfer.effectAllowed = "move"; // разрешено только перемещение
         e.dataTransfer.setData("taskID", task.id.toString()); // Передаем ID задачи.
-        console.log("Начало перетаскивания:", task);
+        // console.log("Начало перетаскивания:", task);
     }
     /**
  * Обработчик события "drop" — обновляет статус задачи при перетаскивании.
@@ -88,8 +88,6 @@ export function useTaskManager() {
     async function onDrop(e, statusId) {
         e.preventDefault(); // Отменяем стандартное поведение браузера.
         const taskID = parseInt(e.dataTransfer.getData("taskID")); // Получаем ID задачи.
-
-
         try {
             await updateTaskStatus(taskID, statusId); // Обновляем статус задачи на сервере.
             const task = tasks.value.find(t => t.id === taskID); // Находим задачу в локальном списке.
@@ -100,7 +98,7 @@ export function useTaskManager() {
             console.error("Ошибка при обновлении задачи:", error);
         }
     }
-//Формат дата именено от django формат даты на день месяц и время
+//Формат дата от django формат даты на день месяц и время
     function formatDate(dateString) {
         const date = new Date(dateString);
         if (!dateString) return "Нет даты"; 
@@ -138,7 +136,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     };
     const submitTask = async () => {
         try {
-            console.log("🔥 Перед отправкой:", JSON.stringify(newTask, null, 2));
+            console.log("Перед отправкой:", JSON.stringify(newTask, null, 2));
             // console.log('Newtasks',newTask);
             newTask.end_date = formatDateForBackend(newTask.end_date); // убедись, что дата правильно форматируется
             if (!newTask || typeof newTask.task_name === "undefined") {
@@ -158,7 +156,9 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     
             console.log("Попытка отправки запроса...", JSON.stringify(newTask, null, 2));
             await addTask(newTask); // отправка данных без сброса
-            tasks.value = await getTask(); // обновление списка задач после отправки
+            // tasks.value = await getTask(); // обновление списка задач после отправки
+            tasks.value = [...await getTask()];
+            console.log('НОВАЯ ЗАДАЧА', tasks.value)
             console.log("Задание перед отправкой:", {
                 task_name: newTask.task_name,
                 description: newTask.description,

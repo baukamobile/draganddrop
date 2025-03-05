@@ -27,16 +27,18 @@ export async function updateTaskStatus(taskId, statusId) {
     return response.data;
 }
 export async function addTask(taskData) {
-    try {
-        const response = await axios.post(`${API_URL_TASK}/`, taskData, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Ошибка при отправке задачи:", error.response ? error.response.data : error.message);
-    }
+    // try {
+    //     const response = await axios.post(`${API_URL_TASK}/`, taskData, {
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         }
+    //     });
+    //     return response.data;
+    // } catch (error) {
+    //     console.error("Ошибка при отправке задачи:", error.response ? error.response.data : error.message);
+    // }
+    const response = await axios.post(`${API_URL_TASK}/`,taskData);
+    return response.data;
 }
 
 
