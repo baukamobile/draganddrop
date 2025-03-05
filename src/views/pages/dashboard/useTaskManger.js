@@ -25,9 +25,16 @@ export function useTaskManager() {
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
     const newTask = reactive({
-        task_name: "ывавы",description:"ываыв",documents:null,end_date:"",
-        agreed_with_managers: false,assigned:14,status:1,priority: 3,projects: 2,department: 1
-    })
+        task_name: ref("youtube"),
+        description: ref("e"),
+        documents: ref(null),
+        end_date: ref(""),
+        agreed_with_managers: ref(false),
+        assigned: ref(14),
+        status: ref(1),
+        priority: ref(1),
+        projects: ref(2),
+        department: ref(1) })
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -39,6 +46,7 @@ export function useTaskManager() {
     const handleClick = async (statusId) => {
         try {
             await axios.delete(`${API_URL_STATUS}/${statusId}/`);
+            console.log('Удаление колонок')
             statuses.value = statuses.value.filter(status => status.id !== statusId);
         } catch (error) {
             console.error("Ошибка удаления колонки", error);
@@ -49,6 +57,7 @@ export function useTaskManager() {
         try {
             await axios.delete(`${API_URL}/${taskID}/`);
             tasks.value = tasks.value.filter(task => task.id !== taskID);
+            console.log('Удаление задач')
         } catch (error) {
             console.error("Ошибка удаления задачи", error);
         }
@@ -64,6 +73,7 @@ export function useTaskManager() {
  */
 
     function ondragstart(e, task) {
+        console.log('Перетаскивание задач')
         e.dataTransfer.dropEffect = "move"; //Визуальный эффект перетаскивании
         e.dataTransfer.effectAllowed = "move"; // разрешено только перемещение
         e.dataTransfer.setData("taskID", task.id.toString()); // Передаем ID задачи.
@@ -111,8 +121,8 @@ export function useTaskManager() {
  // логика создание колонок.  
 const submitColumn = async () => {
         try {
-            console.log("🔥 Перед отправкой:", JSON.stringify(newTask, null, 2));
-console.log("📌 Тип end_date:", typeof newTask.end_date);
+            
+console.log(" Тип end_date:", typeof newTask.end_date);
             if (!newStatus.value.user) {
 
                 console.error("Ошибка: user не выбран!");
@@ -128,8 +138,9 @@ console.log("📌 Тип end_date:", typeof newTask.end_date);
     };
     const submitTask = async () => {
         try {
-            console.log("Данные перед отправкой:", newTask);
-            newTask.end_date = formatDateForBackend(newTask.end_date);
+            console.log("🔥 Перед отправкой:", JSON.stringify(newTask, null, 2));
+            // console.log('Newtasks',newTask);
+            newTask.end_date = formatDateForBackend(newTask.end_date); // убедись, что дата правильно форматируется
             if (!newTask || typeof newTask.task_name === "undefined") {
                 console.error("Ошибка: newTask не инициализирован!");
                 return;
@@ -144,30 +155,33 @@ console.log("📌 Тип end_date:", typeof newTask.end_date);
                 alert("Выберите проект");
                 return;
             }
+    
             console.log("Попытка отправки запроса...", JSON.stringify(newTask, null, 2));
-await addTask(newTask);
-console.log("Запрос ушёл?");
-
-
-            await addTask(newTask);
-            projects.value = await getProject();
-    
-            Object.assign(newTask, {
-                task_name: "",
-                description: "",
-                documents: null,
-                end_date: "",
-                agreed_with_managers: false,
-                projects: null,
-                assigned: null,
-                status: 1
+            await addTask(newTask); // отправка данных без сброса
+            tasks.value = await getTask(); // обновление списка задач после отправки
+            console.log("Задание перед отправкой:", {
+                task_name: newTask.task_name,
+                description: newTask.description,
+                end_date: newTask.end_date,
+                assigned: newTask.assigned,
+                projects: newTask.projects,
+                status: newTask.status,
+                priority: newTask.priority,
             });
-    
-            tasks.value = await getTask();
+            // Сбрасывай только после успешной отправки
+            newTask.task_name = "";
+            newTask.description = "";
+            newTask.documents = null;
+            newTask.end_date = "";
+            newTask.agreed_with_managers = false;
+            newTask.projects = null;
+            newTask.assigned = null;
+            newTask.status = 1;
         } catch (error) {
             console.error("Ошибка при добавлении задания", error);
         }
     };
+    
     
     
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:

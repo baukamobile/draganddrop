@@ -4,6 +4,7 @@ import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import './styles/dashboard.css';
 import PageWrapper from '@/components/PageWrapper.vue';
 import SidebarContent from "@/components/sidebar/SidebarContent.vue";
+import { stringify } from "postcss";
 // C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
     tasks,
@@ -25,12 +26,13 @@ const {
 
 const showTaskForm = ref(false);
 const newTask = reactive({
-        task_name: "й",description:"ц",documents:null,end_date:"",
-        agreed_with_managers: false,assigned:14,status:1,priority: 3,projects: 2,department: 1
+        task_name: "",description:"",documents:null,end_date:"",
+        agreed_with_managers: false,assigned: null,status:1,priority: 1,projects: 1,department: 1
     })
-watch(() => newTask.projects, (newValue) => {
-    console.log("newTask.projects изменился:", newValue);
-});
+watch(() => newTask, (val) => {
+    console.log('newtask изменился: ',JSON,stringify(val,null,2) );
+
+},{deep: true});
 
 </script>
 
@@ -87,33 +89,33 @@ watch(() => newTask.projects, (newValue) => {
                                    <!-- <input type="date" id="email1" name="email1"> -->
                                    <br>
                                    <label class="label-name">Конец:</label>
-                                   <input type="date" v-model="newTask.end_date" 
-    @input="newTask.end_date = $event.target.value || null">
+                                   <input type="date" v-model="newTask.end_date" @input="console.log('end date', newTask.end_date)" >
+    <!-- @input="newTask.end_date = $event.target.value || null"> -->
                                    <br><br>
                                    <label class="label-name">Согласовано с руководством:</label>
                                    <input type="checkbox" v-model="newTask.agreed_with_managers"  @input="console.log('Название изменилось:', newTask.agreed_with_managers)" >
                                    <br><br>
                                    <label class="label-name">Подписан с :</label>
                                    <!-- <label class="label-name">Название проекта:</label> -->
-                                   <select id="users" v-model="newTask.assigned">
+                                   <select id="users" v-model="newTask.assigned"  @change="console.log('assigned', newTask.assigned)">
                                    <option v-for="user in users" :key="user.id" :value="Number(user.id)">
                                        {{ user.first_name }}  
                                    </option>
                                </select> 
                                    <br><br>
                                    <label class="label-name">Название проекта:</label>
-                                   <select v-model="newTask.projects">
+                                   <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
     <option v-for="project in projects" :key="project.id" :value="project.id">
         {{ project.project_name }}
     </option>
 </select>
                                    <br><br>
                                    <label for="">Приоритет</label>
-                                   <select v-model="newTask.priority">
+                                   <select v-model="newTask.priority" @change="console.log('priorty',newTask.priority)">
                                     <option v-for="(priority_value, priority_key) in priority" :key="priority_key" :value="priority_key">{{ priority_value.priority_name }}</option>
                                </select>
                                <br><br>
-                               <select id="users" v-model="newTask.status">
+                               <select id="users" v-model="newTask.status" @change="console.log('status',newTask.status)">
                                 <option v-for="status in statuses" :key="status.id" :value="status.id">
     {{ status.status_name }}
 </option>
