@@ -42,7 +42,7 @@ _Создание задач_
 - [x] Логин
 - [ ] Авторизация 
 
-**git clone <https://github.com/baukamobile/draganddrop.git>**
-**cd draganddrop**
-**npm install** 
-**npm run dev**
+- **git clone <https://github.com/baukamobile/draganddrop.git>**
+- **cd draganddrop**
+- **npm install** 
+- **npm run dev**
