@@ -1,9 +1,10 @@
  <script setup>
+import { onMounted } from 'vue';
 import { UserAuthManager } from './userAuthManager';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const {
-    email,password,first_name,last_name,phone_number,isLoading,position,department,register,errorMessage 
+    email,password,first_name,last_name,selectedPosition,phone_number,isLoading,position,department,register,errorMessage 
 } = UserAuthManager();
 const handleRegister = async () => {
     const success = await register();
@@ -11,6 +12,7 @@ const handleRegister = async () => {
         router.push({name: 'Dashboard'}) //Перенапрляем после успешного входа
     }
 };
+// onMounted(getPosition,getDepartment)
 </script>
 
 
@@ -53,25 +55,34 @@ const handleRegister = async () => {
                 <form @submit.prevent="handleRegister">
                     <h1>Создать Аккаунт</h1>
                     <input type="email" placeholder="Email" v-model="email"/>
-                    <input type="text" placeholder="Имя" v-model="first_name"/>
-                    <input type="text" placeholder="Фамилия" v-model="last_name"/>
-                   <div style="display: flex; justify-content: space-around;"> <input type="password" placeholder="Password" v-model="password"/>
-                    <input type="tel" placeholder="Номер Телефона" v-model="phone_number"/></div>
+                    <!-- <input type="text" placeholder="Имя" v-model="first_name"/> -->
+                    <!-- <input type="text" placeholder="Фамилия" v-model="last_name"/> -->
+                   <!-- <div style="display: none; justify-content: space-around;"> -->
+                     <input type="password" placeholder="Password" v-model="password"/>
+                    <input type="tel" placeholder="Номер Телефона" v-model="phone_number"/>
+                <!-- </div> -->
                     <!-- <input type="text" placeholder="Телеграм айди" /> -->
                     <div >
                         <label for="">Должность</label>
-                        <select id="position" v-model="position"  @change="console.log('position: ', position)">
-                        <option v-for="positions in position" :key="positions.id" :value="Number(positions.id)">
-                            {{ positions.position_name }}  
-                        </option>
-                    </select> 
+                        <select v-model="selectedPosition" @change="console.log('Выбрана должность:', selectedPosition)">
+        <option v-for="position in positions" :key="position.id" :value="position.id">
+            {{ position.position_name }}
+        </option>
+    </select>
                         <br><br>
                         <label class="label-name">Название Отдела:</label>
-                        <select v-model="department"  @change="console.log('department: ', department)">
+                        <select id="department.id" v-model="department"  @change="console.log('department: ', department)">
         <option v-for="departments in department" :key="departments.id" :value="departments.id">
         {{ departments.department_name }} {{ departments.department_head }}
         </option>
-        </select></div>
+        </select>
+        <!-- <label class="label-name">Название проекта:</label> -->
+                                   <!-- <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
+    <option v-for="project in projects" :key="project.id" :value="project.id">
+        {{ project.project_name }}
+    </option>
+</select> -->
+    </div>
                     <button type="submit" :disabled="isLoading">Регистрация</button>
                 </form>
             </div>

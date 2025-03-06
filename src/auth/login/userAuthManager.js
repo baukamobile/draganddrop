@@ -1,10 +1,10 @@
-import { ref, onMounted } from "vue";
+import { ref, onMounted,reactive } from "vue";
 
 
 // import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/api/tasks";
 import {getUsers} from "@/api/users";
 import axios from "axios";
-import { reactive } from "vue";
+// import { reactive } from "vue";
 // const API_REGISTER = "http://127.0.0.1:8000/users/register";
 const API_LOGIN = "http://127.0.0.1:8000/users/api/login";
 const API_REGISTER = "http://127.0.0.1:8000/users/api/register"
@@ -22,9 +22,20 @@ export function UserAuthManager(){
     const first_name = ref('');//name
     const last_name = ref(''); 
     const phone_number = ref('');
-    const position = ref(''); //должность
-    const department = ref('');//отдел сотрудника
-
+    const position = ref([]); //должность
+    const department = ref([]);//отдел сотрудника
+    const selectedPosition = ref(null);  // Одна выбранная должность
+    // const newUser = reactive({
+    //     email: ref(''), //email ползователя
+    //  password: ref(''),//пароль ползователя
+    //  isLoading: ref(false),//кнопка логин
+    //  errorMessage: ref(''),//ошибки
+    //  first_name: ref(''),//name
+    //  last_name: ref(''), 
+    //  phone_number: ref(''),
+    //  position: ref(''), //должность
+    //  department: ref('')//отдел сотрудника
+    // })
     const login = async () =>{
         if (!email.value || !password.value){ //если ползователь не вводил данные
             errorMessage.value='Email и пароль обязательны!'
@@ -39,6 +50,7 @@ export function UserAuthManager(){
             });
             const token = response.data.token;
             localStorage.setItem('authToken',token);//Сохраняем токен
+            console.log('token', localStorage);
             // axios.defaults.headers.common['Authorization']='Bearer $token';
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             return true; //Success
@@ -55,6 +67,7 @@ export function UserAuthManager(){
             errorMessage.value="Пожалуйста заполните все полей";
             return;
         }
+        
         isLoading.value = true;
         errorMessage.value = '';
         try{
@@ -82,7 +95,8 @@ export function UserAuthManager(){
 const getPosition = async () => {
     try {
         const response = await axios.get(`${API_POSTIION}/`);
-        console.log('Загрука список должностей')
+        console.log('Загрука список должностей', response.data)
+        positions.value = response.data;
         return response.data;
     } catch (error) {
         console.error(`Ошибка при получении проекта:`, error);
@@ -105,7 +119,8 @@ onMounted(async () => { //Код внутри выполняется, когда
         const [positionData, departmentData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
             //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
             getPosition(),
-            getDepartment()
+            getDepartment(),
+            console.log('list position: ',getPosition),
         ]);
 
         // if (taskData.status === "fulfilled") tasks.value = taskData.value;
@@ -127,6 +142,7 @@ return {email,
     login,
     logout,
     errorMessage,
+    selectedPosition,
     getDepartment,
     getPosition,
 };}
