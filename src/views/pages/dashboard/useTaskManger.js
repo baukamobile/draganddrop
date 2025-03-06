@@ -110,7 +110,7 @@ export function useTaskManager() {
         
         const date = new Date(dateString);
         if (isNaN(date)) {
-            console.error("🔥 Неправильная дата:", dateString);
+            console.error("Неправильная дата:", dateString);
             return null;
         }
     
@@ -186,9 +186,10 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     
     
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
-onMounted(async () => {
+onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
-        const [taskData, statusData, userData, projectData] = await Promise.allSettled([
+        const [taskData, statusData, userData, projectData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
+            //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
             getTask(),
             getStatusTask(),
             getUsers(),

@@ -1,6 +1,17 @@
-<!-- <!-- <script>
-
-    </script> -->
+ <script setup>
+import { UserAuthManager } from './userAuthManager';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const {
+    email,password,first_name,last_name,phone_number,isLoading,position,department,register,errorMessage 
+} = UserAuthManager();
+const handleRegister = async () => {
+    const success = await register();
+    if (success){
+        router.push({name: 'Dashboard'}) //Перенапрляем после успешного входа
+    }
+};
+</script>
 
 
     <template>
@@ -11,7 +22,7 @@
                 <form action="#">
                     <h1>Создать Аккаунт</h1>
                     <input type="email" placeholder="Email" />
-                    <input type="text" placeholder="Имя" />
+                    <input type="text" placeholder="Имssя" />
                     <input type="text" placeholder="Фамилия" />
                     <input type="password" placeholder="Password" />
                     <input type="number" placeholder="Номер Телефона" />
@@ -32,12 +43,36 @@
                 </form>
             </div>
             <div class="form-container sign-in-container">
-                <form action="#">
+                <!-- <form action="#">
                     <h1>Sign in</h1>
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
                     <a href="#">Forgot your password?</a>
                     <button>Sign In</button>
+                </form> -->
+                <form @submit.prevent="handleRegister">
+                    <h1>Создать Аккаунт</h1>
+                    <input type="email" placeholder="Email" v-model="email"/>
+                    <input type="text" placeholder="Имя" v-model="first_name"/>
+                    <input type="text" placeholder="Фамилия" v-model="last_name"/>
+                   <div style="display: flex; justify-content: space-around;"> <input type="password" placeholder="Password" v-model="password"/>
+                    <input type="tel" placeholder="Номер Телефона" v-model="phone_number"/></div>
+                    <!-- <input type="text" placeholder="Телеграм айди" /> -->
+                    <div >
+                        <label for="">Должность</label>
+                        <select id="position" v-model="position"  @change="console.log('position: ', position)">
+                        <option v-for="positions in position" :key="positions.id" :value="Number(positions.id)">
+                            {{ positions.position_name }}  
+                        </option>
+                    </select> 
+                        <br><br>
+                        <label class="label-name">Название Отдела:</label>
+                        <select v-model="department"  @change="console.log('department: ', department)">
+        <option v-for="departments in department" :key="departments.id" :value="departments.id">
+        {{ departments.department_name }} {{ departments.department_head }}
+        </option>
+        </select></div>
+                    <button type="submit" :disabled="isLoading">Регистрация</button>
                 </form>
             </div>
             <div class="overlay-container">

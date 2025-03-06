@@ -2,16 +2,16 @@ import axios from "axios";
 
 
 const API_URL_USERS = "http://127.0.0.1:8000/users/users";
-const API_REGISTER = "http://127.0.0.1:8000/users/register";
-const API_LOGIN = "http://127.0.0.1:8000/users/login";
-const API_LOGOUT = "http://127.0.0.1:8000/users/logout";
+// const API_REGISTER = "http://127.0.0.1:8000/users/register";
+// const API_LOGIN = "http://127.0.0.1:8000/users/login";
+// const API_LOGOUT = "http://127.0.0.1:8000/users/logout";
 
 export const getTask = async()=>{
     const response = await axios.get(`${API_URL_USERS}/`)
     return response.data
 };
 export const getUsers = async()=>{
-    const response = await axios.get(`${API_URL_USERS}`); 
+    const response = await axios.get(`${API_URL_USERS}/`); 
     return response.data;
 }
 
