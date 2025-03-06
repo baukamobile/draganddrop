@@ -38,3 +38,7 @@ _Отчеты и аналитика_
 
 
 
+- git clone https://github.com/baukamobile/draganddrop.git
+- cd draganddrop
+- npm install 
+- npm run dev
