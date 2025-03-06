@@ -1,5 +1,6 @@
 import { ref, onMounted } from "vue";
-import { getTask, getStatusTask, updateTaskStatus, addColumn, getUsers,addTask } from "@/api/tasks";
+import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/api/tasks";
+import {getUsers} from "@/api/users";
 import axios from "axios";
 import { reactive } from "vue";
 const API_URL = "http://127.0.0.1:8000/tasks/tasks";

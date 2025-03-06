@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue';
+// import { useRouter } from 'vue-router';
 import {
     handleScroll,
     isDark,

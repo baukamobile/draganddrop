@@ -59,12 +59,12 @@ const isCurrentPath = (path) => {
             :active="isCurrentRoute('reports')"
             icon="tabler--report"
         />
-        <SidebarLink class="Logout-sidebar"
+        <!-- <SidebarLink class="Logout-sidebar"
             title="Выйти"
             :to="{ name: 'auth' }"
             :active="isCurrentRoute('logout')"
             icon="tabler--logout"
-        />
+        /> -->
 
     </PerfrectScrollbar>
 </template>

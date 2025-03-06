@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 const API_URL_TASK = "http://127.0.0.1:8000/tasks/tasks";
-const API_URL_USERS = "http://127.0.0.1:8000/users/users/";
+// const API_URL_USERS = "http://127.0.0.1:8000/users/users/";
 const API_URL_PROJECTS = "http://127.0.0.1:8000/tasks/projects/";
 const API_URL = "http://127.0.0.1:8000/";  
 export const getDataApi = async (first_url, second_url) => {
@@ -47,8 +47,4 @@ export async function addColumn(newStatus){
     const response = await axios.post(`${API_URL_STATUS}/`,newStatus);
     return response.data;
     // await axios.get(`${API_URL_USERS}/`)
-}
-export const getUsers = async()=>{
-    const response = await axios.get(`${API_URL_USERS}`); 
-    return response.data;
 }
