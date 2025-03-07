@@ -2,7 +2,6 @@
 import { onMounted } from 'vue';
 import { UserAuthManager } from './userAuthManager';
 import { useRouter } from 'vue-router';
-import { computed } from "vue";
 const router = useRouter();
 const {
     email,password,first_name,last_name,selectedPosition,selectedDepartment,phone_number,isLoading,position,department,register,errorMessage,
@@ -16,15 +15,6 @@ const handleRegister = async () => {
     }
 };
 
-const selectedPositionName = computed(() => {
-    const selected = position.value.find(pos => pos.id === selectedPosition.value);
-    return selected ? selected.position_name : "Не найдено";
-});
-const selectedDepartmentName = computed(() =>{
-    const selected = department.value.find(dep => dep.id === selectedDepartment.value);
-    return selected ? selected.department_name : "Не найдено"
-})
-// onMounted(getPosition,getDepartment)
 </script>
     <template>
         <h1>Register page</h1>
@@ -82,21 +72,12 @@ const selectedDepartmentName = computed(() =>{
         {{ pos.position_name }}
     </option>
 </select>
-
+<br>
 <select v-model="selectedDepartment">
     <option v-for="dept in department" :key="dept.id" :value="dept.id">
         {{ dept.department_name }} ({{ dept.department_head }})
     </option>
-</select>
-<!-- </div> -->
-        <!-- </select> -->
-        <!-- <label class="label-name">Название проекта:</label> -->
-                                   <!-- <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
-    <option v-for="project in projects" :key="project.id" :value="project.id">
-        {{ project.project_name }}
-    </option>
-</select> -->
-  
+</select><br>  
                     <button type="submit" :disabled="isLoading">Создать Аккаунт</button>
                 </form>
             </div>

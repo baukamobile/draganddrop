@@ -26,5 +26,8 @@ export default defineConfig({
         exclude: ['.out'],
     },
     base: '/',
-    // base: '/static/vue/dist/',
-})
+    // base: '/static/',
+    // build: {
+    //     outDir: "dist",
+    //   }
+});

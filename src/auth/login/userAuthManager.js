@@ -86,7 +86,7 @@ export function UserAuthManager(){
         delete axios.defaults.headers.common['Authorization'];
         window.location.reload(); // Перезагрузим страницу, чтобы сбросить состояние
     };
-    
+    //Получаем список должностей
 const getPosition = async () => {
     try {
         const response = await axios.get(`${API_POSTIION}/`);
