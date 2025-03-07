@@ -25,17 +25,8 @@ export function UserAuthManager(){
     const position = ref([]); //должность
     const department = ref([]);//отдел сотрудника
     const selectedPosition = ref(null);  // Одна выбранная должность
-    // const newUser = reactive({
-    //     email: ref(''), //email ползователя
-    //  password: ref(''),//пароль ползователя
-    //  isLoading: ref(false),//кнопка логин
-    //  errorMessage: ref(''),//ошибки
-    //  first_name: ref(''),//name
-    //  last_name: ref(''), 
-    //  phone_number: ref(''),
-    //  position: ref(''), //должность
-    //  department: ref('')//отдел сотрудника
-    // })
+    const selectedDepartment = ref(null);
+
     const login = async () =>{
         if (!email.value || !password.value){ //если ползователь не вводил данные
             errorMessage.value='Email и пароль обязательны!'
@@ -63,10 +54,11 @@ export function UserAuthManager(){
     //register logic
     const register = async () =>{
         if(!email.value || !first_name.value 
-            || !last_name.value || !password.value || !phone_number.value || !position.value || !department.value){
-            errorMessage.value="Пожалуйста заполните все полей";
-            return;
+            || !last_name.value || !password.value || !phone_number.value || !selectedPosition.value || !selectedDepartment.value){
+            errorMessage.value="Пожалуйста заполните все поля";
+            return false;
         }
+        
         
         isLoading.value = true;
         errorMessage.value = '';
@@ -77,11 +69,13 @@ export function UserAuthManager(){
                 last_name: last_name.value,
                 password: password.value,
                 phone_number: phone_number.value,
-                position: position.value,
-                department: department.value
+                position: selectedPosition.value,
+                department: selectedDepartment.value
             });
+            return true;
         }catch(error){
             errorMessage.value = error.response?.data?.message || "Ошибка при регистрации";
+            return false;
         }finally{
             isLoading.value = false;
         }
@@ -90,13 +84,14 @@ export function UserAuthManager(){
     const logout = () => {
         localStorage.removeItem('authToken');
         delete axios.defaults.headers.common['Authorization'];
+        window.location.reload(); // Перезагрузим страницу, чтобы сбросить состояние
     };
     
 const getPosition = async () => {
     try {
         const response = await axios.get(`${API_POSTIION}/`);
         console.log('Загрука список должностей', response.data)
-        positions.value = response.data;
+        // positions.value = response.data;
         return response.data;
     } catch (error) {
         console.error(`Ошибка при получении проекта:`, error);
@@ -120,7 +115,7 @@ onMounted(async () => { //Код внутри выполняется, когда
             //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
             getPosition(),
             getDepartment(),
-            console.log('list position: ',getPosition),
+            // console.log('list position: ',getPosition()),
         ]);
 
         // if (taskData.status === "fulfilled") tasks.value = taskData.value;
@@ -134,6 +129,9 @@ onMounted(async () => { //Код внутри выполняется, когда
     }
 });
 return {email,
+    first_name,
+    last_name,
+    phone_number,
     password,
     isLoading,
     position,
@@ -143,6 +141,7 @@ return {email,
     logout,
     errorMessage,
     selectedPosition,
+    selectedDepartment,
     getDepartment,
     getPosition,
 };}

@@ -82,7 +82,7 @@ form {
 	text-align: center;
 }
 .errormes{
-    color: orange;
+    color: rgb(254, 254, 254);
 }
 
 input {

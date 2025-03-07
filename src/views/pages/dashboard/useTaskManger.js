@@ -26,16 +26,16 @@ export function useTaskManager() {
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
     const newTask = reactive({
-        task_name: ref(""),
-        description: ref(""),
-        documents: ref(null),
-        end_date: ref(""),
-        agreed_with_managers: ref(false),
-        assigned: ref(14),
-        status: ref(1),
-        priority: ref(1),
-        projects: ref(2),
-        department: ref(1) })
+        task_name: "",
+        description: "",
+        documents: null,
+        end_date: "",
+        agreed_with_managers: false,
+        assigned: 14,
+        status: 1,
+        priority: 1,
+        projects: 2,
+        department: 1 })
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -150,7 +150,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
                 return;
             }
     
-            if (!newTask.projects) {
+            if (!newTask.projects || newTask.projects.length === 0) {
                 alert("Выберите проект");
                 return;
             }

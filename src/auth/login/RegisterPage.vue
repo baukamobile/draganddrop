@@ -2,20 +2,30 @@
 import { onMounted } from 'vue';
 import { UserAuthManager } from './userAuthManager';
 import { useRouter } from 'vue-router';
+import { computed } from "vue";
 const router = useRouter();
 const {
-    email,password,first_name,last_name,selectedPosition,phone_number,isLoading,position,department,register,errorMessage 
+    email,password,first_name,last_name,selectedPosition,selectedDepartment,phone_number,isLoading,position,department,register,errorMessage,
 } = UserAuthManager();
 const handleRegister = async () => {
+    errorMessage.value = "";
+
     const success = await register();
     if (success){
         router.push({name: 'Dashboard'}) //Перенапрляем после успешного входа
     }
 };
+
+const selectedPositionName = computed(() => {
+    const selected = position.value.find(pos => pos.id === selectedPosition.value);
+    return selected ? selected.position_name : "Не найдено";
+});
+const selectedDepartmentName = computed(() =>{
+    const selected = department.value.find(dep => dep.id === selectedDepartment.value);
+    return selected ? selected.department_name : "Не найдено"
+})
 // onMounted(getPosition,getDepartment)
 </script>
-
-
     <template>
         <h1>Register page</h1>
         <h2>Task Manager</h2>
@@ -53,37 +63,41 @@ const handleRegister = async () => {
                     <button>Sign In</button>
                 </form> -->
                 <form @submit.prevent="handleRegister">
-                    <h1>Создать Аккаунт</h1>
-                    <input type="email" placeholder="Email" v-model="email"/>
-                    <!-- <input type="text" placeholder="Имя" v-model="first_name"/> -->
-                    <!-- <input type="text" placeholder="Фамилия" v-model="last_name"/> -->
-                   <!-- <div style="display: none; justify-content: space-around;"> -->
-                     <input type="password" placeholder="Password" v-model="password"/>
-                    <input type="tel" placeholder="Номер Телефона" v-model="phone_number"/>
-                <!-- </div> -->
+                    <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p>
+                    <!-- <h1>Создать Аккаунт</h1> -->
+                    <div style="display: flex; justify-content: space-around;">
+                    <input type="email" placeholder="Email" v-model="email" @input="console.log('email:',email)"/>
+                    <input type="text" placeholder="Имя" v-model="first_name"@input="console.log('first name:',first_name)"/>
+                    </div>
+                    <input type="text" placeholder="Фамилия" v-model="last_name"@input="console.log('last name:',last_name)"/>
+                   <div style="display: flex; justify-content: space-around;">
+                     <input type="password" placeholder="Password" v-model="password"@input="console.log('password:',password)"/>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="phone_number" placeholder="Номер телефона"/>
+                </div>
                     <!-- <input type="text" placeholder="Телеграм айди" /> -->
-                    <div >
-                        <label for="">Должность</label>
-                        <select v-model="selectedPosition" @change="console.log('Выбрана должность:', selectedPosition)">
-        <option v-for="position in positions" :key="position.id" :value="position.id">
-            {{ position.position_name }}
-        </option>
-    </select>
-                        <br><br>
-                        <label class="label-name">Название Отдела:</label>
-                        <select id="department.id" v-model="department"  @change="console.log('department: ', department)">
-        <option v-for="departments in department" :key="departments.id" :value="departments.id">
-        {{ departments.department_name }} {{ departments.department_head }}
-        </option>
-        </select>
+                    <!-- <div style="display: flex; justify-content: space-around;"> -->
+                        <label class="label-name">Должность</label>
+                      <select v-model="selectedPosition">
+    <option v-for="pos in position" :key="pos.id" :value="pos.id">
+        {{ pos.position_name }}
+    </option>
+</select>
+
+<select v-model="selectedDepartment">
+    <option v-for="dept in department" :key="dept.id" :value="dept.id">
+        {{ dept.department_name }} ({{ dept.department_head }})
+    </option>
+</select>
+<!-- </div> -->
+        <!-- </select> -->
         <!-- <label class="label-name">Название проекта:</label> -->
                                    <!-- <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
     <option v-for="project in projects" :key="project.id" :value="project.id">
         {{ project.project_name }}
     </option>
 </select> -->
-    </div>
-                    <button type="submit" :disabled="isLoading">Регистрация</button>
+  
+                    <button type="submit" :disabled="isLoading">Создать Аккаунт</button>
                 </form>
             </div>
             <div class="overlay-container">
