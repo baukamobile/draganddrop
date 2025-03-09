@@ -34,8 +34,8 @@ export default [
                 component: ()=> import('@/views/pages/reports/reports.vue')
             },
             {
-                path: '/auth',
-                name: 'auth',
+                path: '/login',
+                name: 'login',
                 component: ()=> import('@/auth/login/LoginPage.vue')
             },
             {
@@ -43,7 +43,6 @@ export default [
                 name: 'signup',
                 component: ()=> import('@/auth/login/RegisterPage.vue')
             },
-
         ],
     },
     // {

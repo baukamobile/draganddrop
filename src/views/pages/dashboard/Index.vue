@@ -48,7 +48,8 @@ watch(() => newTask, (val) => {
                          @dragover.prevent
                          @dragenter.prevent>
                         <div class="status">
-                            <h1 class="status-name">{{ status.status_name }}</h1>
+                            <h1 class="status-name">{{ status.status_name }}</h1> 
+                            
                             <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку</a-button>
                         </div>
 
@@ -57,12 +58,16 @@ watch(() => newTask, (val) => {
                                 @dragstart="ondragstart($event, task)"
                                 draggable="true"
                                 class="draggable">
-                                <p>{{ task.task_name }} 
-                                    <span :style="{ color: priority[task.priority]?.color }">
-                                        ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
-                                    </span>
-                                </p>
+                               <div style="">
+                                   <p>{{ task.task_name }} 
+                                       <span :style="{ color: priority[task.priority]?.color }">
+                                           ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
+                                        </span>
+                                    </p>
+                                    <button style="color: black;">Подробнее</button>
+                                </div>
                                 <div class="time-part">
+                                    
                                     <p>от {{ formatDate(task.start_date) }}</p>
                                     <p>до {{ formatDate(task.end_date) }}</p>
                                 </div>
@@ -73,6 +78,7 @@ watch(() => newTask, (val) => {
                         <div class="add-task-container">
                             <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
                             <div v-if="showTaskForm">
+                                <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
                                 <h2>Форма</h2>
                                 <form @submit.prevent="console.log('Форма отправлена!'); submitTask();">
                                    

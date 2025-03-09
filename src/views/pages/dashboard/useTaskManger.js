@@ -35,7 +35,7 @@ export function useTaskManager() {
         status: 1,
         priority: 1,
         projects: 2,
-        department: 1 })
+        department: 1 });
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -138,50 +138,48 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     const submitTask = async () => {
         try {
             console.log("Перед отправкой:", JSON.stringify(newTask, null, 2));
-            // console.log('Newtasks',newTask);
-            newTask.end_date = formatDateForBackend(newTask.end_date); // убедись, что дата правильно форматируется
-            if (!newTask || typeof newTask.task_name === "undefined") {
-                console.error("Ошибка: newTask не инициализирован!");
-                return;
-            }
-            
-            if (!newTask.task_name.trim()) {
-                console.error("Задание должно быть заполненным");
+            newTask.end_date = formatDateForBackend(newTask.end_date);
+    
+            if (!newTask || !newTask.task_name?.trim()) {
+                console.error("Ошибка: Задание должно быть заполненным");
                 return;
             }
     
-            if (!newTask.projects || newTask.projects.length === 0) {
+            if (!newTask.projects) {
                 alert("Выберите проект");
                 return;
             }
     
             console.log("Попытка отправки запроса...", JSON.stringify(newTask, null, 2));
-            await addTask(newTask); // отправка данных без сброса
-            // tasks.value = await getTask(); // обновление списка задач после отправки
-            tasks.value = [...await getTask()];
-            console.log('НОВАЯ ЗАДАЧА', tasks.value)
-            console.log("Задание перед отправкой:", {
-                task_name: newTask.task_name,
-                description: newTask.description,
-                end_date: newTask.end_date,
-                assigned: newTask.assigned,
-                projects: newTask.projects,
-                status: newTask.status,
-                priority: newTask.priority,
+    
+            // Отправляем данные
+            const response = await axios.post(`${API_URL}/`, newTask);
+            console.log("Ответ сервера:", response.data);
+    
+            // Обновляем список задач
+            tasks.value.length = 0; 
+            tasks.value.push(...await getTask());
+    
+            console.log("НОВАЯ ЗАДАЧА", tasks.value);
+    
+            // Очищаем форму после успешной отправки
+            Object.assign(newTask, {
+                task_name: "",
+                description: "",
+                documents: null,
+                end_date: "",
+                agreed_with_managers: false,
+                projects: null,
+                assigned: null,
+                status: 1,
+                priority: 1
             });
-            // Сбрасывай только после успешной отправки
-            newTask.task_name = "";
-            newTask.description = "";
-            newTask.documents = null;
-            newTask.end_date = "";
-            newTask.agreed_with_managers = false;
-            newTask.projects = null;
-            newTask.assigned = null;
-            newTask.status = 1;
+    
         } catch (error) {
             console.error("Ошибка при добавлении задания", error);
         }
     };
+    
     
     
     
