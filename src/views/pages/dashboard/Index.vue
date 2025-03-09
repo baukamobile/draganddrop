@@ -19,24 +19,21 @@ const {
     ondragstart,
     onDrop,
     formatDate,
-    // formatDateForBackend,
     submitColumn,
     submitTask,
     
 } = useTaskManager();
+const showTaskForm = ref({});
+const toggleTaskForm = (statusId) => {
+    showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
+};
 
-const showTaskForm = ref(false);
-// const newTask = reactive({
-//         task_name: "",description:"",documents:null,end_date:"",
-//         agreed_with_managers: false,assigned: null,status:1,priority: 1,projects: 1,department: 1
-//     })
 watch(() => newTask, (val) => {
     console.log('newtask изменился: ',JSON,stringify(val,null,2) );
 
 },{deep: true});
 
 </script>
-
 <template>
     <PageWrapper>
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
@@ -49,10 +46,8 @@ watch(() => newTask, (val) => {
                          @dragenter.prevent>
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1> 
-                            
                             <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку</a-button>
                         </div>
-
                         <transition-group name="fade">
                             <div v-for="task in tasks.filter(x => x.status == status.id)" :key="task.id"
                                 @dragstart="ondragstart($event, task)"
@@ -76,8 +71,9 @@ watch(() => newTask, (val) => {
                         </transition-group>
 <!-- Здсь форма для добавление задач с вводимым данными -->
                         <div class="add-task-container">
-                            <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Добавить Задачу</a>
-                            <div v-if="showTaskForm">
+                            <a @click="toggleTaskForm(status.id)" href="#" class="add-task">Добавить Задачу</a> 
+                            <!-- порма открывается только -->
+                            <div v-if="showTaskForm[status.id]">
                                 <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
                                 <h2>Форма</h2>
                                 <form @submit.prevent="console.log('Форма отправлена!'); submitTask();">

@@ -21,10 +21,22 @@ export const getProject = async () => {
 
 export function useTaskManager() {
     const tasks = ref([]);
-    const statuses = ref([]);
+    // const statuses = ref([
+    //     { id: 1, status_name: "Список задач", user: 1 },
+    // ]);
     const projects = ref({});
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
+    // const showTaskForm = ref({}); // Храним состояние формы для каждой колонки (статуса)
+const statuses = ref([
+    { id: 1, status_name: "Список задач", user: 1 },
+    { id: 2, status_name: "В процессе", user: 2 },
+    { id: 3, status_name: "Готово", user: 3 }
+]);
+
+// const toggleTaskForm = (statusId) => {
+//     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
+// };
     const newTask = reactive({
         task_name: "",
         description: "",
@@ -215,6 +227,7 @@ onMounted(async () => { //Код внутри выполняется, когда
         newStatus,
         newTask,
         priority,
+        
         handleClick,
         handleClickTask,
         ondragstart,
