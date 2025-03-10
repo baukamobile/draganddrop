@@ -5,6 +5,11 @@ import './styles/dashboard.css';
 import PageWrapper from '@/components/PageWrapper.vue';
 import SidebarContent from "@/components/sidebar/SidebarContent.vue";
 import { stringify } from "postcss";
+// import Antd from 'ant-design-vue';
+import { EditFilled,DeleteOutlined } from "@ant-design/icons-vue";
+
+// import 'ant-design-vue/dist/antd.css';
+
 // C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
     tasks,
@@ -46,33 +51,50 @@ watch(() => newTask, (val) => {
                          @dragenter.prevent>
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1> 
-                            <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку</a-button>
+                            <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
+                                <a class="red-button" @click="handleClick(status.id)">
+                                    <DeleteOutlined style="font-size: 15px; color: red;"/>
+                                </a>
+                            <!-- </a-button> -->
                         </div>
                         <transition-group name="fade">
                             <div v-for="task in tasks.filter(x => x.status == status.id)" :key="task.id"
                                 @dragstart="ondragstart($event, task)"
                                 draggable="true"
                                 class="draggable">
-                               <div style="">
-                                   <p>{{ task.task_name }} 
-                                       <span :style="{ color: priority[task.priority]?.color }">
-                                           ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
-                                        </span>
-                                    </p>
+                                <div style="display: flex; justify-content: space-between; gap: 8px;">
+    <p style="margin: 0;">
+        {{ task.task_name }} 
+        <span :style="{ color: priority[task.priority]?.color }">
+            ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
+        </span>
+    </p>
+    <div style="display: flex;">
+
+        <a @click.prevent="handleClickTask(task.id)" class="delete-task">
+            
+            <DeleteOutlined style="font-size: 15px; color: red;"/>
+        </a>
+        <EditFilled style="font-size: 15px; color: green;"/>
+    </div>
+</div>
                                     <button style="color: black;">Подробнее</button>
-                                </div>
                                 <div class="time-part">
                                     
                                     <p>от {{ formatDate(task.start_date) }}</p>
                                     <p>до {{ formatDate(task.end_date) }}</p>
                                 </div>
-                                <a @click.prevent="handleClickTask(task.id)" class="delete-task">Удалить</a>
+                                <p>
+                                    {{ task.description }}
+                                    {{ task.assigned }}
+                                </p>
+                                
                             </div>
                         </transition-group>
 <!-- Здсь форма для добавление задач с вводимым данными -->
                         <div class="add-task-container">
                             <a @click="toggleTaskForm(status.id)" href="#" class="add-task">Добавить Задачу</a> 
-                            <!-- порма открывается только -->
+                            <!-- порма открывается только выбранного колонки с помошью id -->
                             <div v-if="showTaskForm[status.id]">
                                 <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
                                 <h2>Форма</h2>

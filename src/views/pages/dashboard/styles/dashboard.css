@@ -8,17 +8,17 @@
     white-space: nowrap; /* Запретит перенос элементов */
 
 }
-.delete-task{
+/* .delete-task{
     color: black;
     /* background-color: red; */
     /* text-decoration: black; */
-}
-.delete-task:hover{
+
+/* .delete-task:hover{
     /* color: black; */
-    background-color: rgb(245, 132, 132);
-    border-radius: 10px;
-    padding: 2px;
-}
+    /* background-color: rgb(245, 132, 132); */
+    /* border-radius: 10px; */
+    /* padding: 2px; */
+
 
 .add-task-container{
     display: unset;
