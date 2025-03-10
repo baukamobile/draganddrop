@@ -4,7 +4,11 @@ import { UserAuthManager } from './userAuthManager';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const {
-    email,password,first_name,last_name,selectedPosition,selectedDepartment,phone_number,isLoading,position,department,register,errorMessage,
+    email,password,first_name,
+    last_name,selectedPosition,
+    selectedDepartment,phone_number,
+    isLoading,position,department,
+    register,errorMessage,handleLoginClick
 } = UserAuthManager();
 const handleRegister = async () => {
     errorMessage.value = "";
@@ -14,6 +18,8 @@ const handleRegister = async () => {
         router.push({name: 'Dashboard'}) //Перенапрляем после успешного входа
     }
 };
+
+
 
 </script>
     <template>
@@ -28,30 +34,10 @@ const handleRegister = async () => {
                     <input type="text" placeholder="Фамилия" />
                     <input type="password" placeholder="Password" />
                     <input type="number" placeholder="Номер Телефона" />
-                    <!-- <input type="text" placeholder="Телеграм айди" /> -->
-                    <!-- <select id="users" v-model="newTask.assigned"  @change="console.log('assigned', newTask.assigned)">
-                        <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                            {{ user.first_name }}  
-                        </option>
-                    </select> 
-                        <br><br>
-                        <label class="label-name">Название проекта:</label>
-                        <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
-        <option v-for="project in projects" :key="project.id" :value="project.id">
-        {{ project.project_name }}
-        </option>
-        </select> -->
-                    <button>Регистрация</button>
+                    <button>Войти</button>
                 </form>
             </div>
             <div class="form-container sign-in-container">
-                <!-- <form action="#">
-                    <h1>Sign in</h1>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <a href="#">Forgot your password?</a>
-                    <button>Sign In</button>
-                </form> -->
                 <form @submit.prevent="handleRegister">
                     <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p>
                     <!-- <h1>Создать Аккаунт</h1> -->
@@ -84,14 +70,15 @@ const handleRegister = async () => {
             <div class="overlay-container">
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
-                        <h1>Welcome Back!</h1>
+                        <!-- <h1>Welcome Back!</h1>
                         <p>To keep connected with us please login with your personal info</p>
-                        <button class="ghost" id="signIn">Войти</button>
-                    </div>
+                         <button class="ghost" id="signIn">Войти</button> -->
+                    </div> 
                     <div class="overlay-panel overlay-right">
                         <h1>Hello, Friend!</h1>
                         <p>Enter your personal details and start journey with us</p>
-                        <button class="ghost" id="signUp">Регистрация</button>
+                        <button @click="handleLoginClick">Войти</button>
+
                     </div>
                 </div>
             </div>

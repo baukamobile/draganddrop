@@ -147,6 +147,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.error("Ошибка при добавлении колонки", error);
         }
     };
+
     const submitTask = async () => {
         try {
             console.log("Перед отправкой:", JSON.stringify(newTask, null, 2));
@@ -191,6 +192,26 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.error("Ошибка при добавлении задания", error);
         }
     };
+    const updateTask = async() => {
+        try {
+            if (!newTask.id) {
+                console.error("Нет ID задачи для обновления");
+                return;
+            }
+    
+            console.log("Отправка обновления задачи:", JSON.stringify(newTask, null, 2));
+    
+            const response = await axios.patch(`${API_URL}/${newTask.id}/`, newTask);
+            console.log("Ответ сервера:", response.data);
+    
+            // Обновляем список задач после обновления
+            tasks.value.length = 0;
+            tasks.value.push(...await getTask());
+    
+        } catch (error) {
+            console.error("Ошибка при обновлении задачи", error);
+        }
+    }
     
     
     
@@ -227,7 +248,7 @@ onMounted(async () => { //Код внутри выполняется, когда
         newStatus,
         newTask,
         priority,
-        
+        updateTask,
         handleClick,
         handleClickTask,
         ondragstart,

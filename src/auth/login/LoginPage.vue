@@ -26,19 +26,6 @@ const handleLogin = async () => {
 			<input type="text" placeholder="Фамилия" />
 			<input type="password" placeholder="Password" />
 			<input type="number" placeholder="Номер Телефона" />
-			<!-- <input type="text" placeholder="Телеграм айди" /> -->
-			<!-- <select id="users" v-model="newTask.assigned"  @change="console.log('assigned', newTask.assigned)">
-				<option v-for="user in users" :key="user.id" :value="Number(user.id)">
-					{{ user.first_name }}  
-				</option>
-			</select> 
-				<br><br>
-				<label class="label-name">Название проекта:</label>
-				<select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
-<option v-for="project in projects" :key="project.id" :value="project.id">
-{{ project.project_name }}
-</option>
-</select> -->
 			<button>Регистрация</button>
 		</form>
 	</div>

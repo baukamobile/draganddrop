@@ -20,6 +20,7 @@ const {
     newTask, //добавили внутри const из за него знечении не принимались
     priority,
     handleClick,
+    updateTask,
     handleClickTask,
     ondragstart,
     onDrop,
@@ -32,12 +33,9 @@ const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
 };
-
 watch(() => newTask, (val) => {
     console.log('newtask изменился: ',JSON,stringify(val,null,2) );
-
 },{deep: true});
-
 </script>
 <template>
     <PageWrapper>
@@ -53,7 +51,7 @@ watch(() => newTask, (val) => {
                             <h1 class="status-name">{{ status.status_name }}</h1> 
                             <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
                                 <a class="red-button" @click="handleClick(status.id)">
-                                    <DeleteOutlined style="font-size: 15px; color: red;"/>
+                                    <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;"/>
                                 </a>
                             <!-- </a-button> -->
                         </div>
@@ -70,25 +68,24 @@ watch(() => newTask, (val) => {
         </span>
     </p>
     <div style="display: flex;">
-
         <a @click.prevent="handleClickTask(task.id)" class="delete-task">
-            
-            <DeleteOutlined style="font-size: 15px; color: red;"/>
-        </a>
-        <EditFilled style="font-size: 15px; color: green;"/>
-    </div>
-</div>
+            <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;"/>
+        </a><EditFilled style="font-size: 15px; color: green;"  @click="updateTask(task)" />
+    </div></div>
                                     <button style="color: black;">Подробнее</button>
-                                <div class="time-part">
-                                    
+                                <div class="time-part">  
                                     <p>от {{ formatDate(task.start_date) }}</p>
                                     <p>до {{ formatDate(task.end_date) }}</p>
                                 </div>
                                 <p>
                                     {{ task.description }}
-                                    {{ task.assigned }}
+                                    {{ users.find(user => user.id === task.assigned)?.first_name || 'Неизвестно' }}
+                                    <!-- <select id="users" v-model="newTask.assigned"  @change="console.log('assigned', newTask.assigned)">
+                                   <option v-for="user in users" :key="user.id" :value="Number(user.id)">
+                                       {{ user.first_name }}  
+                                   </option>
+                               </select>  -->
                                 </p>
-                                
                             </div>
                         </transition-group>
 <!-- Здсь форма для добавление задач с вводимым данными -->
@@ -130,10 +127,7 @@ watch(() => newTask, (val) => {
                                    <br><br>
                                    <label class="label-name">Название проекта:</label>
                                    <select v-model="newTask.projects"  @change="console.log('project', newTask.projects)">
-    <option v-for="project in projects" :key="project.id" :value="project.id">
-        {{ project.project_name }}
-    </option>
-</select>
+                                    <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.project_name }}</option></select>
                                    <br><br>
                                    <label for="">Приоритет</label>
                                    <select v-model="newTask.priority" @change="console.log('priorty',newTask.priority)">
@@ -142,11 +136,7 @@ watch(() => newTask, (val) => {
                                <br><br>
                                <select id="users" v-model="newTask.status" @change="console.log('status',newTask.status)">
                                 <option v-for="status in statuses" :key="status.id" :value="status.id">
-    {{ status.status_name }}
-</option>
-
-</select>
-
+                                    {{ status.status_name }}</option></select>
                                <br>
                                <br>
                                <!-- <a href="#">Добавить</a> -->

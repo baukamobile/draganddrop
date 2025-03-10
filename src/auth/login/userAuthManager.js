@@ -108,7 +108,14 @@ const getPosition = async () => {
         return null;
     }
 };
-
+const handleLoginClick = async () => {
+    const success = await handleLogin();
+    if (success) {
+        router.push({ name: 'Dashboard' }); // Переход на Dashboard после логина
+    } else {
+        errorMessage.value = "Ошибка входа. Проверьте данные.";
+    }
+};
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
         const [positionData, departmentData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
@@ -136,6 +143,7 @@ return {email,
     isLoading,
     position,
     department,
+    handleLoginClick,
     register,
     login,
     logout,
