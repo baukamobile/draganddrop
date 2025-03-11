@@ -192,6 +192,20 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.error("Ошибка при добавлении задания", error);
         }
     };
+    const editTask = (task) =>{
+        newTask.id = task.id;
+        newTask.task_name = task.task_name;
+        newTask.description = task.description;
+        newTask.documents = task.documents;
+        newTask.end_date = task.end_date;
+        newTask.assigned = task.assigned;
+        newTask.agreed_with_managers=task.agreed_with_managers;
+        newTask.status=task.status;
+        newTask.priority = task.priority;
+        newTask.projects = task.projects;
+        showTaskForm.value = {...showTaskForm.value,[task.status]: true};
+
+    };
     const updateTask = async() => {
         try {
             if (!newTask.id) {
@@ -205,8 +219,10 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.log("Ответ сервера:", response.data);
     
             // Обновляем список задач после обновления
-            tasks.value.length = 0;
-            tasks.value.push(...await getTask());
+            // tasks.value.length = 0;
+            // tasks.value.push(...await getTask());
+            tasks.value = await getTask();
+            showTaskForm.value = {};
     
         } catch (error) {
             console.error("Ошибка при обновлении задачи", error);
@@ -249,6 +265,7 @@ onMounted(async () => { //Код внутри выполняется, когда
         newTask,
         priority,
         updateTask,
+        editTask,
         handleClick,
         handleClickTask,
         ondragstart,

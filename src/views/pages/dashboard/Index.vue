@@ -21,6 +21,7 @@ const {
     priority,
     handleClick,
     updateTask,
+    editTask,
     handleClickTask,
     ondragstart,
     onDrop,
@@ -70,7 +71,7 @@ watch(() => newTask, (val) => {
     <div style="display: flex;">
         <a @click.prevent="handleClickTask(task.id)" class="delete-task">
             <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;"/>
-        </a><EditFilled style="font-size: 15px; color: green;"  @click="updateTask(task)" />
+        </a><EditFilled style="font-size: 15px; color: green;"  @click="editTask(task)" />
     </div></div>
                                     <button style="color: black;">Подробнее</button>
                                 <div class="time-part">  
@@ -140,9 +141,10 @@ watch(() => newTask, (val) => {
                                <br>
                                <br>
                                <!-- <a href="#">Добавить</a> -->
-                                   <button type="submit ">Добавить</button>
+                                   <button type="submi  t ">Добавить</button>
                                </form>
                             </div>
+                           
                         </div>
                     </div>
                      <div class="add-list">

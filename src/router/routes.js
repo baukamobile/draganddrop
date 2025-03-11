@@ -43,6 +43,11 @@ export default [
                 name: 'signup',
                 component: ()=> import('@/auth/login/RegisterPage.vue')
             },
+            {
+                path: '/login',
+                name: 'newsignup',
+                component: () => import('@/auth/login/signup.vue')
+            }
         ],
     },
     // {

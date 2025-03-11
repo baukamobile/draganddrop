@@ -102,6 +102,7 @@ onUnmounted(() => {
                 <template #content>
                     <DropdownLink :to="{ name: 'signup' }">Log Out</DropdownLink>
                     <DropdownLink :to="{ name: 'login' }">Log In</DropdownLink>
+                    <DropdownLink :to="{ name: 'newsignup' }">Sign Up</DropdownLink>
                 </template>
             </Dropdown>
         </div>
