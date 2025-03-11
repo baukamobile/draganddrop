@@ -1,65 +1,83 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
-import { getTask,getStatusTask,updateTaskStatus } from "@/api/tasks";
+import { getUsersbyDepartment } from "./department";
+
 
 
 </script>
 
 <template>
     <PageWrapper>
-        <!-- <h2 class="text-center">Dashboard</h2> -->
+        <h2 class="text-center">Мой отдел</h2>
 
-        <div class="card">
-  <img src="https://www.svgrepo.com/show/5125/avatar.svg" alt="Avatar" style="width:10%">
-  <div class="container">
-    <h4><b>John Doe</b></h4>
-    <p>Architect & Engineer</p>
-    <div class="loader"></div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="card">
+  <img src="https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D" alt="John" style="width:100%">
+  <h1>John Doe</h1>
+  <p class="title">CEO & Founder, Example</p>
+  <p>Harvard University</p>
+  <div style="display: flex; justify-content: center;">
+    <a style="padding: 10px;" href="#"><i class="fa fa-telegram"></i></a>
+    <br>
+    <a style="padding: 10px;"href="#"><i class="fa fa-whatsapp"></i></a>
   </div>
+  
+  <p><button>Contact</button></p>
+</div>
+<div class="card">
+  <img src="https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D" alt="John" style="width:100%">
+  <h1>John Doe</h1>
+  <p class="title">CEO & Founder, Example</p>
+  <p>Harvard University</p>
+  <div style="display: flex; justify-content: center;">
+    <a style="padding: 10px;" href="#"><i class="fa fa-telegram"></i></a>
+    <br>
+    <a style="padding: 10px;"href="#"><i class="fa fa-whatsapp"></i></a>
+  </div>
+  
+  <p><button>Contact</button></p>
 </div>
     </PageWrapper>
 </template>
 
 
 <style scoped>
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.card {
-  /* Add shadows to create the "card" effect */
-  box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2);
-  transition: 0.3s;
-  background-color: grey;
-}
 .card {
   box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2);
-  transition: 0.3s;
-  border-radius: 5px; /* 5px rounded corners */
+  max-width: 300px;
+  margin: auto;
+  background-color: white;
+  color: black;
+  text-align: center;
 }
 
-/* Add rounded corners to the top left and the top right corner of the image */
-img {
-  border-radius: 5px 5px 0 0;
+.title {
+  color: grey;
+  font-size: 18px;
 }
 
-/* On mouse-over, add a deeper shadow */
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2);
+button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #bababa;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
 }
 
-/* Add some padding inside the card container */
-.container {
-  padding: 2px 26px;
+a {
+  text-decoration: none;
+  font-size: 22px;
+  color: rgb(187, 183, 183);
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
 }
 </style>

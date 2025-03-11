@@ -238,6 +238,9 @@ body {
 	height: 100vh;
 	margin: -20px 0 50px;
 }
+input,form,select{
+    color: black;
+}
 
 h1 {
 	font-weight: bold;
