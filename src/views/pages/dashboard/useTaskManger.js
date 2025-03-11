@@ -3,10 +3,10 @@ import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/a
 import {getUsers} from "@/api/users";
 import axios from "axios";
 import { reactive } from "vue";
-const API_URL = "http://127.0.0.1:8000/tasks/tasks";
-const API_URL_USERS = "http://127.0.0.1:8000/users/users";
-const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
-const API_URL_PROJECTS = "http://127.0.0.1:8000/tasks/projects";
+const API_URL = import.meta.env.VITE_API_URL;
+const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
+const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
+const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);

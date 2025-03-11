@@ -6,10 +6,10 @@ import {getUsers} from "@/api/users";
 import axios from "axios";
 // import { reactive } from "vue";
 // const API_REGISTER = "http://127.0.0.1:8000/users/register";
-const API_LOGIN = "http://127.0.0.1:8000/users/api/login";
-const API_REGISTER = "http://127.0.0.1:8000/users/api/register"
-const API_POSTIION = "http://127.0.0.1:8000/users/positions"
-const API_DEPARTMENT = "http://127.0.0.1:8000/users/department"
+const API_LOGIN = import.meta.env.VITE_API_LOGIN;
+const API_REGISTER = import.meta.env.VITE_API_REGISTER;
+const API_POSTIION = import.meta.env.VITE_API_POSITION;
+const API_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
 // const API_LOGOUT = "http://127.0.0.1:8000/users/logout";
 // const API_URL_USERS = "http://127.0.0.1:8000/users/users";
 
