@@ -17,8 +17,6 @@ export const getProject = async () => {
         return null;
     }
 };
-
-
 export function useTaskManager() {
     const tasks = ref([]);
     const projects = ref({});
@@ -120,12 +118,10 @@ const statuses = ref([
         }
     
         return date.toISOString().split("T")[0]; // Дата без времени
-    }
-    
+    } 
  // логика создание колонок.  
 const submitColumn = async () => {
-        try {
-            
+        try {    
 console.log(" Тип end_date:", typeof newTask.end_date);
             if (!newStatus.value.user) {
 
@@ -140,7 +136,6 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.error("Ошибка при добавлении колонки", error);
         }
     };
-
     const submitTask = async () => {
         try {
             console.log("Перед отправкой:", JSON.stringify(newTask, null, 2));
@@ -150,14 +145,11 @@ console.log(" Тип end_date:", typeof newTask.end_date);
                 console.error("Ошибка: Задание должно быть заполненным");
                 return;
             }
-    
             if (!newTask.projects) {
                 alert("Выберите проект");
                 return;
             }
-    
             console.log("Попытка отправки запроса...", JSON.stringify(newTask, null, 2));
-    
             // Отправляем данные
             const response = await axios.post(`${API_URL}/`, newTask);
             console.log("Ответ сервера:", response.data);
@@ -186,7 +178,8 @@ console.log(" Тип end_date:", typeof newTask.end_date);
         }
     };
     const editTask = (task) =>{
-        newTask.value = {...task};
+        newTask.value = {...task}; //скопируем весь объект
+
         newTask.task_name = task.task_name;
         newTask.description = task.description;
         newTask.documents = task.documents;
@@ -205,26 +198,17 @@ console.log(" Тип end_date:", typeof newTask.end_date);
                 console.error("Нет ID задачи для обновления");
                 return;
             }
-    
             console.log("Отправка обновления задачи:", JSON.stringify(newTask.value, null, 2));
-    
             const response = await axios.patch(`${API_URL}/${newTask.value.id}/`, newTask.value);
             console.log("Ответ сервера:", response.data);
-    
             // Обновляем список задач после обновления
-            // tasks.value.length = 0;
-            // tasks.value.push(...await getTask());
             tasks.value = await getTask();
             showTaskForm.value = {...showTaskForm.value,[task.status]: true};
     
         } catch (error) {
             console.error("Ошибка при обновлении задачи", error);
         }
-    }
-    
-    
-    
-    
+    } 
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
@@ -247,8 +231,6 @@ onMounted(async () => { //Код внутри выполняется, когда
         console.error("Ошибка при загрузке данных:", error);
     }
 });
-
-
     return {
         tasks,
         statuses,

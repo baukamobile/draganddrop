@@ -29,9 +29,9 @@ const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
 };
-watch(() => newTask, (val) => {
-    console.log('newtask изменился: ', JSON.stringify(val, null, 2));
-}, { deep: true });
+// watch(() => newTask, (val) => {
+//     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
+// }, { deep: true });
 </script>
 <template>
     <PageWrapper>
@@ -138,7 +138,7 @@ watch(() => newTask, (val) => {
                         <h2>Добавить колонку</h2>
                         <form @submit.prevent="submitColumn">
                             <input v-model="newStatus.status_name" placeholder="Название колонки" required />
-                            <div><label for="users">Сотрудник:</label>
+                            <div><label for="users">Сотрудник:</label><br>
                                 <select id="users" v-model="newStatus.user">
                                     <option v-for="user in users" :key="user.id" :value="Number(user.id)">
                                         {{ user.first_name }} {{ user.last_name }}
