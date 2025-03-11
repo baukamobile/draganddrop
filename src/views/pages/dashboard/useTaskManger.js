@@ -21,22 +21,15 @@ export const getProject = async () => {
 
 export function useTaskManager() {
     const tasks = ref([]);
-    // const statuses = ref([
-    //     { id: 1, status_name: "Список задач", user: 1 },
-    // ]);
     const projects = ref({});
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
-    // const showTaskForm = ref({}); // Храним состояние формы для каждой колонки (статуса)
 const statuses = ref([
     { id: 1, status_name: "Список задач", user: 1 },
     { id: 2, status_name: "В процессе", user: 2 },
     { id: 3, status_name: "Готово", user: 3 }
 ]);
 
-// const toggleTaskForm = (statusId) => {
-//     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
-// };
     const newTask = reactive({
         task_name: "",
         description: "",
@@ -193,7 +186,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
         }
     };
     const editTask = (task) =>{
-        newTask.id = task.id;
+        newTask.value = {...task};
         newTask.task_name = task.task_name;
         newTask.description = task.description;
         newTask.documents = task.documents;
@@ -208,21 +201,21 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     };
     const updateTask = async() => {
         try {
-            if (!newTask.id) {
+            if (!newTask.value.id) {
                 console.error("Нет ID задачи для обновления");
                 return;
             }
     
-            console.log("Отправка обновления задачи:", JSON.stringify(newTask, null, 2));
+            console.log("Отправка обновления задачи:", JSON.stringify(newTask.value, null, 2));
     
-            const response = await axios.patch(`${API_URL}/${newTask.id}/`, newTask);
+            const response = await axios.patch(`${API_URL}/${newTask.value.id}/`, newTask.value);
             console.log("Ответ сервера:", response.data);
     
             // Обновляем список задач после обновления
             // tasks.value.length = 0;
             // tasks.value.push(...await getTask());
             tasks.value = await getTask();
-            showTaskForm.value = {};
+            showTaskForm.value = {...showTaskForm.value,[task.status]: true};
     
         } catch (error) {
             console.error("Ошибка при обновлении задачи", error);

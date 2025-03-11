@@ -2,9 +2,6 @@
 import { onMounted, ref } from "vue";
 import PageWrapper from "@/components/PageWrapper.vue";
 import { getUsersbyDepartment } from "./department";
-
-
-
 </script>
 
 <template>
