@@ -1,472 +1,172 @@
-<script setup>
-import PageWrapper from '@/components/PageWrapper.vue'
-import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vue'
-import SalesSection from '@/components/pages/dashboard/SalesSection.vue'
-import LatestSection from '@/components/pages/dashboard/LatestSection.vue'
-import Button from '@/components/Button.vue'
+<script>
+import { defineComponent } from 'vue'
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import { INITIAL_EVENTS, createEventId } from './event-utils'
+
+export default defineComponent({
+  components: {
+    FullCalendar,
+  },
+  data() {
+    return {
+      calendarOptions: {
+        plugins: [
+          dayGridPlugin,
+          timeGridPlugin,
+          interactionPlugin // needed for dateClick
+        ],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        initialView: 'dayGridMonth',
+        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        editable: true,
+        selectable: true,
+        selectMirror: true,
+        dayMaxEvents: true,
+        weekends: true,
+        select: this.handleDateSelect,
+        eventClick: this.handleEventClick,
+        eventsSet: this.handleEvents
+        /* you can update a remote database when these fire:
+        eventAdd:
+        eventChange:
+        eventRemove:
+        */
+      },
+      currentEvents: [],
+    }
+  },
+  methods: {
+    handleWeekendsToggle() {
+      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
+    },
+    handleDateSelect(selectInfo) {
+      let title = prompt('Please enter a new title for your event')
+      let calendarApi = selectInfo.view.calendar
+
+      calendarApi.unselect() // clear date selection
+
+      if (title) {
+        calendarApi.addEvent({
+          id: createEventId(),
+          title,
+          start: selectInfo.startStr,
+          end: selectInfo.endStr,
+          allDay: selectInfo.allDay
+        })
+      }
+    },
+    handleEventClick(clickInfo) {
+      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+        clickInfo.event.remove()
+      }
+    },
+    handleEvents(events) {
+      this.currentEvents = events
+    },
+  }
+})
 
 </script>
 
 <template>
-    <!-- <PageWrapper> -->
-        
-            <h2 class="text-center"><b><strong> Календарь</strong></b></h2>
-            <div class="flex flex-col gap-4 md:flex-row md:items-center">
-                <div class="dashboard"></div> <!-- Тут закрываю нормально -->
-            </div>
-        
-    <!-- </PageWrapper> -->
-</template>
-
-<style scoped> /* scoped, если нужно применить стили только внутри этого компонента */
-.dashboard {
-    width: 100%;
-    height: 90vh;
-	background: rgb(2,0,36);
-	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,86,121,1) 48%, rgba(0,212,255,1) 100%);
-}
-</style>
-
-
-
-
-<!-- <template>
-	<div id="example-full">
-		<div class="calendar-controls">
-			<div v-if="state.message" class="notification is-success">{{ state.message }}</div>
-
-			<div class="box">
-				<h4 class="title is-5">Play with the options!</h4>
-
-				<div class="field">
-					<label class="label">Period UOM</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.displayPeriodUom">
-								<option>month</option>
-								<option>week</option>
-								<option>year</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Period Count</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.displayPeriodCount">
-								<option :value="1">1</option>
-								<option :value="2">2</option>
-								<option :value="3">3</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Starting day of the week</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.startingDayOfWeek">
-								<option v-for="(d, index) in dayNames" :key="index" :value="index">
-									{{ d }}
-								</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.useTodayIcons" type="checkbox" />
-						Use icon for today's period
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.displayWeekNumbers" type="checkbox" />
-						Show week number
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.showTimes" type="checkbox" />
-						Show times
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="label">Themes</label>
-					<label class="checkbox">
-						<input v-model="state.useDefaultTheme" type="checkbox" />
-						Default
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.useHolidayTheme" type="checkbox" />
-						Holidays
-					</label>
-				</div>
-			</div>
-
-			<div class="box">
-				<div class="field">
-					<label class="label">Title</label>
-					<div class="control">
-						<input v-model="state.newItemTitle" class="input" type="text" />
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Start date</label>
-					<div class="control">
-						<input v-model="state.newItemStartDate" class="input" type="date" />
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">End date</label>
-					<div class="control">
-						<input v-model="state.newItemEndDate" class="input" type="date" />
-					</div>
-				</div>
-
-				<button class="button is-info" @click="clickTestAddItem">Add Item</button>
-			</div>
-		</div>
-		<div class="calendar-parent">
-			<CalendarView
-				:items="state.items"
-				:show-date="state.showDate"
-				:time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-				:enable-drag-drop="true"
-				:disable-past="state.disablePast"
-				:disable-future="state.disableFuture"
-				:show-times="state.showTimes"
-				:date-classes="myDateClasses()"
-				:display-period-uom="state.displayPeriodUom"
-				:display-period-count="state.displayPeriodCount"
-				:starting-day-of-week="state.startingDayOfWeek"
-				:class="themeClasses"
-				:period-changed-callback="periodChanged"
-				:current-period-label="state.useTodayIcons ? 'icons' : ''"
-				:displayWeekNumbers="state.displayWeekNumbers"
-				:enable-date-selection="true"
-				:selection-start="state.selectionStart"
-				:selection-end="state.selectionEnd"
-				@date-selection-start="setSelection"
-				@date-selection="setSelection"
-				@date-selection-finish="finishSelection"
-				@drop-on-date="onDrop"
-				@click-date="onClickDay"
-				@click-item="onClickItem"
-			>
-				<template #header="{ headerProps }">
-					<CalendarViewHeader :header-props @input="setShowDate" />
-				</template>
-			</CalendarView>
-		</div>
-	</div>
-</template>
-<script setup lang="ts">
-
-import CalendarView from "../calendar/CalendarView.vue"
-import CalendarViewHeader from "../calendar/CalendarViewHeader.vue"
-import CalendarMath from "./CalendarMath"
-import { ICalendarItem, INormalizedCalendarItem } from "./ICalendarItem.ts"
-
-import { onMounted, reactive, computed } from "vue"
-
-const thisMonth = (d: number, h?: number, m?: number): Date => {
-	const t = new Date()
-	return new Date(t.getFullYear(), t.getMonth(), d, h || 0, m || 0)
-}
-
-interface IExampleState {
-	showDate: Date
-	message: string
-	startingDayOfWeek: number
-	disablePast: boolean
-	disableFuture: boolean
-	displayPeriodUom: string
-	displayPeriodCount: number
-	displayWeekNumbers: boolean
-	showTimes: boolean
-	selectionStart?: Date
-	selectionEnd?: Date
-	newItemTitle: string
-	newItemStartDate: string
-	newItemEndDate: string
-	useDefaultTheme: boolean
-	useHolidayTheme: boolean
-	useTodayIcons: boolean
-	items: ICalendarItem[]
-}
-
-const state = reactive({
-	/* Show the current month, and give it some fake items to show */
-	showDate: thisMonth(1),
-	message: "",
-	startingDayOfWeek: 0,
-	disablePast: false,
-	disableFuture: false,
-	displayPeriodUom: "month",
-	displayPeriodCount: 1,
-	displayWeekNumbers: false,
-	showTimes: true,
-	selectionStart: undefined,
-	selectionEnd: undefined,
-	newItemTitle: "",
-	newItemStartDate: "",
-	newItemEndDate: "",
-	useDefaultTheme: true,
-	useHolidayTheme: true,
-	useTodayIcons: false,
-	items: [
-		/*{
-			id: "e0",
-			startDate: "2018-01-05",
-		},*/
-		{
-			id: "e1",
-			startDate: thisMonth(15, 18, 30),
-		},
-		{
-			id: "e2",
-			startDate: thisMonth(15),
-			title: "Single-day item with a long title",
-		},
-		{
-			id: "e3",
-			startDate: thisMonth(7, 9, 25),
-			endDate: thisMonth(10, 16, 30),
-			title: "Multi-day item with a long title and times",
-		},
-		{
-			id: "e4",
-			startDate: thisMonth(20),
-			title: "My Birthday!",
-			classes: "birthday",
-			url: "https://en.wikipedia.org/wiki/Birthday",
-		},
-		{
-			id: "e5",
-			startDate: thisMonth(5),
-			endDate: thisMonth(12),
-			title: "Multi-day item",
-			classes: "purple",
-			tooltip: "This spans multiple days",
-		},
-		{
-			id: "foo",
-			startDate: thisMonth(29),
-			title: "Same day 1",
-		},
-		{
-			id: "e6",
-			startDate: thisMonth(29),
-			title: "Same day 2",
-			classes: "orange",
-		},
-		{
-			id: "e7",
-			startDate: thisMonth(29),
-			title: "Same day 3",
-		},
-		{
-			id: "e8",
-			startDate: thisMonth(29),
-			title: "Same day 4",
-			classes: "orange",
-		},
-		{
-			id: "e9",
-			startDate: thisMonth(29),
-			title: "Same day 5",
-		},
-		{
-			id: "e10",
-			startDate: thisMonth(29),
-			title: "Same day 6",
-			classes: "orange",
-		},
-		{
-			id: "e11",
-			startDate: thisMonth(29),
-			title: "Same day 7",
-		},
-	],
-} as IExampleState)
-
-const userLocale = computed((): string => CalendarMath.getDefaultBrowserLocale())
-
-const dayNames = computed((): string[] => CalendarMath.getFormattedWeekdayNames(userLocale.value, "long", 0))
-
-const themeClasses = computed(() => ({
-	"theme-default": state.useDefaultTheme,
-	"holiday-us-traditional": state.useHolidayTheme,
-	"holiday-us-official": state.useHolidayTheme,
-}))
-
-const myDateClasses = (): Record<string, string[]> => {
-	// This was added to demonstrate the dateClasses prop. Note in particular that the
-	// keys of the object are `yyyy-mm-dd` ISO date strings (not dates), and the values
-	// for those keys are strings or string arrays. Keep in mind that your CSS to style these
-	// may need to be fairly specific to make it override your theme's styles. See the
-	// CSS at the bottom of this component to see how these are styled.
-	const o = {} as Record<string, string[]>
-	const theFirst = thisMonth(1)
-	const ides = [2, 4, 6, 9].includes(theFirst.getMonth()) ? 15 : 13
-	const idesDate = thisMonth(ides)
-	o[CalendarMath.isoYearMonthDay(idesDate)] = ["ides"]
-	o[CalendarMath.isoYearMonthDay(thisMonth(21))] = ["do-you-remember", "the-21st"]
-	return o
-}
-
-onMounted((): void => {
-	state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
-	state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
-})
-
-const periodChanged = (): void => {
-	// range, eventSource) {
-	// Demo does nothing with this information, just including the method to demonstrate how
-	// you can listen for changes to the displayed range and react to them (by loading items, etc.)
-	//console.log(eventSource)
-	//console.log(range)
-}
-
-const onClickDay = (d: Date): void => {
-	state.selectionStart = undefined
-	state.selectionEnd = undefined
-	state.message = `You clicked: ${d.toLocaleDateString()}`
-}
-
-const onClickItem = (item: INormalizedCalendarItem): void => {
-	state.message = `You clicked: ${item.title}`
-}
-
-const setShowDate = (d: Date): void => {
-	state.message = `Changing calendar view to ${d.toLocaleDateString()}`
-	state.showDate = d
-}
-
-const setSelection = (dateRange: Date[]): void => {
-	state.selectionEnd = dateRange[1]
-	state.selectionStart = dateRange[0]
-}
-
-const finishSelection = (dateRange: Date[]): void => {
-	setSelection(dateRange)
-	state.message = `You selected: ${state.selectionStart?.toLocaleDateString() ?? "n/a"} - ${state.selectionEnd?.toLocaleDateString() ?? "n/a"}`
-}
-
-const onDrop = (item: INormalizedCalendarItem, date: Date): void => {
-	state.message = `You dropped ${item.id} on ${date.toLocaleDateString()}`
-	// Determine the delta between the old start date and the date chosen,
-	// and apply that delta to both the start and end date to move the item.
-	const eLength = CalendarMath.dayDiff(item.startDate, date)
-	item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
-	item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
-}
-
-const clickTestAddItem = (): void => {
-	state.items.push({
-		startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
-		endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
-		title: state.newItemTitle,
-		id: "e" + Math.random().toString(36).substring(2, 11),
-	})
-	state.message = "You added a calendar item!"
-}
-</script>
-<style>
-@import "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css";
-/* For apps using the npm package, the below URLs should reference /node_modules/vue-simple-calendar/dist/css/ instead */
-@import "/css/gcal.css";
-@import "/css/holidays-us.css";
-@import "/css/holidays-ue.css";
-
-#example-full {
-	display: flex;
-	flex-direction: row;
-	font-family: Calibri, sans-serif;
-	width: 96vw;
-	min-width: 30rem;
-	max-width: 100rem;
-	min-height: 40rem;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#example-full .calendar-controls {
-	margin-right: 1rem;
-	min-width: 14rem;
-	max-width: 14rem;
-}
-
-#example-full .calendar-parent {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	overflow-x: hidden;
-	overflow-y: hidden;
-	max-height: 80vh;
-	background-color: white;
-}
-
-/* For long calendars, ensure each week gets sufficient height. The body of the calendar will scroll if needed */
-#example-full .cv-wrapper.period-month.periodCount-2 .cv-week,
-#example-full .cv-wrapper.period-month.periodCount-3 .cv-week,
-#example-full .cv-wrapper.period-year .cv-week {
-	min-height: 6rem;
-}
-
-/* These styles are optional, to illustrate the flexbility of styling the calendar purely with CSS. */
-
-/* Add some styling for items tagged with the "birthday" class */
-#example-full .theme-default .cv-item.birthday {
-	background-color: #e0f0e0;
-	border-color: #d7e7d7;
-}
-
-#example-full .theme-default .cv-item.birthday::before {
-	content: "\1F382"; /* Birthday cake */
-	margin-right: 0.5em;
-}
-
-/* The following classes style the classes computed in myDateClasses and passed to the component's dateClasses prop. */
-#example-full .theme-default .cv-day.ides {
-	background-color: #ffe0e0;
-}
-
-#example-full .ides .cv-day-number::before {
-	content: "\271D";
-}
-
-#example-full .cv-day.do-you-remember.the-21st .cv-day-number::after {
-	content: "\1F30D\1F32C\1F525";
-}
-</style> -->
-
-            <!-- <h2 class="text-center">Dashboard</h2>
-            <div
-                class="flex flex-col gap-4 md:flex-row md:items-center"
-            >
-<div>
-                <div class="dashboard" style="width: fit-content; height: fit-content; background-color: aliceblue;">
-
-                </div>
-            </div>
-            </div>
+  <div class='demo-app'>
+    <div class='demo-app-sidebar'>
+      <div class='demo-app-sidebar-section'>
+        <h2>Инструкция</h2>
+        <ul>
+          <li>Выберите даты, и вам будет предложено создать новое событие.</li>
+          <li>Перетаскивание, сброс и изменение размера событий</li>
+          <li>Нажмите событие чтобы удалить</li>
+        </ul>
+      </div>
+      <div class='demo-app-sidebar-section'>
+        <label>
+          <input
+            type='checkbox'
+            :checked='calendarOptions.weekends'
+            @change='handleWeekendsToggle'
+          />
+          Переключать выходные дни
+        </label>
+      </div>
+      <div class='demo-app-sidebar-section'>
+        <h2>Все событий ({{ currentEvents.length }})</h2>
+        <ul>
+          <li v-for='event in currentEvents' :key='event.id'>
+            <b>{{ event.startStr }}</b>
+            <i>{{ event.title }}</i>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class='demo-app-main'>
+      <FullCalendar
+        class='demo-app-calendar'
+        :options='calendarOptions'
+      >
+        <template v-slot:eventContent='arg'>
+          <b>{{ arg.timeText }}</b>
+          <i>{{ arg.event.title }}</i>
         </template>
+      </FullCalendar>
+    </div>
+  </div>
+</template>
 
-   
-    </PageWrapper>
-</template> -->
+<style lang='css'>
 
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0 0 0 1em;
+}
+
+li {
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+b { /* used for event dates/times */
+  margin-left: 3px;
+}
+
+.demo-app {
+  display: flex;
+  min-height: 100%;
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.demo-app-sidebar {
+  width: 200px;
+  line-height: 1.5;
+  background: #D4000000;
+  border-left: 1px solid white;
+}
+
+.demo-app-sidebar-section {
+  padding: 2em;
+}
+
+.demo-app-main {
+  flex-grow: 1;
+  padding: 3em;
+}
+
+.fc { /* the calendar root */
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+</style>
