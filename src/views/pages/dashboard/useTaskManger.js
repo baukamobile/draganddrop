@@ -27,7 +27,6 @@ const statuses = ref([
     { id: 2, status_name: "В процессе", user: 2 },
     { id: 3, status_name: "Готово", user: 3 }
 ]);
-
     const newTask = reactive({
         task_name: "",
         description: "",
@@ -209,6 +208,30 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.error("Ошибка при обновлении задачи", error);
         }
     } 
+function onColumnDrag(e, status){
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("statusID",status.id.toString());
+    console.log('Перетаскивание колонок: ', status);
+}
+//обработчик дроп события для колонок
+const onColumnDrop = (event, targetStatus) => {
+    const draggedStatusId = event.dataTransfer.getData('statusId');
+    
+    if (draggedStatusId && draggedStatusId !== targetStatus.id) {
+        // Логика для перестановки колонок
+        const draggedIndex = statuses.findIndex(s => s.id == draggedStatusId);
+        const targetIndex = statuses.findIndex(s => s.id == targetStatus.id);
+
+        if (draggedIndex !== -1 && targetIndex !== -1) {
+            const draggedStatus = statuses[draggedIndex];
+            statuses.splice(draggedIndex, 1);
+            statuses.splice(targetIndex, 0, draggedStatus);
+        }
+    }
+};
+function onColumnDragOver(e){//размешаем сбрасываьт колонку
+    e.preventDefault();
+}
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
@@ -249,6 +272,9 @@ onMounted(async () => { //Код внутри выполняется, когда
         formatDateForBackend,
         submitColumn,
         submitTask,
+        onColumnDrag,
+        onColumnDrop,
+        onColumnDragOver,
     };
 }
 

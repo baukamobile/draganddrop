@@ -23,11 +23,17 @@ const {
     formatDate,
     submitColumn,
     submitTask,
+    onColumnDrag,
+    onColumnDrop,
+    onColumnDragOver,
 
 } = useTaskManager();
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
+    if (showTaskForm.value[statusId]) {
+        newTask.status = statusId; // Автоматически устанавливаем статус
+    }
 };
 // watch(() => newTask, (val) => {
 //     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
@@ -37,9 +43,15 @@ const toggleTaskForm = (statusId) => {
     <PageWrapper>
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
-                <div class="center">
-                    <div v-for="status in statuses" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
-                        @dragover.prevent @dragenter.prevent>
+                <div class="center" >
+                    <div v-for="status in statuses" 
+                    :key="status.id"
+                    @drop="onDrop($event, status.id)" 
+                    class="droppable"
+                    @dragover.prevent @dragenter.prevent
+                        
+                        > 
+                        <!-- Разрешение для перетаскивание -->
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
                             <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
@@ -48,7 +60,7 @@ const toggleTaskForm = (statusId) => {
                             </a>
                         </div>
                         <transition-group name="fade">
-                            <div v-for="task in tasks.filter(x => x.status == status.id)" :key="task.id"
+                            <div v-for="task in tasks.filter(x => x.status == status.id && new Date(x.end_date) > new Date())" :key="task.id"
                                 @dragstart="ondragstart($event, task)" draggable="true" class="draggable">
                                 <div class="form1">
                                     <p style="margin: 0;">
@@ -88,7 +100,7 @@ const toggleTaskForm = (statusId) => {
                                     <!-- <input v-model="newTask.task_name" placeholder="Название задачи" required> -->
                                     <br><br>
                                     <label class="label-name">Описание:</label>
-                                    <input v-model="newTask.description" placeholder="Описание задачи" required>
+                                    <input v-model="newTask.description" placeholder="Описание задачи">
                                     <br><br>
                                     <label class="label-name">Прикрепить Файл: </label>
                                     <input type="file" @input="console.log('файл изменилось:')">
@@ -121,12 +133,10 @@ const toggleTaskForm = (statusId) => {
                                             :value="priority_key">{{ priority_value.priority_name }}</option>
                                     </select>
                                     <br><br>
-                                    <select id="users" v-model="newTask.status">
+                                    <!-- <select v-model="newTask.status">
                                         <option v-for="status in statuses" :key="status.id" :value="status.id">
                                             {{ status.status_name }}</option>
-                                    </select>
-                                    <br>
-                                    <br>
+                                    </select> -->
                                     <!-- <a href="#">Добавить</a> -->
                                     <button type="submit ">Добавить</button>
                                 </form>
