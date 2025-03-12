@@ -25,7 +25,29 @@
     display: unset;
     /* justify-content: center; */
 }
+.columns {
+    display: flex;
+    gap: 20px;
+}
+.column {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 250px;
+}
+.draggable {
+    padding: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    cursor: grab;
+}
 
+/* Анимация для transition-group */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
 
 .add-task{
     color: rgb(0, 0, 0);

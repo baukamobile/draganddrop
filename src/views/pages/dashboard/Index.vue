@@ -3,7 +3,8 @@ import { ref, watch, reactive } from "vue";
 import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import './styles/dashboard.css';
 import PageWrapper from '@/components/PageWrapper.vue';
-import { EditFilled, DeleteOutlined } from "@ant-design/icons-vue";
+import { EditFilled, DeleteOutlined,CommentOutlined } from "@ant-design/icons-vue";
+// import { useSortable } from '@vueuse/core';
 
 // C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
@@ -28,6 +29,8 @@ const {
     onColumnDragOver,
 
 } = useTaskManager();
+// const el = useTemplateRef<HTMLElement>('el')
+// useSortable(el, list)
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
@@ -59,7 +62,7 @@ const toggleTaskForm = (statusId) => {
                                 <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
                             </a>
                         </div>
-                        <transition-group name="fade">
+                        <transition-group name="fade" >
                             <div v-for="task in tasks.filter(x => x.status == status.id && new Date(x.end_date) > new Date())" :key="task.id"
                                 @dragstart="ondragstart($event, task)" draggable="true" class="draggable">
                                 <div class="form1">
@@ -82,8 +85,9 @@ const toggleTaskForm = (statusId) => {
                                 </div>
                                 <p>
                                     {{ task.description }}
-                                    {{users.find(user => user.id === task.assigned)?.first_name || 'Неизвестно'}}
+                                    <p>Создано с {{users.find(user => user.id === task.assigned)?.first_name || 'Неизвестно'}}</p>
                                 </p>
+                                <CommentOutlined style="color: green; cursor: pointer;"/>
                             </div>
                         </transition-group>
                         <!-- Здсь форма для добавление задач с вводимым данными -->
@@ -137,6 +141,7 @@ const toggleTaskForm = (statusId) => {
                                         <option v-for="status in statuses" :key="status.id" :value="status.id">
                                             {{ status.status_name }}</option>
                                     </select> -->
+                                    
                                     <!-- <a href="#">Добавить</a> -->
                                     <button type="submit ">Добавить</button>
                                 </form>
