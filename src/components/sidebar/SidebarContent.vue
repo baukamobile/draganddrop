@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import PerfrectScrollbar from '@/components/PerfectScrollbar.vue'
 import SidebarLink from '@/components/sidebar/SidebarLink.vue'
+import {CalendarOutlined } from "@ant-design/icons-vue";
 // import SidebarCollapsible from '@/components/sidebar/SidebarCollapsible.vue'
 // import SidebarCollapsibleItem from '@/components/sidebar/SidebarCollapsibleItem.vue'
 // import { IconBrandLine } from '@tabler/icons-vue';
@@ -33,13 +34,13 @@ const isCurrentPath = (path) => {
             title="Чаты"
             :to="{ name: 'Chat' }"
             :active="isCurrentRoute('Chat')"
-            icon="tabler--message-circle"
+            icon="tabler--brand-hipchat"
         />
         <SidebarLink class="Calendar-sidebar"
             title="Календарь"
             :to="{ name: 'calendar' }"
             :active="isCurrentRoute('calendar')"
-            icon="tabler--calendar"
+            icon="tabler--calendar-week"
         />
         <SidebarLink class="Department-sidebar"
             title="Отдел"
