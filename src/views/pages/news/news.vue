@@ -4,6 +4,7 @@ import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from '@/components/pages/dashboard/SalesSection.vue'
 import LatestSection from '@/components/pages/dashboard/LatestSection.vue'
 import Button from '@/components/Button.vue'
+import { EditFilled, DeleteOutlined,CommentOutlined,LikeOutlined,HeartOutlined,  } from "@ant-design/icons-vue";
 // This adds some nice ellipsis to the description:
 document.querySelectorAll(".projcard-description").forEach(function(box) {
 	$clamp(box, {clamp: 6});
@@ -26,10 +27,26 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
           <div class="projcard-description">Наурыз мейрамы — ежелгі заманнан қалыптасқан жыл бастау мейрамы. Қазіргі күнтізбе бойынша (наурыздың 22) күн мен түннің теңесуі кезіне келеді. Көне парсы тілінде нава=жаңа + рәзаңһ=күн, «жаңа күн» мағынасында, қазіргі парсы тілінде де сол мағынамен қалған (но=жаңа + роуз=күн; мағынасы «жаңа күн»), яғни «жаңа жылды» (күн өсуін белгілеуі) білдіреді.
 2010 жылдың 10 мамырынан бастап Біріккен Ұлттар Ұйымының Бас ассамблеясының 64-қарарына сәйкес 21 наурыз "Халықаралық Наурыз күні" болып аталып келеді.[1] Бас ассамблея өзінің берген түсініктемесінде "Наурызды көктем мерекесі ретінде 3000 жылдан бері Балқан түбегінде, Қара теңіз аймағында, Кавказда, Орта Азияда және Таяу Шығыста 300 миллион адам тойлап келе жатқандығын" мәлімдеді. Ал ЮНЕСКО болса, 2009 жылдың 30 қыркүйегінде Наурыз мейрамын адамзаттың материалдық емес мәдени мұра тізіміне кіргізді.
           </div>
+		  <HeartOutlined style="color: red;"/>
+		  <LikeOutlined style="color: blue;"/>
           <div class="projcard-tagbox">
-            <span class="projcard-tag">Праздник</span>
-            <span class="projcard-tag">Выходной</span>
-          </div>
+            <a href="#" class="projcard-tag">Праздник</a>
+            <a href="#" class="projcard-tag">Выходной</a>
+			</div>
+			<!-- <br>
+			<br>
+			<div class="comment-section-send">
+
+            <input	style="padding: 10px;"
+                        type="text"
+                        inputmode="text"
+                        pattern="[0-9]*"
+                        v-model="phone_number"
+                        placeholder="Оставьте коментарий"
+                    />
+                    <a-button >Отправить</a-button>
+				
+          </div> -->
         </div>
       </div>
     </div>
@@ -42,11 +59,26 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
           <div class="projcard-subtitle">I don't really think that I need to explain anything here</div>
           <div class="projcard-bar"></div>
           <div class="projcard-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-          <div class="projcard-tagbox">
+          <div class="comment-section">
+
+            <div class="projcard-tagbox">
             <span class="projcard-tag">PHP</span>
-            <span class="projcard-tag">SQL</span>
-            <span class="projcard-tag">Database</span>
+            <!-- <span class="projcard-tag">SQL</span>
+            <span class="projcard-tag">Database</span> -->
           </div>
+		  <!-- <div class="comment-section-send">
+            <input	style="padding: 10px;"
+                        type="text"
+                        inputmode="text"
+                        pattern="[0-9]*"
+                        v-model="phone_number"
+                        placeholder="Оставьте коментарий"
+                    />
+                    <a-button >Отправить</a-button>
+				</div> -->
+          </div>
+          
+         
         </div>
       </div>
     </div>
@@ -267,45 +299,40 @@ body {
 }
 .projcard-tagbox {
 	position: absolute;
-	bottom: 3%;
+	/* bottom: 3%; */
 	font-size: 14px;
-	cursor: default;
+	display: flex;
+	/* cursor: default; */
 	user-select: none;
-	pointer-events: none;
+	/* pointer-events: none; */
 }
 .projcard-tag {
-	display: inline-block;
+	/* display: inline-block; */
 	background: #E0E0E0;
 	color: #000000;
-	border-radius: 3px 0 0 3px;
-	line-height: 26px;
-	padding: 0 10px 0 23px;
+	/* border-radius: 3px 0 0 3px; */
+	/* line-height: 26px; */
+	/* padding: 0 10px 0 23px; */
 	position: relative;
 	margin-right: 20px;
-	cursor: auto;
-	user-select: none;
-	transition: color 0.2s;
+	/* cursor: auto; */
+	/* user-select: none; */
+	/* transition: color 0.2s; */
 }
-.projcard-tag::before {
-	content: '';
-	position: absolute;
-	background: #fff;
-	border-radius: 10px;
-	box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
-	height: 6px;
-	left: 10px;
-	width: 6px;
-	top: 10px;
-  cursor: pointer;
+
+
+.comment-section{
+  display: flex;
+  /* grid-template-columns: repeat(1,1fr); */ 
 }
-.projcard-tag::after {
-	content: '';
-	position: absolute;
-  cursor: pointer;
-	border-bottom: 13px solid transparent;
-	border-left: 10px solid #E0E0E0;
-	border-top: 13px solid transparent;
-	right: -10px;
-	top: 0;
+input{
+  border-radius: 20px;
+  max-width: 450px;
+  color: #000;
+}
+.comment-section-send{
+	display: flex;
+	justify-content: space-around;
+	padding: 10px;
 }
 </style>
