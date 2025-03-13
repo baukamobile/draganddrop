@@ -23,9 +23,9 @@ export function useTaskManager() {
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
 const statuses = ref([
-    { id: 1, status_name: "Список задач", user: 1 },
-    { id: 2, status_name: "В процессе", user: 2 },
-    { id: 3, status_name: "Готово", user: 3 }
+    // { id: 1, status_name: "Список задач", user: 1 },
+    // { id: 2, status_name: "В процессе", user: 2 },
+    // { id: 3, status_name: "Готово", user: 3 }
 ]);
     const newTask = reactive({
         task_name: "",
