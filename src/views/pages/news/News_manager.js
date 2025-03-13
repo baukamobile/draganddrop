@@ -26,7 +26,7 @@ export function NewsManager() {
         documents: "",
         tags: ""
     });
-
+   
     onMounted(async () => { 
         try {
             const newsData = await getNews();
@@ -44,7 +44,6 @@ export function NewsManager() {
 
     return {
         news,
-        
         NewsObject,
     };
 }
