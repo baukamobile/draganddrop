@@ -4,11 +4,19 @@ import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vu
 import SalesSection from '@/components/pages/dashboard/SalesSection.vue'
 import LatestSection from '@/components/pages/dashboard/LatestSection.vue'
 import Button from '@/components/Button.vue'
+// import { NewsManager } from '@/views/pages/news/News_Manager';
+import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import { EditFilled, DeleteOutlined,CommentOutlined,LikeOutlined,HeartOutlined,  } from "@ant-design/icons-vue";
 // This adds some nice ellipsis to the description:
 document.querySelectorAll(".projcard-description").forEach(function(box) {
 	$clamp(box, {clamp: 6});
 });
+
+// const {
+// 	news,
+// 	getNews,
+// 	NewsObject,
+// } = NewsManager();
 
 </script>
 
@@ -21,7 +29,7 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
       <div class="projcard-innerbox">
         <img class="projcard-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/01/bd/a3/see-two-for-the-price.jpg?w=900&h=500&s=1" />
         <div class="projcard-textbox">
-          <div class="projcard-title">Праздник</div>
+          <!-- <div class="projcard-title">Праздник</div> -->
           <div class="projcard-subtitle">Наурыз мейрамы</div>
           <div class="projcard-bar"></div>
           <div class="projcard-description">Наурыз мейрамы — ежелгі заманнан қалыптасқан жыл бастау мейрамы. Қазіргі күнтізбе бойынша (наурыздың 22) күн мен түннің теңесуі кезіне келеді. Көне парсы тілінде нава=жаңа + рәзаңһ=күн, «жаңа күн» мағынасында, қазіргі парсы тілінде де сол мағынамен қалған (но=жаңа + роуз=күн; мағынасы «жаңа күн»), яғни «жаңа жылды» (күн өсуін белгілеуі) білдіреді.
@@ -33,20 +41,6 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
             <a href="#" class="projcard-tag">Праздник</a>
             <a href="#" class="projcard-tag">Выходной</a>
 			</div>
-			<!-- <br>
-			<br>
-			<div class="comment-section-send">
-
-            <input	style="padding: 10px;"
-                        type="text"
-                        inputmode="text"
-                        pattern="[0-9]*"
-                        v-model="phone_number"
-                        placeholder="Оставьте коментарий"
-                    />
-                    <a-button >Отправить</a-button>
-				
-          </div> -->
         </div>
       </div>
     </div>
@@ -63,19 +57,8 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
 
             <div class="projcard-tagbox">
             <span class="projcard-tag">PHP</span>
-            <!-- <span class="projcard-tag">SQL</span>
-            <span class="projcard-tag">Database</span> -->
           </div>
-		  <!-- <div class="comment-section-send">
-            <input	style="padding: 10px;"
-                        type="text"
-                        inputmode="text"
-                        pattern="[0-9]*"
-                        v-model="phone_number"
-                        placeholder="Оставьте коментарий"
-                    />
-                    <a-button >Отправить</a-button>
-				</div> -->
+
           </div>
           
          
@@ -115,13 +98,8 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
         </div>
       </div>
     </div>
-    
   </div>
-    
-    
         </template>
-
-   
     </PageWrapper>
 </template>
 <style scoped>
