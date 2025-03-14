@@ -34,6 +34,11 @@ export default [
                 component: ()=> import('@/views/pages/news/news.vue')
             },
             {
+                path: '/pages/business_process',
+                name: 'business_process',
+                component: ()=> import('@/views/pages/business_process/business_process.vue')
+            },
+            {
                 path: '/pages/reports',
                 name: 'reports',
                 component: ()=> import('@/views/pages/reports/reports.vue')
@@ -52,7 +57,8 @@ export default [
                 path: '/login',
                 name: 'newsignup',
                 component: () => import('@/auth/login/signup.vue')
-            }
+            },
+
         ],
     },
     // {

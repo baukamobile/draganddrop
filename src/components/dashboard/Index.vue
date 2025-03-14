@@ -24,9 +24,7 @@ const {
     formatDate,
     submitColumn,
     submitTask,
-    onColumnDrag,
-    onColumnDrop,
-    onColumnDragOver,
+
 
 } = useTaskManager();
 // const el = useTemplateRef<HTMLElement>('el')
@@ -44,6 +42,7 @@ const toggleTaskForm = (statusId) => {
 </script>
 <template>
     <PageWrapper>
+        <h1>{{ newTask.projects }}</h1>
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <div class="center" >

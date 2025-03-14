@@ -2,7 +2,6 @@
 import { useRouter } from 'vue-router'
 import PerfrectScrollbar from '@/components/PerfectScrollbar.vue'
 import SidebarLink from '@/components/sidebar/SidebarLink.vue'
-import {CalendarOutlined } from "@ant-design/icons-vue";
 // import SidebarCollapsible from '@/components/sidebar/SidebarCollapsible.vue'
 // import SidebarCollapsibleItem from '@/components/sidebar/SidebarCollapsibleItem.vue'
 // import { IconBrandLine } from '@tabler/icons-vue';
@@ -59,6 +58,12 @@ const isCurrentPath = (path) => {
             :to="{ name: 'reports' }"
             :active="isCurrentRoute('reports')"
             icon="tabler--report"
+        />
+        <SidebarLink class="Business_process-sidebar"
+            title="Бизнес Процессы"
+            :to="{ name: 'business_process' }"
+            :active="isCurrentRoute('business_process')"
+            icon="tabler--progress-check"
         />
         <!-- <SidebarLink class="Logout-sidebar"
             title="Выйти"
