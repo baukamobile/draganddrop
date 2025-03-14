@@ -1,5 +1,5 @@
 import {ref,reactive,onMounted} from "vue";
-import { getTask } from "@/api/tasks";
+import { getProjects } from "@/api/tasks";
 
 export function ProjectsManager (){
     const projects = ref([]);
@@ -7,7 +7,7 @@ export function ProjectsManager (){
 
     onMounted(async () => {
         try {
-            const projectsData = await getTask();
+            const projectsData = await getProjects();
             if (projectsData) {
                 projects.value = projectsData;
                 console.log('Данные закгружены: ', projects.value);

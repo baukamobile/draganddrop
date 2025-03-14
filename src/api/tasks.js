@@ -14,7 +14,10 @@ export const getTask = async()=>{
     const response = await axios.get(`${API_URL_TASK}/`)
     return response.data
 };
-
+export const getProjects = async()=>{
+    const response = await axios.get(`${API_URL_PROJECTS}/`);
+    return response.data;
+}
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 
 export const getStatusTask = async()=>{
@@ -40,7 +43,6 @@ export async function addTask(taskData) {
     const response = await axios.post(`${API_URL_TASK}/`,taskData);
     return response.data;
 }
-
 
 
 export async function addColumn(newStatus){
