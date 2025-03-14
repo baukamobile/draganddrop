@@ -3,15 +3,7 @@ import { getUsers } from "@/api/users";
 
 export function DepartmentManager (){
     const department = ref([]);
-    const DepartmentObject = reactive({
-        first_name: "",
-        last_name: "",
-        position_name: "",
-        image: "",
-        department_name: "",
-        telegram_id: "",
-        phone_number: null, 
-    });
+    
 
     onMounted(async () => {
         try {
@@ -27,6 +19,6 @@ export function DepartmentManager (){
 
     return {
         department,
-        DepartmentObject,
+     
     };
 }
