@@ -16,7 +16,6 @@ const {
 } = useTaskManager();
 const {
 	news,
-	NewsObject,
 	// formatDate,
 	
 } = NewsManager();
@@ -28,7 +27,6 @@ console.log('Теги новости:', news.tags, typeof news.tags);
     <PageWrapper>
         <template #header>  
       <div class="projcard-container">
-		
     <div class="projcard projcard-blue" v-for="newss in news" :key="newss.id">
       <div class="projcard-innerbox">
 		

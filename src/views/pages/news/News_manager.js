@@ -17,15 +17,7 @@ export const getNews = async () => { //Получаем данные через 
 
 export function NewsManager() { 
     const news = ref([]);
-    const NewsObject = reactive({
-        title: "",
-        content: "",
-        created_by: "",
-        created_at: "",
-        picture: "",
-        documents: "",
-        tags: ""
-    });
+    
    
     onMounted(async () => { 
         try {
@@ -44,6 +36,6 @@ export function NewsManager() {
 
     return {
         news,
-        NewsObject,
+ 
     };
 }

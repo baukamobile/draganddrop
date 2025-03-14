@@ -3,12 +3,19 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    /* padding: 10px; */
+    /* margin: 10px; */
   }
-  
+  .img-department{
+    max-width: auto;
+    max-height: 300px;
+  }
   .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    max-width: 300px;
+    /* max-width: 300px; */
+    /* max-height: 390px; */
+    /* margin: 10px; */
     
     /* margin: auto; */
     background-color: white;

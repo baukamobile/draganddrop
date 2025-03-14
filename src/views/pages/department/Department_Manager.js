@@ -6,9 +6,9 @@ export function DepartmentManager (){
     const DepartmentObject = reactive({
         first_name: "",
         last_name: "",
-        position: "",
+        position_name: "",
         image: "",
-        department: "",
+        department_name: "",
         telegram_id: "",
         phone_number: null, 
     });
