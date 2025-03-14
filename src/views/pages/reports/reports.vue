@@ -1,21 +1,39 @@
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
-import StatisticsSection from '@/components/pages/dashboard/StatisticsSection.vue'
-import SalesSection from '@/components/pages/dashboard/SalesSection.vue'
-import LatestSection from '@/components/pages/dashboard/LatestSection.vue'
-import Button from '@/components/Button.vue'
+import './style/style.css'
+import { ProjectsManager } from './Report_manager';
+
+const {
+  projects,
+} = ProjectsManager();
 </script>
 
 <template>
     <PageWrapper>
-        <template #header>
-            <div
-                class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
-            >
-                <h2 class="text-xl font-semibold leading-tight">Отчеты</h2>
+       
+        <div class="ag-format-container" v-for="(project, index) in projects" :key="index" >
+  <div class="ag-courses_box">
+   
 
-            </div>
-        </template>
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+          Проект&#160; {{ project.project_name }}
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            04.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
 
    
     </PageWrapper>
