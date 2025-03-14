@@ -9,6 +9,11 @@ export default [
                 component: () => import('@/views/pages/dashboard/Index.vue'),
             },
             {
+                path: '/',
+                name: 'Dashboardc',
+                component: () => import('@/components/dashboard/Index.vue'),
+            },
+            {
                 path: '/pages/chat',
                 name: 'Chat',
                 component: ()=> import('@/views/pages/chat/Chat.vue')
