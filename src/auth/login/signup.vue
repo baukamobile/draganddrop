@@ -7,8 +7,8 @@ const router = useRouter();
 
 const {
   email, password, first_name, last_name,
-  selectedPosition, selectedDepartment,
-  phone_number, isLoading, position, department,
+  selectedPosition, selectedDepartment,selectedCompany,
+  phone_number, isLoading, position, department,company,
   login, logout, register, errorMessage, handleLoginClick
 } = UserAuthManager();
 
@@ -100,6 +100,7 @@ onMounted(() => {
                     </option>
                 </select>
                 <br />
+                <label class="label-name">Отдел</label>
                 <select v-model="selectedDepartment">
                     <option
                         v-for="dept in department"
@@ -109,23 +110,33 @@ onMounted(() => {
                         {{ dept.department_name }} ({{ dept.department_head }})
                     </option></select
                 ><br />
+                <label class="label-name">Организация</label>
+                <select v-model="selectedCompany">
+                    <option
+                        v-for="com in company"
+                        :key="com.id"
+                        :value="com.id"
+                    >
+                        {{ com.company_name }} 
+                    </option></select>
+                    <br>
                 <button type="submit" :disabled="isLoading">
                     Создать Аккаунт
                 </button>
             </form>
         </div>
-        <div class="form-container sign-in-container">
-            <form @submit.prevent="handleRegister">
-                <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p>
+        <!-- <div class="form-container sign-in-container"> -->
+            <!-- <form @submit.prevent="handleRegister">
+                <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p> -->
                 <!-- <h1>Создать Аккаунт</h1> -->
-                <div style="display: flex; justify-content: space-around">
+                <!-- <div style="display: flex; justify-content: space-around">
                     <input
                         type="email"
                         placeholder="Email"
                         v-model="email"
-                        @input="console.log('email:', email)"
-                    />
-                    <input
+                        @input="console.log('email:', email)" -->
+                    
+                    <!-- <input
                         type="text"
                         placeholder="Имя"
                         v-model="first_name"
@@ -151,12 +162,12 @@ onMounted(() => {
                         pattern="[0-9]*"
                         v-model="phone_number"
                         placeholder="Номер телефона"
-                    />
-                </div>
+                    /> -->
+                <!-- </div> -->
                 <!-- <input type="text" placeholder="Телеграм айди" /> -->
                 <!-- <div style="display: flex; justify-content: space-around;"> -->
-                <label class="label-name">Должность</label>
-                <select v-model="selectedPosition">
+                <!-- <label class="label-name">Должность</label> -->
+                <!-- <select v-model="selectedPosition">
                     <option
                         v-for="pos in position"
                         :key="pos.id"
@@ -178,8 +189,8 @@ onMounted(() => {
                 <button type="submit" :disabled="isLoading">
                     Создать Аккаунт
                 </button>
-            </form>
-        </div>
+            </form> -->
+        <!-- </div> -->
   
         <div class="form-container sign-in-container">
             <form @submit.prevent="handleLogin">

@@ -43,16 +43,16 @@ export default [
                 name: 'reports',
                 component: ()=> import('@/views/pages/reports/reports.vue')
             },
-            {
-                path: '/login',
-                name: 'login',
-                component: ()=> import('@/auth/login/LoginPage.vue')
-            },
-            {
-                path: '/auth',
-                name: 'signup',
-                component: ()=> import('@/auth/login/RegisterPage.vue')
-            },
+            // {
+            //     path: '/login',
+            //     name: 'login',
+            //     component: ()=> import('@/auth/login/LoginPage.vue')
+            // },
+            // {
+            //     path: '/auth',
+            //     name: 'signup',
+            //     component: ()=> import('@/auth/login/RegisterPage.vue')
+            // },
             {
                 path: '/login',
                 name: 'newsignup',

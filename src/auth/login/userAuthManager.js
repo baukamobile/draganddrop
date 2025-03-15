@@ -10,6 +10,7 @@ const API_LOGIN = import.meta.env.VITE_API_LOGIN;
 const API_REGISTER = import.meta.env.VITE_API_REGISTER;
 const API_POSTIION = import.meta.env.VITE_API_POSITION;
 const API_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
+const API_COMPANY = import.meta.env.VITE_API_COMPANY;
 // const API_LOGOUT = "http://127.0.0.1:8000/users/logout";
 // const API_URL_USERS = "http://127.0.0.1:8000/users/users";
 
@@ -24,8 +25,10 @@ export function UserAuthManager(){
     const phone_number = ref('');
     const position = ref([]); //должность
     const department = ref([]);//отдел сотрудника
+    const company = ref([]);
     const selectedPosition = ref(null);  // Одна выбранная должность
     const selectedDepartment = ref(null);
+    const selectedCompany = ref(null);
 
     const login = async () =>{
         if (!email.value || !password.value){ //если ползователь не вводил данные
@@ -54,7 +57,7 @@ export function UserAuthManager(){
     //register logic
     const register = async () =>{
         if(!email.value || !first_name.value 
-            || !last_name.value || !password.value || !phone_number.value || !selectedPosition.value || !selectedDepartment.value){
+            || !last_name.value || !password.value || !phone_number.value || !selectedPosition.value || !selectedDepartment.value || !selectedCompany.value){
             errorMessage.value="Пожалуйста заполните все поля";
             return false;
         }
@@ -70,7 +73,8 @@ export function UserAuthManager(){
                 password: password.value,
                 phone_number: phone_number.value,
                 position: selectedPosition.value,
-                department: selectedDepartment.value
+                department: selectedDepartment.value,
+                company: selectedCompany.value
             });
             return true;
         }catch(error){
@@ -108,6 +112,15 @@ const getPosition = async () => {
         return null;
     }
 };
+const getCompany = async()=>{
+    try{
+        const response = await axios.get(`${API_COMPANY}/`);
+        return response.data;
+    }catch(e){
+        console.log('Ошибка загрузки данные о компании');
+        return e;
+    }
+}
 const handleLoginClick = async () => {
     const success = await handleLogin();
     if (success) {
@@ -118,18 +131,20 @@ const handleLoginClick = async () => {
 };
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
-        const [positionData, departmentData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
+        const [positionData, departmentData,companyData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
             //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
             getPosition(),
             getDepartment(),
+            getCompany(),
             // console.log('list position: ',getPosition()),
         ]);
 
         // if (taskData.status === "fulfilled") tasks.value = taskData.value;
         if (positionData.status === "fulfilled") position.value = positionData.value;
         if (departmentData.status === "fulfilled") department.value = departmentData.value;
+        if (companyData.status == "fulfilled") company.value=companyData.value;
         
-        console.log("Данные загружены:", { position: positionData.value,department: departmentData.value});
+        console.log("Данные загружены:", { position: positionData.value,department: departmentData.value,company: companyData.value});
 
     } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
@@ -142,6 +157,7 @@ return {email,
     password,
     isLoading,
     position,
+    company,
     department,
     handleLoginClick,
     register,
@@ -150,7 +166,9 @@ return {email,
     errorMessage,
     selectedPosition,
     selectedDepartment,
+    selectedCompany,
     getDepartment,
+    getCompany,
     getPosition,
 };}
 
