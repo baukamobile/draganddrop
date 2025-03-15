@@ -3,10 +3,18 @@ import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/a
 import {getUsers} from "@/api/users";
 import axios from "axios";
 import { reactive } from "vue";
+import { computed } from "vue";
 const API_URL = import.meta.env.VITE_API_URL;
 const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const projectid = route.params.projectid;
+
+
+
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -38,6 +46,9 @@ const statuses = ref([
         priority: 1,
         projects: 2,
         department: 1 });
+        const filteredTasks = computed(() => {
+            return tasks.value.filter(task => task.projects === newTask.projects);
+        });
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -275,6 +286,7 @@ onMounted(async () => { //Код внутри выполняется, когда
         onColumnDrag,
         onColumnDrop,
         onColumnDragOver,
+        filteredTasks,
     };
 }
 

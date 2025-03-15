@@ -2,11 +2,9 @@
 import { ref, watch, reactive } from "vue";
 import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
 import './styles/dashboard.css';
+
 import PageWrapper from '@/components/PageWrapper.vue';
 import { EditFilled, DeleteOutlined,CommentOutlined } from "@ant-design/icons-vue";
-// import { useSortable } from '@vueuse/core';
-
-// C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
     tasks,
     statuses,
@@ -24,11 +22,8 @@ const {
     formatDate,
     submitColumn,
     submitTask,
-
-
+    filteredTasks,
 } = useTaskManager();
-// const el = useTemplateRef<HTMLElement>('el')
-// useSortable(el, list)
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
@@ -36,9 +31,6 @@ const toggleTaskForm = (statusId) => {
         newTask.status = statusId; // Автоматически устанавливаем статус
     }
 };
-// watch(() => newTask, (val) => {
-//     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
-// }, { deep: true });
 </script>
 <template>
     <PageWrapper>
@@ -51,18 +43,17 @@ const toggleTaskForm = (statusId) => {
                     @drop="onDrop($event, status.id)" 
                     class="droppable"
                     @dragover.prevent @dragenter.prevent
-                        
                         > 
                         <!-- Разрешение для перетаскивание -->
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
-                            <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
+                            <!-- Удалить колонку  -->
                             <a class="red-button" @click="handleClick(status.id)">
                                 <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
                             </a>
                         </div>
                         <transition-group name="fade" >
-                            <div v-for="task in tasks.filter(x => x.status == status.id && new Date(x.end_date) > new Date())" :key="task.id"
+                            <div v-for="task in filteredTasks.filter(x => x.status === status.id)" :key="task.id">
                                 @dragstart="ondragstart($event, task)" draggable="true" class="draggable">
                                 <div class="form1">
                                     <p style="margin: 0;">
@@ -169,6 +160,5 @@ const toggleTaskForm = (statusId) => {
 
             </div>
         </div>
-        <!-- </div> -->
     </PageWrapper>
 </template>

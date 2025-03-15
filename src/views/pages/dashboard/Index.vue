@@ -19,7 +19,8 @@ const {
        
         <div class="ag-format-container" v-for="(item, index) in projects" :key="index" >
   <!-- <a href="#" @click.prevent=""><div class="ag-courses_box"> -->
-    <router-link :to="{ name: 'Dashboardc' }">
+    <router-link :to="{ name: 'Dashboardc', params: { projectId: item.id } }">
+      
         <!-- Путь к доски и задач проекта -->
     <div class="ag-courses_item">
       <a href="#" class="ag-courses-item_link">
