@@ -21,6 +21,7 @@ const {
     onDrop,
     formatDate,
     submitColumn,
+    // projectId,
     submitTask,
     filteredTasks,
 } = useTaskManager();
@@ -30,7 +31,10 @@ const toggleTaskForm = (statusId) => {
     if (showTaskForm.value[statusId]) {
         newTask.status = statusId; // Автоматически устанавливаем статус
     }
+
 };
+// console.log('projec id', projectId);
+console.log('фильтрованные данные: ',filteredTasks);
 </script>
 <template>
     <PageWrapper>

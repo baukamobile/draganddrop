@@ -7,11 +7,12 @@ import { useRouter } from 'vue-router';
 import Dashboard from '@/components/dashboard/Index.vue';
 const {
 	formatDate,
+  projectId,
 } = useTaskManager();
 const {
   projects,
 } = ProjectsManager();
-
+console.log('projects id', projectId)
 </script>
 
 <template>

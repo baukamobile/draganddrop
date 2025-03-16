@@ -11,7 +11,7 @@ const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-const projectid = route.params.projectid;
+const projectId = route.params.projectId;
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -45,10 +45,10 @@ const statuses = ref([
         projects: null,
         department: null });
         const filteredTasks = computed(() => {
-            return tasks.value.filter(task => task.projects === parseInt(projectid));
+            return tasks.value.filter(task => task.projects === parseInt(projectId));
         });
-        console.log('фильтрованные данные: ',filteredTasks);
-        console.log('projec id',projectid)
+        
+        console.log('projec id',projectId)
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -253,17 +253,42 @@ onMounted(async () => { //Код внутри выполняется, когда
             getProject(),
         ]);
 
-        if (taskData.status === "fulfilled") tasks.value = taskData.value;
+        if (taskData.status === "fulfilled"){ tasks.value = taskData.value;
+
+                console.log("projectid:", projectId, typeof projectId);
+                console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
+            
+        }
         if (statusData.status === "fulfilled") statuses.value = statusData.value;
         if (userData.status === "fulfilled") users.value = userData.value;
         if (projectData.status === "fulfilled") projects.value = projectData.value;
-        
+        console.log("projectid:", projectId, typeof projectId);
+console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
         console.log("Данные загружены:", { tasks: tasks.value, statuses: statuses.value, users: users.value, projects: projects.value });
 
     } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
     }
 });
+
+// onMounted(async () => {
+//     try {
+//         const [taskData, statusData, userData, projectData] = await Promise.allSettled([
+//             getTask(),
+//             getStatusTask(),
+//             getUsers(),
+//             getProject(),
+//         ]);
+//         if (taskData.status === "fulfilled") {
+//             tasks.value = taskData.value;
+//             console.log("projectid:", projectid, typeof projectid);
+//             console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
+//         }
+//         // остальной код...
+//     } catch (error) {
+//         console.error("Ошибка при загрузке данных:", error);
+//     }
+// });
     return {
         tasks,
         statuses,
