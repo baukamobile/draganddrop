@@ -34,7 +34,7 @@ const toggleTaskForm = (statusId) => {
 </script>
 <template>
     <PageWrapper>
-        <h1>{{ newTask.projects }}</h1>
+        <!-- <h1>{{ filteredTasks.projects }}</h1> -->
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <div class="center" >
@@ -42,8 +42,7 @@ const toggleTaskForm = (statusId) => {
                     :key="status.id"
                     @drop="onDrop($event, status.id)" 
                     class="droppable"
-                    @dragover.prevent @dragenter.prevent
-                        > 
+                    @dragover.prevent @dragenter.prevent> 
                         <!-- Разрешение для перетаскивание -->
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
@@ -53,8 +52,12 @@ const toggleTaskForm = (statusId) => {
                             </a>
                         </div>
                         <transition-group name="fade" >
-                            <div v-for="task in filteredTasks.filter(x => x.status === status.id)" :key="task.id">
-                                @dragstart="ondragstart($event, task)" draggable="true" class="draggable">
+                            <div v-if="filteredTasks" 
+     v-for="task in filteredTasks.filter(t => t.status === status.id)" 
+     :key="task.id"
+     @dragstart="ondragstart($event, task)" 
+     draggable="true" 
+     class="draggable">
                                 <div class="form1">
                                     <p style="margin: 0;">
                                         {{ task.task_name }}
@@ -100,6 +103,9 @@ const toggleTaskForm = (statusId) => {
                                     <input type="file" @input="console.log('файл изменилось:')">
                                     <br>
                                     <br>
+                                    <label class="label-name">Начало:</label>
+                                    <input type="date" v-model="newTask.start_date">
+<br><br>
                                     <label class="label-name">Конец:</label>
                                     <input type="date" v-model="newTask.end_date">
                                     <!-- @input="newTask.end_date = $event.target.value || null"> -->
@@ -127,12 +133,6 @@ const toggleTaskForm = (statusId) => {
                                             :value="priority_key">{{ priority_value.priority_name }}</option>
                                     </select>
                                     <br><br>
-                                    <!-- <select v-model="newTask.status">
-                                        <option v-for="status in statuses" :key="status.id" :value="status.id">
-                                            {{ status.status_name }}</option>
-                                    </select> -->
-                                    
-                                    <!-- <a href="#">Добавить</a> -->
                                     <button type="submit ">Добавить</button>
                                 </form>
                             </div>

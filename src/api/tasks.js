@@ -8,10 +8,12 @@ const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 const API_URL = "http://10.0.0.52:8000/";  
 export const getDataApi = async (first_url, second_url) => {
     const response = await axios.get(`${API_URL}${first_url}/${second_url}`); 
+    
     return response.data;
 };
 export const getTask = async()=>{
     const response = await axios.get(`${API_URL_TASK}/`)
+    // alert('Задачи загружены')
     return response.data
 };
 export const getProjects = async()=>{
@@ -22,6 +24,7 @@ const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 
 export const getStatusTask = async()=>{
     const response = await axios.get(`${API_URL_STATUS}/`) 
+    console.log('status:', response.data)
     return response.data
 };
 

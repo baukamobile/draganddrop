@@ -12,9 +12,6 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const projectid = route.params.projectid;
-
-
-
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -39,16 +36,19 @@ const statuses = ref([
         task_name: "",
         description: "",
         documents: null,
+        start_date: "",
         end_date: "",
         agreed_with_managers: false,
-        assigned: 14,
-        status: 1,
-        priority: 1,
-        projects: 2,
-        department: 1 });
+        assigned: null,
+        status: null,
+        priority: null,
+        projects: null,
+        department: null });
         const filteredTasks = computed(() => {
-            return tasks.value.filter(task => task.projects === newTask.projects);
+            return tasks.value.filter(task => task.projects === parseInt(projectid));
         });
+        console.log('фильтрованные данные: ',filteredTasks);
+        console.log('projec id',projectid)
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -189,7 +189,6 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     };
     const editTask = (task) =>{
         newTask.value = {...task}; //скопируем весь объект
-
         newTask.task_name = task.task_name;
         newTask.description = task.description;
         newTask.documents = task.documents;
@@ -289,5 +288,3 @@ onMounted(async () => { //Код внутри выполняется, когда
         filteredTasks,
     };
 }
-
-
