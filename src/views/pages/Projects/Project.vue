@@ -1,18 +1,18 @@
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
-import '../dashboard/styles/style.css'
+import './styles/style.css'
 import { ProjectsManager } from './Report_manager';
-import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
+import { TaskManager } from "@/views/pages/Projects/TaskManger";
 import { useRouter } from 'vue-router';
 import Dashboard from '@/components/dashboard/Index.vue';
 const {
 	formatDate,
-  projectId,
-} = useTaskManager();
+  // projectId,
+} = TaskManager();
 const {
   projects,
 } = ProjectsManager();
-console.log('projects id', projectId)
+// console.log('projects id', projectId)
 </script>
 
 <template>

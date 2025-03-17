@@ -11,7 +11,7 @@ const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-const projectId = route.params.projectId;
+const projectId = ref([]);
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -44,11 +44,21 @@ const statuses = ref([
         priority: null,
         projects: null,
         department: null });
+
+        const filteredStatuses = computed(() => {
+            return statuses.value.filter(status => 
+                tasks.value.some(task => 
+                    task.status === status.id && task.projects === parseInt(projectId)
+                )
+            );
+        });
+    
         const filteredTasks = computed(() => {
             return tasks.value.filter(task => task.projects === parseInt(projectId));
         });
         
-        console.log('projec id',projectId)
+        
+        // console.log('projec id',projectId)
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -271,24 +281,6 @@ console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.p
     }
 });
 
-// onMounted(async () => {
-//     try {
-//         const [taskData, statusData, userData, projectData] = await Promise.allSettled([
-//             getTask(),
-//             getStatusTask(),
-//             getUsers(),
-//             getProject(),
-//         ]);
-//         if (taskData.status === "fulfilled") {
-//             tasks.value = taskData.value;
-//             console.log("projectid:", projectid, typeof projectid);
-//             console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
-//         }
-//         // остальной код...
-//     } catch (error) {
-//         console.error("Ошибка при загрузке данных:", error);
-//     }
-// });
     return {
         tasks,
         statuses,
@@ -311,5 +303,6 @@ console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.p
         onColumnDrop,
         onColumnDragOver,
         filteredTasks,
+        filteredStatuses,
     };
 }

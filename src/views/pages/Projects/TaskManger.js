@@ -17,7 +17,7 @@ export const getProject = async () => {
         return null;
     }
 };
-export function useTaskManager() {
+export function TaskManager() {
     const tasks = ref([]);
     const projects = ref({});
     const users = ref([]);

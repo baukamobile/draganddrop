@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, reactive } from "vue";
-import { useTaskManager } from "@/views/pages/dashboard/useTaskManger";
+import { useTaskManager } from "./useTaskManger";
 import './styles/dashboard.css';
 
 import PageWrapper from '@/components/PageWrapper.vue';
@@ -24,6 +24,7 @@ const {
     // projectId,
     submitTask,
     filteredTasks,
+    filteredStatus
 } = useTaskManager();
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
@@ -42,12 +43,12 @@ console.log('фильтрованные данные: ',filteredTasks);
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <div class="center" >
-                    <div v-for="status in statuses" 
-                    :key="status.id"
-                    @drop="onDrop($event, status.id)" 
-                    class="droppable"
-                    @dragover.prevent @dragenter.prevent> 
-                        <!-- Разрешение для перетаскивание -->
+                    <div v-for="status in filteredStatus" 
+                        :key="status.id"
+                        @drop="onDrop($event, status.id)" 
+                        class="droppable"
+                        @dragover.prevent 
+                        @dragenter.prevent>
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
                             <!-- Удалить колонку  -->

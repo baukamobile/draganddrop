@@ -6,7 +6,7 @@ export default [
             {
                 path: '/',
                 name: 'Dashboard',
-                component: () => import('@/views/pages/dashboard/Index.vue'),
+                component: () => import('@/views/pages/Projects/Project.vue'),
             },
             {
                 path: '/dashboard/:projectId',
