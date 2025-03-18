@@ -43,7 +43,7 @@ console.log('фильтрованные данные: ',filteredTasks);
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <div class="center" >
-                    <div v-for="status in filteredStatus" 
+                    <div v-for="status in statuses" 
                         :key="status.id"
                         @drop="onDrop($event, status.id)" 
                         class="droppable"
