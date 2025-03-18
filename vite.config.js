@@ -25,9 +25,9 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ['.out'],
     },
-    base: '/',
-    // base: '/static/',
-    // build: {
-    //     outDir: "dist",
-    //   }
+    // base: '/',
+    base: '/static/',
+    build: {
+        outDir: "dist",
+      }
 });

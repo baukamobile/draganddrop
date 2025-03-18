@@ -1,10 +1,10 @@
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
 
-import Button from '@/components/Button.vue'
+// import Button from '@/components/Button.vue'
 import './style/style.css'
 // import { NewsManager } from "@/views/pages/news/News_Manager";
-import { useTaskManager } from "@/views/pages/Projects/TaskManger";
+import { TaskManager } from "@/views/pages/Projects/TaskManger";
 import { NewsManager } from './News_manager'
 import { EditFilled, DeleteOutlined,CommentOutlined,LikeOutlined,HeartOutlined,  } from "@ant-design/icons-vue";
 // This adds some nice ellipsis to the description:
@@ -13,7 +13,7 @@ document.querySelectorAll(".projcard-description").forEach(function(box) {
 });
 const {
 	formatDate,
-} = useTaskManager();
+} = TaskManager();
 const {
 	news,
 	// formatDate,
