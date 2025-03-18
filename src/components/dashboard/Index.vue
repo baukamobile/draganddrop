@@ -2,9 +2,12 @@
 import { ref, watch, reactive } from "vue";
 import { useTaskManager } from "./useTaskManger";
 import './styles/dashboard.css';
-
 import PageWrapper from '@/components/PageWrapper.vue';
-import { EditFilled, DeleteOutlined,CommentOutlined } from "@ant-design/icons-vue";
+import { EditFilled, DeleteOutlined, CommentOutlined } from "@ant-design/icons-vue";
+import { useRoute } from 'vue-router';
+// import { useSortable } from '@vueuse/core';
+
+// C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
 const {
     tasks,
     statuses,
@@ -13,6 +16,7 @@ const {
     newStatus,
     newTask, //добавили внутри const из за него знечении не принимались
     priority,
+    department,
     handleClick,
     updateTask,
     editTask,
@@ -21,48 +25,49 @@ const {
     onDrop,
     formatDate,
     submitColumn,
-    // projectId,
     submitTask,
-    filteredTasks,
-    filteredStatus
+    onColumnDrag,
+    onColumnDrop,
+    onColumnDragOver,
+
 } = useTaskManager();
+// const el = useTemplateRef<HTMLElement>('el')
+// useSortable(el, list)
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
     if (showTaskForm.value[statusId]) {
         newTask.status = statusId; // Автоматически устанавливаем статус
     }
-
 };
-// console.log('projec id', projectId);
-console.log('фильтрованные данные: ',filteredTasks);
+const route = useRoute();
+const selectedProjectId = ref(Number(route.params.projectId));
+// watch(() => newTask, (val) => {
+//     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
+// }, { deep: true });
 </script>
 <template>
     <PageWrapper>
-        <!-- <h1>{{ filteredTasks.projects }}</h1> -->
+        <h1 v-for="status in statuses.filter(s => s.project_id === selectedProjectId)" :key="status.id">
+    {{ status.status_name }}
+</h1>
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
-                <div class="center" >
-                    <div v-for="status in statuses" 
-                        :key="status.id"
-                        @drop="onDrop($event, status.id)" 
-                        class="droppable"
-                        @dragover.prevent 
-                        @dragenter.prevent>
+                <div class="center">
+                    <div v-for="status in statuses" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
+    @dragover.prevent @dragenter.prevent>
+                        <!-- Разрешение для перетаскивание -->
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
-                            <!-- Удалить колонку  -->
+                            <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
                             <a class="red-button" @click="handleClick(status.id)">
                                 <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
                             </a>
                         </div>
-                        <transition-group name="fade" >
-                            <div v-if="filteredTasks" 
-     v-for="task in filteredTasks.filter(t => t.status === status.id)" 
-     :key="task.id"
-     @dragstart="ondragstart($event, task)" 
-     draggable="true" 
-     class="draggable">
+                        <transition-group name="fade">
+                            <div v-for="task in tasks.filter(x => x.status == status.id && new Date(x.end_date) > new Date())"
+                                :key="task.id" @dragstart="ondragstart($event, task)" draggable="true"
+                                class="draggable">
                                 <div class="form1">
                                     <p style="margin: 0;">
                                         {{ task.task_name }}
@@ -83,9 +88,10 @@ console.log('фильтрованные данные: ',filteredTasks);
                                 </div>
                                 <p>
                                     {{ task.description }}
-                                    <p>Создано с {{users.find(user => user.id === task.assigned)?.first_name || 'Неизвестно'}}</p>
+                                <p>Создано с {{users.find(user => user.id === task.assigned)?.first_name ||
+                                    'Неизвестно'}}</p>
                                 </p>
-                                <CommentOutlined style="color: green; cursor: pointer;"/>
+                                <CommentOutlined style="color: green; cursor: pointer;" />
                             </div>
                         </transition-group>
                         <!-- Здсь форма для добавление задач с вводимым данными -->
@@ -110,13 +116,20 @@ console.log('фильтрованные данные: ',filteredTasks);
                                     <br>
                                     <label class="label-name">Начало:</label>
                                     <input type="date" v-model="newTask.start_date">
-<br><br>
+                                    <br><br>
                                     <label class="label-name">Конец:</label>
                                     <input type="date" v-model="newTask.end_date">
                                     <!-- @input="newTask.end_date = $event.target.value || null"> -->
                                     <br><br>
-                                    <label class="label-name">Согласовано с руководством:</label>
-                                    <input type="checkbox" v-model="newTask.agreed_with_managers">
+                                    <label>Отдел</label>
+                                    <select v-model="newTask.department"
+                                        @change="console.log('отдел: ', newTask.department)">
+                                        <option v-for="dep in department" :key="dep.id" :value="dep.id">
+                                            {{ dep.department_name }}
+                                        </option>
+                                    </select>
+                                    <!-- <label class="label-name">Согласовано с руководством:</label>
+                                    <input type="checkbox" v-model="newTask.agreed_with_managers"> -->
                                     <br><br>
                                     <label class="label-name">Подписан с :</label>
                                     <!-- <label class="label-name">Название проекта:</label> -->
@@ -138,6 +151,12 @@ console.log('фильтрованные данные: ',filteredTasks);
                                             :value="priority_key">{{ priority_value.priority_name }}</option>
                                     </select>
                                     <br><br>
+                                    <!-- <select v-model="newTask.status">
+                                        <option v-for="status in statuses" :key="status.id" :value="status.id">
+                                            {{ status.status_name }}</option>
+                                    </select> -->
+
+                                    <!-- <a href="#">Добавить</a> -->
                                     <button type="submit ">Добавить</button>
                                 </form>
                             </div>
@@ -165,5 +184,6 @@ console.log('фильтрованные данные: ',filteredTasks);
 
             </div>
         </div>
+        <!-- </div> -->
     </PageWrapper>
 </template>

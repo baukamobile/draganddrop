@@ -19,6 +19,11 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@fullcalendar/core": "^6.1.10",
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/interaction": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
+    "@fullcalendar/vue3": "^6.1.10",
     "@headlessui/vue": "^1.7.23",
     "@tabler/icons-vue": "^3.30.0",
     "@vueuse/core": "^13.0.0",
@@ -30,6 +35,7 @@
     "gsap": "^3.11.5",
     "nprogress": "^0.2.0",
     "perfect-scrollbar": "^1.5.6",
+    "pinia": "^3.0.1",
     "sortablejs": "^1.15.6",
     "vue": "^3.5.7",
     "vue-router": "^4.4.5",
@@ -37,12 +43,7 @@
     "vue-toastification": "^2.0.0-rc.5",
     "vuedraggable": "^4.1.0",
     "vuejs-logger": "1.5.5",
-    "vuetify": "^3.7.14",
-    "@fullcalendar/core": "^6.1.10",
-    "@fullcalendar/daygrid": "^6.1.10",
-    "@fullcalendar/interaction": "^6.1.10",
-    "@fullcalendar/timegrid": "^6.1.10",
-    "@fullcalendar/vue3": "^6.1.10"
+    "vuetify": "^3.7.14"
   },
   "devDependencies": {
     "@iconify-json/tabler": "^1.2.15",

@@ -8,7 +8,7 @@ const { projects } = ProjectsManager();
 const router = useRouter();
 
 const goToProject = (projectId) => {
-    router.push({ name: 'Dashboardc', params: { projectId } });
+    router.push({ name: 'ProjectTasks', params: { projectId } });
 };
 </script>
 

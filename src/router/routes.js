@@ -10,7 +10,7 @@ export default [
             },
             {
                 path: '/dashboard/:projectId',
-                name: 'Dashboardc',
+                name: 'ProjectTasks',
                 component: () => import('@/components/dashboard/Index.vue'),
             },
             {

@@ -3,15 +3,12 @@ import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/a
 import {getUsers} from "@/api/users";
 import axios from "axios";
 import { reactive } from "vue";
-import { computed } from "vue";
+
 const API_URL = import.meta.env.VITE_API_URL;
 const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
-import { useRoute } from "vue-router";
-const route = useRoute();
-
-const projectId = ref([]);
+const API_URL_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -22,9 +19,21 @@ export const getProject = async () => {
         return null;
     }
 };
+export const getDepartment = async () => {
+    try{
+        const response = await axios.get(`${API_URL_DEPARTMENT}/`);
+        console.log('Полученные отделы:', response.data);
+
+        return response.data;
+    }catch(e){
+        console.error('Ошибка при получении отделов:', e);
+        return null;
+    }
+}
 export function useTaskManager() {
     const tasks = ref([]);
     const projects = ref({});
+    const department = ref([]);
     const users = ref([]);
     const newStatus = ref({ status_name: "", user: null });
 const statuses = ref([
@@ -39,26 +48,11 @@ const statuses = ref([
         start_date: "",
         end_date: "",
         agreed_with_managers: false,
-        assigned: null,
-        status: null,
-        priority: null,
-        projects: null,
-        department: null });
-
-        const filteredStatuses = computed(() => {
-            return statuses.value.filter(status => 
-                tasks.value.some(task => 
-                    task.status === status.id && task.projects === parseInt(projectId)
-                )
-            );
-        });
-    
-        const filteredTasks = computed(() => {
-            return tasks.value.filter(task => task.projects === parseInt(projectId));
-        });
-        
-        
-        // console.log('projec id',projectId)
+        assigned: 14,
+        status: 1,
+        priority: 1,
+        projects: 2,
+        department: 1 });
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -199,6 +193,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
     };
     const editTask = (task) =>{
         newTask.value = {...task}; //скопируем весь объект
+
         newTask.task_name = task.task_name;
         newTask.description = task.description;
         newTask.documents = task.documents;
@@ -208,6 +203,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
         newTask.status=task.status;
         newTask.priority = task.priority;
         newTask.projects = task.projects;
+        newTask.department = task.department;
         showTaskForm.value = {...showTaskForm.value,[task.status]: true};
 
     };
@@ -255,32 +251,26 @@ function onColumnDragOver(e){//размешаем сбрасываьт коло�
 // onmounted грузит три запроса подряд  завернули в Promise.all(), чтобы грузилось параллельно:
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     try {
-        const [taskData, statusData, userData, projectData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
+        const [taskData, statusData, userData, projectData,departmentData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
             //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
             getTask(),
             getStatusTask(),
             getUsers(),
             getProject(),
+            getDepartment(),
         ]);
 
-        if (taskData.status === "fulfilled"){ tasks.value = taskData.value;
-
-                console.log("projectid:", projectId, typeof projectId);
-                console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
-            
-        }
+        if (taskData.status === "fulfilled") tasks.value = taskData.value;
         if (statusData.status === "fulfilled") statuses.value = statusData.value;
         if (userData.status === "fulfilled") users.value = userData.value;
         if (projectData.status === "fulfilled") projects.value = projectData.value;
-        console.log("projectid:", projectId, typeof projectId);
-console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.projects);
+        if (departmentData.status === "fulfilled") department.value = departmentData.value;
         console.log("Данные загружены:", { tasks: tasks.value, statuses: statuses.value, users: users.value, projects: projects.value });
 
     } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
     }
 });
-
     return {
         tasks,
         statuses,
@@ -289,6 +279,7 @@ console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.p
         newStatus,
         newTask,
         priority,
+        department,
         updateTask,
         editTask,
         handleClick,
@@ -302,7 +293,6 @@ console.log("task.projects:", tasks.value[0]?.projects, typeof tasks.value[0]?.p
         onColumnDrag,
         onColumnDrop,
         onColumnDragOver,
-        filteredTasks,
-        filteredStatuses,
     };
 }
+
