@@ -26,6 +26,7 @@ const goToProject = (projectId) => {
                         <div class="ag-courses-item_date-box">
                             Начало: <span class="ag-courses-item_date">{{ item.start_date }}</span>
                             Конец: <span class="ag-courses-item_date">{{ item.end_date }}</span>
+                            <el-icon><Search /></el-icon>
                         </div>
                     </div>
                 </div>

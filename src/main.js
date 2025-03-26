@@ -6,6 +6,8 @@ import '@/assets/css/main.css'
 import Antd from 'ant-design-vue';
 import { AntDesignOutlined } from "@ant-design/icons-vue";
 import { createPinia } from 'pinia';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css'  // Import Element Plus styles
 // import axios from "axios";
 // // Функция для получения CSRF-токена из куков
 // function getCsrfToken() {
@@ -24,6 +26,7 @@ const app = createApp(App)
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);
+app.use(ElementPlus)
 app.use(Antd);
 app.component("AntDesignOutlined", AntDesignOutlined);
 app.use(Toast, {
