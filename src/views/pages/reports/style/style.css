@@ -147,3 +147,19 @@
       font-size: 16px;
     }
   }
+
+  .demo-date-picker {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .demo-date-picker .block {
+    padding: 30px 0;
+    text-align: center;
+    border-right: solid 1px var(--el-border-color);
+    flex: 1;
+  }
+  .demo-date-picker .block:last-child {
+    border-right: none;
+  }
