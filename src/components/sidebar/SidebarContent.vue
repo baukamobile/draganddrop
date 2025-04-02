@@ -41,11 +41,17 @@ const isCurrentPath = (path) => {
             :active="isCurrentRoute('calendar')"
             icon="tabler--calendar-week"
         />
-        <SidebarLink class="Department-sidebar"
-            title="Отдел"
-     :to="{ name: 'department' }"
-            :active="isCurrentRoute('department')"
-            icon="tabler--building"
+        <SidebarLink class="My_Tasks-sidebar"
+            title="Мои Задачи"
+            :to="{ name: 'my_tasks' }"
+            :active="isCurrentRoute('my_tasks')"
+            icon="tabler--clipboard-list"
+        />
+        <SidebarLink class="Business_process-sidebar"
+            title="Бизнес Процессы"
+            :to="{ name: 'business_process' }"
+            :active="isCurrentRoute('business_process')"
+            icon="tabler--progress-check"
         />
         <SidebarLink class="News-sidebar"
             title="Лента Новостей"
@@ -59,12 +65,14 @@ const isCurrentPath = (path) => {
             :active="isCurrentRoute('reports')"
             icon="tabler--report"
         />
-        <SidebarLink class="Business_process-sidebar"
-            title="Бизнес Процессы"
-            :to="{ name: 'business_process' }"
-            :active="isCurrentRoute('business_process')"
-            icon="tabler--progress-check"
+        
+        <SidebarLink class="Department-sidebar"
+            title="Отдел"
+     :to="{ name: 'department' }"
+            :active="isCurrentRoute('department')"
+            icon="tabler--building"
         />
+        
         <!-- <SidebarLink class="Logout-sidebar"
             title="Выйти"
             :to="{ name: 'auth' }"

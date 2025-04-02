@@ -89,7 +89,8 @@ onMounted(() => {
                 </div>
                 <!-- <input type="text" placeholder="Телеграм айди" /> -->
                 <!-- <div style="display: flex; justify-content: space-around;"> -->
-                <label class="label-name">Должность</label>
+              <div class="register-form-user-info" style="display: flex; justify-content: space-between;">
+                    <label class="label-name">Должность</label>asdasdsa
                 <select v-model="selectedPosition">
                     <option
                         v-for="pos in position"
@@ -109,7 +110,9 @@ onMounted(() => {
                     >
                         {{ dept.department_name }} ({{ dept.department_head }})
                     </option></select
-                ><br />
+
+                >
+            </div><br />
                 <label class="label-name">Организация</label>
                 <select v-model="selectedCompany">
                     <option
@@ -123,6 +126,7 @@ onMounted(() => {
                 <button type="submit" :disabled="isLoading">
                     Создать Аккаунт
                 </button>
+            
             </form>
         </div>
         <!-- <div class="form-container sign-in-container"> -->

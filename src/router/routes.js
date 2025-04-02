@@ -48,6 +48,11 @@ export default [
                 name: 'business_process',
                 component: ()=> import('@/views/pages/business_process/business_process.vue')
             },
+            {
+                path: '/pages/my_tasks',
+                name: 'my_tasks',
+                component: ()=> import('@/views/pages/my_tasks/My_Tasks.vue')
+            },
             // {
             //     path: '/login',
             //     name: 'login',
