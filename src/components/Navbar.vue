@@ -13,12 +13,28 @@ import Logo from '@/components/Logo.vue'
 import Dropdown from '@/components/Dropdown.vue'
 import DropdownLink from '@/components/DropdownLink.vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth_user_store'
+import { computed } from 'vue'
+import { UserAuthManager } from '@/auth/login/userAuthManager';
+const {
+  email, password, first_name, last_name,
+  selectedPosition, selectedDepartment,selectedCompany,
+  phone_number, isLoading, position, department,company,
+  login, logout, register, errorMessage, handleLoginClick
+} = UserAuthManager();
+const authStore = useAuthStore()
+const user = computed(() => authStore.user)
 
+// const logout = () => {
+//   authStore.logout()
+// }
 onMounted(() => {
+    console.log(user.value)
     document.addEventListener('scroll', handleScroll)
 })
 
 onUnmounted(() => {
+    console.log(user.value,'Это должно показать объект пользователя или null')
     document.removeEventListener('scroll', handleScroll)
 })
 </script>
@@ -98,14 +114,18 @@ onUnmounted(() => {
                             src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg"
                         />
                         
-                        <p style="color: white;">Username</p>
+                        <!-- <p style="color: white;">Username</p> -->
+                        <p style="color: white;">{{ user?.first_name || 'Гость' }}</p>
                     </div>
                     </button>
                 </template>
                 <template #content>
                     <!-- <DropdownLink :to="{ name: 'signup' }">Log Out</DropdownLink>
                     <DropdownLink :to="{ name: 'login' }">Log In</DropdownLink> -->
-                    <DropdownLink :to="{ name: 'newsignup' }">Sign Up</DropdownLink>
+                    <DropdownLink :to="{ name: 'profile' }">Профиль</DropdownLink>
+                    <DropdownLink @click="logout">Выйти</DropdownLink>
+                      <!-- <DropdownLink :to="{ name: 'profile' }">Профиль</DropdownLink>  -->
+                     <!-- <DropdownLink @click="logout">Выйти</DropdownLink>  -->
                 </template>
             </Dropdown>
         </div>

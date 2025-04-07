@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import Sidebar from './components/sidebar/Sidebar.vue';
 
 
+
 const route = useRoute();
 const routeName = ref(route.name); // Создаём реактивное значение
 

@@ -41,17 +41,12 @@ onMounted(() => {
   });
 });
 </script>
-
-
 <template>
     <div>
-      <!-- <link rel="stylesheet" href="login/style.css"> -->
-      <!-- <h2>Weekly Coding Challenge #1: Sign in/up Form</h2> -->
       <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form @submit.prevent="handleRegister">
                 <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p>
-                <!-- <h1>Создать Аккаунт</h1> -->
                 <div style="display: flex; justify-content: space-around">
                     <input
                         type="email"
@@ -87,10 +82,8 @@ onMounted(() => {
                         placeholder="Номер телефона"
                     />
                 </div>
-                <!-- <input type="text" placeholder="Телеграм айди" /> -->
-                <!-- <div style="display: flex; justify-content: space-around;"> -->
               <div class="register-form-user-info" style="display: flex; justify-content: space-between;">
-                    <label class="label-name">Должность</label>asdasdsa
+                    <label class="label-name">Должность</label>
                 <select v-model="selectedPosition">
                     <option
                         v-for="pos in position"
@@ -110,7 +103,6 @@ onMounted(() => {
                     >
                         {{ dept.department_name }} ({{ dept.department_head }})
                     </option></select
-
                 >
             </div><br />
                 <label class="label-name">Организация</label>
@@ -126,76 +118,8 @@ onMounted(() => {
                 <button type="submit" :disabled="isLoading">
                     Создать Аккаунт
                 </button>
-            
             </form>
         </div>
-        <!-- <div class="form-container sign-in-container"> -->
-            <!-- <form @submit.prevent="handleRegister">
-                <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p> -->
-                <!-- <h1>Создать Аккаунт</h1> -->
-                <!-- <div style="display: flex; justify-content: space-around">
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        v-model="email"
-                        @input="console.log('email:', email)" -->
-                    
-                    <!-- <input
-                        type="text"
-                        placeholder="Имя"
-                        v-model="first_name"
-                        @input="console.log('first name:', first_name)"
-                    />
-                </div>
-                <input
-                    type="text"
-                    placeholder="Фамилия"
-                    v-model="last_name"
-                    @input="console.log('last name:', last_name)"
-                />
-                <div style="display: flex; justify-content: space-around">
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        v-model="password"
-                        @input="console.log('password:', password)"
-                    />
-                    <input
-                        type="text"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                        v-model="phone_number"
-                        placeholder="Номер телефона"
-                    /> -->
-                <!-- </div> -->
-                <!-- <input type="text" placeholder="Телеграм айди" /> -->
-                <!-- <div style="display: flex; justify-content: space-around;"> -->
-                <!-- <label class="label-name">Должность</label> -->
-                <!-- <select v-model="selectedPosition">
-                    <option
-                        v-for="pos in position"
-                        :key="pos.id"
-                        :value="pos.id"
-                    >
-                        {{ pos.position_name }}
-                    </option>
-                </select>
-                <br />
-                <select v-model="selectedDepartment">
-                    <option
-                        v-for="dept in department"
-                        :key="dept.id"
-                        :value="dept.id"
-                    >
-                        {{ dept.department_name }} ({{ dept.department_head }})
-                    </option></select
-                ><br />
-                <button type="submit" :disabled="isLoading">
-                    Создать Аккаунт
-                </button>
-            </form> -->
-        <!-- </div> -->
-  
         <div class="form-container sign-in-container">
             <form @submit.prevent="handleLogin">
 			<h1>Войти в Аккаунт</h1>
@@ -207,7 +131,6 @@ onMounted(() => {
             <p v-if="errorMessage" class="errormes">{{ errorMessage }}</p>
 		</form>
         </div>
-  
         <div class="overlay-container">
           <div class="overlay">
             <div class="overlay-panel overlay-left">
@@ -227,16 +150,7 @@ onMounted(() => {
       </div>
     </div>
   </template>
-  
-
-  
   <style scoped>
-  /* Твои стили */
-  
-  
-/*  */
-
-
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 * {
@@ -295,7 +209,7 @@ button {
 	padding: 12px 45px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
-	transition: transform 80ms ease-in;
+	transition: transform 20ms ease-in;
 }
 
 button:active {
@@ -336,17 +250,19 @@ input {
   	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
 			0 10px 10px rgba(0,0,0,0.22);
 	position: relative;
-	overflow: hidden;
-	width: 768px;
+    display: flex;
+    justify-content: center;
+	overflow: clip;
+	width: 968px;
 	max-width: 100%;
-	min-height: 480px;
+	min-height: 580px;
 }
 
 .form-container {
 	position: absolute;
 	top: 0;
 	height: 100%;
-	transition: all 0.6s ease-in-out;
+	transition: all 0.2s ease-in-out;
 }
 
 .sign-in-container {
@@ -392,7 +308,7 @@ input {
 	width: 50%;
 	height: 100%;
 	overflow: hidden;
-	transition: transform 0.6s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 	z-index: 100;
 }
 
@@ -413,7 +329,7 @@ input {
 	height: 100%;
 	width: 200%;
   	transform: translateX(0);
-	transition: transform 0.6s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 }
 
 .container.right-panel-active .overlay {
@@ -432,7 +348,7 @@ input {
 	height: 100%;
 	width: 50%;
 	transform: translateX(0);
-	transition: transform 0.6s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 }
 
 .overlay-left {
@@ -491,5 +407,4 @@ footer a {
     color: #3c97bf;
     text-decoration: none;
 }
-
 </style>

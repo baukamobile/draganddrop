@@ -68,7 +68,7 @@ const isCurrentPath = (path) => {
         
         <SidebarLink class="Department-sidebar"
             title="Отдел"
-     :to="{ name: 'department' }"
+            :to="{ name: 'department' }"
             :active="isCurrentRoute('department')"
             icon="tabler--building"
         />

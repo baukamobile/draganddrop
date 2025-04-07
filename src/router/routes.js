@@ -7,66 +7,73 @@ export default [
                 path: '/',
                 name: 'Dashboard',
                 component: () => import('@/views/pages/Projects/Project.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/dashboard/:projectId',
                 name: 'ProjectTasks',
                 component: () => import('@/components/dashboard/Index.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/chat',
                 name: 'Chat',
-                component: ()=> import('@/views/pages/chat/Chat.vue')
+                component: ()=> import('@/views/pages/chat/Chat.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/calendar',
                 name: 'calendar',
-                component: ()=> import('@/views/pages/calendar/calendar.vue')
+                component: ()=> import('@/views/pages/calendar/calendar.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/department',
                 name: 'department',
-                component: ()=> import('@/views/pages/department/department.vue')
+                component: ()=> import('@/views/pages/department/department.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/news',
                 name: 'news',
-                component: ()=> import('@/views/pages/news/news.vue')
+                component: ()=> import('@/views/pages/news/news.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/business_process',
                 name: 'business_process',
-                component: ()=> import('@/views/pages/business_process/business_process.vue')
+                component: ()=> import('@/views/pages/business_process/business_process.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/reports',
                 name: 'reports',
-                component: ()=> import('@/views/pages/reports/reports.vue')
+                component: ()=> import('@/views/pages/reports/reports.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/business_process',
                 name: 'business_process',
-                component: ()=> import('@/views/pages/business_process/business_process.vue')
+                component: ()=> import('@/views/pages/business_process/business_process.vue'),
+                meta: { layout: 'default' }
             },
             {
                 path: '/pages/my_tasks',
                 name: 'my_tasks',
-                component: ()=> import('@/views/pages/my_tasks/My_Tasks.vue')
+                component: ()=> import('@/views/pages/my_tasks/My_Tasks.vue'),
+                meta: { layout: 'default' }
             },
-            // {
-            //     path: '/login',
-            //     name: 'login',
-            //     component: ()=> import('@/auth/login/LoginPage.vue')
-            // },
-            // {
-            //     path: '/auth',
-            //     name: 'signup',
-            //     component: ()=> import('@/auth/login/RegisterPage.vue')
-            // },
             {
                 path: '/login',
                 name: 'newsignup',
-                component: () => import('@/auth/login/signup.vue')
+                component: () => import('@/auth/login/signup.vue'),
+                meta: { layout: 'auth' }  // Используем AuthenticationLayout
+            },
+            {
+                path: '/login',
+                name: 'profile',
+                component: () => import('@/auth/login/signup.vue'),
+                meta: { layout: 'auth' }  // Используем AuthenticationLayout
             },
 
         ],

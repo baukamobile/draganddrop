@@ -23,8 +23,7 @@ import 'element-plus/dist/index.css'  // Import Element Plus styles
 // // Если используешь сессии, включи withCredentials
 // axios.defaults.withCredentials = true;
 const app = createApp(App)
-const pinia = createPinia();
-app.use(pinia);
+app.use(createPinia()) // Подключаем Pinia
 app.use(router);
 app.use(ElementPlus)
 app.use(Antd);

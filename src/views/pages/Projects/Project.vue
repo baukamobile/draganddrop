@@ -4,6 +4,7 @@ import './styles/style.css'
 import { ProjectsManager } from './Report_manager'
 import { useRouter } from 'vue-router'
 
+
 const { projects } = ProjectsManager();
 const router = useRouter();
 
@@ -15,6 +16,7 @@ const goToProject = (projectId) => {
 <template>
     <PageWrapper>
         <div class="ag-format-container">
+<a href="#"><h1>Добавить проект + </h1></a>
             <div v-for="(item, index) in projects" :key="index">
                 <div class="ag-courses_item" @click="goToProject(item.id)">
                     <div class="ag-courses-item_link">
