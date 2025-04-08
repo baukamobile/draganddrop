@@ -23,7 +23,7 @@ const handleRegister = async () => {
 const handleLogin = async () => {
   const success = await login();
   if (success) {
-    router.push({ name: 'Chat' });
+    router.push({ name: 'Dashboard' });
   }
 };
 

@@ -4,6 +4,7 @@ import { ref, onMounted,reactive } from "vue";
 // import { getTask, getStatusTask, updateTaskStatus, addColumn,addTask } from "@/api/tasks";
 import {getUsers} from "@/api/users";
 import axios from "axios";
+// import { useAuthStore } from '@/stores/auth'
 // import { reactive } from "vue";
 // const API_REGISTER = "http://127.0.0.1:8000/users/register";
 const API_LOGIN = import.meta.env.VITE_API_LOGIN;
@@ -11,10 +12,11 @@ const API_REGISTER = import.meta.env.VITE_API_REGISTER;
 const API_POSTIION = import.meta.env.VITE_API_POSITION;
 const API_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
 const API_COMPANY = import.meta.env.VITE_API_COMPANY;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // const API_LOGOUT = "http://127.0.0.1:8000/users/logout";
 // const API_URL_USERS = "http://127.0.0.1:8000/users/users";
 
-
+// const authStore = useAuthStore()
 export function UserAuthManager(){
     const email = ref(''); //email ползователя
     const password = ref('');//пароль ползователя
@@ -30,30 +32,51 @@ export function UserAuthManager(){
     const selectedDepartment = ref(null);
     const selectedCompany = ref(null);
 
-    const login = async () =>{
-        if (!email.value || !password.value){ //если ползователь не вводил данные
-            errorMessage.value='Email и пароль обязательны!'
+    const login = async () => {
+        if (!email.value || !password.value) {  
+            errorMessage.value = 'Email и пароль обязательны!';
             return;
         }
-        isLoading.value = true; // флаг загрузки Блокируем кнопку, чтобы юзер не спамил клики
-        errorMessage.value = ''; //очистка ошибки перед новым запросом
-        try{
-            const response = await axios.post(`${API_LOGIN}/`,{//импортируем путь к логин 
+        isLoading.value = true;
+        errorMessage.value = '';
+        try {
+            const response = await axios.post(`${API_LOGIN}/`, {
                 email: email.value,
                 password: password.value
             });
-            const token = response.data.token;
-            localStorage.setItem('authToken',token);//Сохраняем токен
-            console.log('token', localStorage);
-            // axios.defaults.headers.common['Authorization']='Bearer $token';
+            console.log('Ответ сервера:', response.data);
+            const token = response.data.jwt;
+            if(!token){
+                console.error('Токен не получен!');
+                return;
+            }
+
+            localStorage.setItem('authToken', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            return true; //Success
-        }catch(error){
+    
+            console.log('Токен сохранён:', token);
+            console.log('Отправляем запрос с заголовками:', {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            });
+            // Теперь загружаем пользователя
+            const userResponse = await axios.get(`${API_BASE_URL}/users/api/me/`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            console.log('Полученные данные пользователя:', userResponse.data);
+    
+            localStorage.setItem('user', JSON.stringify(userResponse.data));
+            console.log('Token jwt',token)
+            console.log('Отправляем запрос с заголовком:', {
+                Authorization: `Bearer ${token}`
+            });
+            return true; 
+        } catch (error) {
             errorMessage.value = error.response?.data?.message || "Ошибка авторизации";
-        }finally{
-            isLoading.value = false; 
+        } finally {
+            isLoading.value = false;
         }
-    };
+    };    
     //register logic
     const register = async () =>{
         if(!email.value || !first_name.value 
