@@ -17,17 +17,10 @@ import { useAuthStore } from '@/stores/auth_user_store'
 import { computed } from 'vue'
 import { UserAuthManager } from '@/auth/login/userAuthManager';
 const {
-  email, password, first_name, last_name,
-  selectedPosition, selectedDepartment,selectedCompany,
-  phone_number, isLoading, position, department,company,
-  login, logout, register, errorMessage, handleLoginClick
+ logout
 } = UserAuthManager();
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
-
-// const logout = () => {
-//   authStore.logout()
-// }
 onMounted(() => {
     console.log(user.value)
     document.addEventListener('scroll', handleScroll)
@@ -52,11 +45,6 @@ onUnmounted(() => {
     >
         <div class="flex items-center gap-2">
             <nav class="navbar navbar-light bg-light">
-  <!-- <form class="form-inline">
-    <input class="form-control" type="search" icon="tabler--search" placeholder="Искать" aria-label="Search">
-    
-<button class="btn btn-outline-success" type="submit">Search</button> -->
-  <!-- </form>  -->
 </nav>
             <Button
                 class="p-2 md:hidden"
@@ -78,8 +66,6 @@ onUnmounted(() => {
                 ></span>
             </Button>
         </div>
-        
-
         <div class="flex items-center gap-2">
             
             <Button

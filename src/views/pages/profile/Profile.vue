@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { getUsers } from '@/api/users';
 const router = useRouter();
 const isLoading = ref(false);
 const errorMessage = ref('');
@@ -16,7 +16,7 @@ const userData = ref({
   position: 'Менеджер проектов',
   department: 'Разработка ПО',
   company: 'GuideJet TI',
-  avatar: 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'
+  image: 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'
 });
 
 // Копия данных для редактирования
@@ -88,7 +88,7 @@ const logout = () => {
       <div class="profile-content">
         <!-- Аватар пользователя -->
         <div class="avatar-container">
-          <img :src="userData.avatar" alt="Аватар пользователя" class="avatar" />
+          <img :src="userData.image" alt="Аватар пользователя" class="avatar" />
           <div class="user-name">{{ userData.first_name }} {{ userData.last_name }}</div>
           <div class="user-position">{{ userData.position }}</div>
         </div>
@@ -180,7 +180,9 @@ const logout = () => {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #b6b6cb;
+  /* background-color: #b6b6cb; */
+  background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
 }
 
 .profile-card {

@@ -256,6 +256,7 @@ input {
 	width: 968px;
 	max-width: 100%;
 	min-height: 580px;
+  padding: 20px;
 }
 
 .form-container {

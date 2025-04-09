@@ -32,6 +32,7 @@ export function UserAuthManager(){
     const selectedPosition = ref(null);  // Одна выбранная должность
     const selectedDepartment = ref(null);
     const selectedCompany = ref(null);
+    const image = ref(null);
 // //Сохраняем токен после авторизации
 // const extract_login_token = async (email, password)=>{
 //     const response = await axios.post(`${API_BASE_URL}/users/api/login/`,{ 
@@ -198,7 +199,7 @@ onMounted(async () => { //Код внутри выполняется, когда
         position: parsedUserData.position || userData.value.position,
         department: parsedUserData.department || userData.value.department,
         company: parsedUserData.company || userData.value.company,
-        avatar: parsedUserData.avatar || userData.value.avatar
+        image: parsedUserData.image || userData.value.image
       };
       
       // Обновляем также данные для редактирования
@@ -232,6 +233,7 @@ return {email,
     first_name,
     last_name,
     phone_number,
+    image,
     password,
     isLoading,
     position,
