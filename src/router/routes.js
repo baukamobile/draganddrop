@@ -71,8 +71,14 @@ export default [
             },
             {
                 path: '/login',
-                name: 'profile',
+                name: 'logout',
                 component: () => import('@/auth/login/signup.vue'),
+                meta: { layout: 'auth' }  // Используем AuthenticationLayout
+            },
+            {
+                path: '/login',
+                name: 'profile',
+                component: () => import('@/views/pages/profile/Profile.vue'),
                 meta: { layout: 'auth' }  // Используем AuthenticationLayout
             },
 

@@ -123,7 +123,8 @@ onUnmounted(() => {
                     <!-- <DropdownLink :to="{ name: 'signup' }">Log Out</DropdownLink>
                     <DropdownLink :to="{ name: 'login' }">Log In</DropdownLink> -->
                     <DropdownLink :to="{ name: 'profile' }">Профиль</DropdownLink>
-                    <DropdownLink @click="logout">Выйти</DropdownLink>
+                    <DropdownLink :to="{ name: 'logout' }">Выйти</DropdownLink>
+                    <!-- <DropdownLink @click="logout">Выйти</DropdownLink> -->
                       <!-- <DropdownLink :to="{ name: 'profile' }">Профиль</DropdownLink>  -->
                      <!-- <DropdownLink @click="logout">Выйти</DropdownLink>  -->
                 </template>

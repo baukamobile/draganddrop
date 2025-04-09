@@ -45,7 +45,9 @@ export function UserAuthManager(){
                 password: password.value
             });
             console.log('Ответ сервера:', response.data);
-            const token = response.data.jwt;
+            // const token = response.data.jwt;
+            console.log('Ответ сервера:', JSON.stringify(response.data, null, 2));
+            const token = response.data.jwt || response.data.access || response.data.token; 
             if(!token){
                 console.error('Токен не получен!');
                 return;
@@ -60,7 +62,8 @@ export function UserAuthManager(){
             });
             // Теперь загружаем пользователя
             const userResponse = await axios.get(`${API_BASE_URL}/users/api/me/`, {
-                headers: { Authorization: `Bearer ${token}` }
+
+                // headers: { Authorization: `Bearer ${token}` }
             });
     
             console.log('Полученные данные пользователя:', userResponse.data);
@@ -147,12 +150,36 @@ const getCompany = async()=>{
 const handleLoginClick = async () => {
     const success = await handleLogin();
     if (success) {
-        router.push({ name: 'Dashboard' }); // Переход на Dashboard после логина
+        router.push({ name: 'profile' }); // Переход на Dashboard после логина
     } else {
         errorMessage.value = "Ошибка входа. Проверьте данные.";
     }
 };
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
+    const userDataFromStorage = localStorage.getItem('user');
+    if (userDataFromStorage) {
+        try {
+          const parsedUserData = JSON.parse(userDataFromStorage);
+            
+      // Обновляем данные профиля данными из API
+      userData.value = {
+        email: parsedUserData.email || userData.value.email,
+        first_name: parsedUserData.first_name || userData.value.first_name,
+        last_name: parsedUserData.last_name || userData.value.last_name,
+        phone_number: parsedUserData.phone_number || userData.value.phone_number,
+        position: parsedUserData.position || userData.value.position,
+        department: parsedUserData.department || userData.value.department,
+        company: parsedUserData.company || userData.value.company,
+        avatar: parsedUserData.avatar || userData.value.avatar
+      };
+      
+      // Обновляем также данные для редактирования
+      editData.value = {...userData.value};
+    } catch (e) {
+      console.error('Ошибка при разборе данных пользователя:', e);
+    }
+  }
+
     try {
         const [positionData, departmentData,companyData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().
             //Разница: Promise.allSettled() не прерывает выполнение при ошибке, а возвращает массив с объектами-результатами каждого запроса.
