@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://127.0.0.1:8000/tasks/tasks";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 export const getTask = async()=>{
@@ -9,7 +9,7 @@ export const getTask = async()=>{
     return response.data
 };
 
-const API_URL_STATUS = "http://127.0.0.1:8000/tasks/status";
+const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 
 export const getStatusTask = async()=>{
     const response = await axios.get(`${API_URL_STATUS}/`) 

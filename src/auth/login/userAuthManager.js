@@ -8,6 +8,7 @@ import axios from "axios";
 // import { reactive } from "vue";
 // const API_REGISTER = "http://127.0.0.1:8000/users/register";
 const API_LOGIN = import.meta.env.VITE_API_LOGIN;
+const API_LOGOUT = import.meta.env.VITE_API_LOGOUT;
 const API_REGISTER = import.meta.env.VITE_API_REGISTER;
 const API_POSTIION = import.meta.env.VITE_API_POSITION;
 const API_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
@@ -31,7 +32,16 @@ export function UserAuthManager(){
     const selectedPosition = ref(null);  // Одна выбранная должность
     const selectedDepartment = ref(null);
     const selectedCompany = ref(null);
-
+// //Сохраняем токен после авторизации
+// const extract_login_token = async (email, password)=>{
+//     const response = await axios.post(`${API_BASE_URL}/users/api/login/`,{ 
+//       //<-- надо менять url из .env
+//       email,password
+//     });
+//     localStorage.setItem('access_token', response.data.access);
+//     localStorage.setItem('refresh_token', response.data.refresh);
+//     return response.data;
+//   };
     const login = async () => {
         if (!email.value || !password.value) {  
             errorMessage.value = 'Email и пароль обязательны!';
@@ -40,13 +50,15 @@ export function UserAuthManager(){
         isLoading.value = true;
         errorMessage.value = '';
         try {
-            const response = await axios.post(`${API_LOGIN}/`, {
+            const response = await axios.post(`${API_LOGIN}`, {
                 email: email.value,
                 password: password.value
             });
-            console.log('Ответ сервера:', response.data);
+            localStorage.setItem('access_token', response.data.access);
+            localStorage.setItem('refresh_token', response.data.refresh);
+            // console.log('Ответ сервера:', response.data);
             // const token = response.data.jwt;
-            console.log('Ответ сервера:', JSON.stringify(response.data, null, 2));
+            console.log('Access Token Ответ сервера:', JSON.stringify(response.data.access, null, 2));
             const token = response.data.jwt || response.data.access || response.data.token; 
             if(!token){
                 console.error('Токен не получен!');
@@ -111,8 +123,20 @@ export function UserAuthManager(){
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
+        try {
+            const refresh = localStorage.getItem('refresh_token');
+            if (refresh) {
+              console.log('Получение refresh token: ', refresh);
+              await axios.post(`${API_LOGOUT}`, { refresh });
+            }
+          }catch (error){
+            console.log('Ошибка с logout: ', error);
+        }
+
         localStorage.removeItem('authToken');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('acces_token');
         delete axios.defaults.headers.common['Authorization'];
         window.location.reload(); // Перезагрузим страницу, чтобы сбросить состояние
     };
@@ -155,6 +179,10 @@ const handleLoginClick = async () => {
         errorMessage.value = "Ошибка входа. Проверьте данные.";
     }
 };
+
+
+
+
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
     const userDataFromStorage = localStorage.getItem('user');
     if (userDataFromStorage) {
