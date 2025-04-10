@@ -156,9 +156,10 @@ const process_stages = ref([]);
  // логика создание колонок.  
 const submitColumn = async () => {
         try {    
-console.log(" Тип end_date:", typeof newTask.end_date);
+// console.log(" Тип end_date:", typeof newTask.created_at);
             if (!newProcessStage.value.process) {
-                console.error("Ошибка: process не выбран!");
+                newProcessStage.value.process = 1;
+                console.error("Ошибка: process не выбран!",newProcessStage.value.process);
                 return;
             }
             await addColumn(newProcessStage.value);
@@ -174,7 +175,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             console.log("Перед отправкой:", JSON.stringify(newTask, null, 2));
             newTask.due_date = formatDateForBackend(newTask.due_date);
     
-            if (!newTask || !newTask.name?.trim()) {
+            if (!newTask || !newTask.title?.trim()) {
                 console.error("Ошибка: Задание должно быть заполненным");
                 return;
             }
@@ -188,10 +189,10 @@ console.log(" Тип end_date:", typeof newTask.end_date);
             // console.log("Ответ сервера:", response.data);
     
             // Обновляем список задач
-            tasks.value.length = 0; 
-            tasks.value.push(...await getBpmTask());
+            bpm_tasks.value.length = 0; 
+            bpm_tasks.value.push(...await getBpmTask());
     
-            console.log("НОВАЯ ЗАДАЧА", tasks.value);
+            console.log("НОВАЯ ЗАДАЧА", bpm_tasks.value);
     
             // Очищаем форму после успешной отправки
             Object.assign(newTask, {
@@ -293,12 +294,12 @@ onMounted(async () => { //Код внутри выполняется, когда
             getDepartment(),
         ]);
 
-        if (taskData.status === "fulfilled") tasks.value = taskData.value;
-        if (ProcessStageData.status === "fulfilled") statuses.value = ProcessStageData.value;
+        if (taskData.status === "fulfilled") bpm_tasks.value = taskData.value;
+        if (ProcessStageData.status === "fulfilled") process_stages.value = ProcessStageData.value;
         if (userData.status === "fulfilled") users.value = userData.value;
-        if (processData.status === "fulfilled") projects.value = processData.value;
+        if (processData.status === "fulfilled") processes.value = processData.value;
         if (departmentData.status === "fulfilled") department.value = departmentData.value;
-        console.log("Данные загружены:", { tasks: tasks.value, process_stages: process_stages.value, users: users.value, processes: processes.value });
+        console.log("Данные загружены:", { tasks: bpm_tasks.value, process_stages: process_stages.value, users: users.value, processes: processes.value });
 
     } catch (error) {
         console.error("Ошибка при загрузке данных:", error);

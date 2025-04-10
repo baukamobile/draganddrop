@@ -54,7 +54,7 @@ const selectedProjectId = ref(Number(route.params.process_id));
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
             <div class="dashboard">
                 <div class="center">
-                    <div v-for="status in statuses" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
+                    <div v-for="status in process_stages" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
     @dragover.prevent @dragenter.prevent>
                         <!-- Разрешение для перетаскивание -->
                         <div class="status">
@@ -169,10 +169,11 @@ const selectedProjectId = ref(Number(route.params.process_id));
                             <input v-model="newProcessStage.name" placeholder="Название колонки" required />
                             <div><label for="users">Сотрудник:</label><br>
                                 <select id="users" v-model="newProcessStage.owner">
-                                    <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                        {{ user.first_name }} {{ user.last_name }}
+                                    <option v-for="owners in newProcessStage.owner" :key="owners.id" :value="Number(owners.id)">
+                                        {{ owners.first_name }} 
+                                        <!-- {{ user.last_name }} -->
                                         <!-- {{ user.department.department_name }} -->
-                                        {{ user.department ? user.department.department_name : 'No department' }}
+                                        <!-- {{ user.department ? user.department.department_name : 'No department' }} -->
                                     </option>
                                 </select>
                             </div>
