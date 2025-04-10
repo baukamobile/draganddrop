@@ -29,6 +29,7 @@ export const getProcess = async()=>{   //Получаем задачи
 };
 export const getDashboardWidget = async()=>{   //Получаем задачи
     const response = await axios.get(`${API_BPM_DASHBOARD_WIDGET}`)
+    console.log('Dashboardwidget : ', response.data)
     return response.data
 };
 export const getDashboard = async()=>{   //Получаем задачи
@@ -51,12 +52,14 @@ export const getProcessStageTemplate = async()=>{   //Получаем зада�
     const response = await axios.get(`${API_BPM_PROCESS_STAGE_TEMPLATE}`)
     return response.data
 };
-export const getProcessState = async()=>{   //Получаем задачи
+export const getProcessStage = async()=>{   //Получаем задачи
     const response = await axios.get(`${API_BPM_PROCESS_STAGE}`)
+    console.log('Бизнес процесс колонки: ', response.data)
     return response.data
 };
 export const getBpmTask = async()=>{   //Получаем задачи
     const response = await axios.get(`${API_BPM_TASK}`)
+    console.log('Бизнес процесс задачи: ', response.data)
     return response.data
 };
 export const getBpmTaskStageHistory = async()=>{   //Получаем задачи

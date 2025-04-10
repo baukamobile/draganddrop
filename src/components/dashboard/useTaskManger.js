@@ -9,6 +9,13 @@ const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 const API_URL_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
+
+
+
+
+
+
+
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
@@ -35,7 +42,7 @@ export function useTaskManager() {
     const projects = ref({});
     const department = ref([]);
     const users = ref([]);
-    const newStatus = ref({ status_name: "", user: null });
+    const newStatus = ref({ status_name: "", project: null });
 const statuses = ref([
     // { id: 1, status_name: "Список задач", user: 1 },
     // { id: 2, status_name: "В процессе", user: 2 },
@@ -137,14 +144,14 @@ const statuses = ref([
 const submitColumn = async () => {
         try {    
 console.log(" Тип end_date:", typeof newTask.end_date);
-            if (!newStatus.value.user) {
+            if (!newStatus.value.project) {
 
-                console.error("Ошибка: user не выбран!");
+                console.error("Ошибка: project не выбран!");
                 return;
             }
             await addColumn(newStatus.value);
             newStatus.value.status_name = "";
-            newStatus.value.user = null;
+            newStatus.value.project = null;
             statuses.value = await getStatusTask();
         } catch (error) {
             console.error("Ошибка при добавлении колонки", error);

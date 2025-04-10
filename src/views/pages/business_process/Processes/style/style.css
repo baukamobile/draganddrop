@@ -82,7 +82,7 @@
   .ag-courses-item_bg {
     height: 128px;
     width: 128px;
-    background-color: #3455f9;
+    background-color: #f934ec;
   
     /* z-index: 4; */
     position: absolute;
@@ -108,7 +108,7 @@
     background-color: #cd3e94;
   }
   .ag-courses_item:nth-child(6n) .ag-courses-item_bg {
-    background-color: #4c49ea;
+    background-color: #5fea49;
   }
   
   

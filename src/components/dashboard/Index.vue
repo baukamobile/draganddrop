@@ -168,7 +168,7 @@ const selectedProjectId = ref(Number(route.params.projectId));
                         <form @submit.prevent="submitColumn">
                             <input v-model="newStatus.status_name" placeholder="Название колонки" required />
                             <div><label for="users">Сотрудник:</label><br>
-                                <select id="users" v-model="newStatus.user">
+                                <select id="projects" v-model="newStatus.project">
                                     <option v-for="user in users" :key="user.id" :value="Number(user.id)">
                                         {{ user.first_name }} {{ user.last_name }}
                                         <!-- {{ user.department.department_name }} -->
