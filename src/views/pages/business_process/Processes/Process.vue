@@ -1,16 +1,16 @@
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
-import './styles/style.css'
-import { ProjectsManager } from './Report_manager'
+import './style/style.css'
+import { ProcessManager } from '@/views/pages/business_process/Processes/getProcess'
 import { useRouter } from 'vue-router'
 import { useTaskManager } from '@/components/dashboard/useTaskManger';
 
-//PROJECT
-const { projects } = ProjectsManager();
+// PROCESS
+const { processes} = ProcessManager();
 const router = useRouter();
 
-const goToProject = (projectId) => {
-    router.push({ name: 'ProjectTasks', params: { projectId } });
+const goToProcess = (processId) => {
+    router.push({ name: 'Processtasks', params: { processId } });
 };
 const {
     formatDate,
@@ -20,19 +20,19 @@ const {
 <template>
     <PageWrapper>
         <div class="ag-format-container">
-<a href="#"><h1>Добавить проект + </h1></a>
-            <div v-for="(item, index) in projects" :key="index">
-                <div class="ag-courses_item" @click="goToProject(item.id)">
+<a href="#"><h1>Добавить Процесс + </h1></a>
+            <div v-for="(item, index) in processes" :key="index">
+                <div class="ag-courses_item" @click="goToProcess(item.id)">
                     <div class="ag-courses-item_link">
                         <div class="ag-courses-item_bg"></div>
                         <div class="ag-courses-item_title">
-                            Проект: {{ item.project_name }}
+                            Процесс: {{ item.name }}
                         </div>
                         <p style="color: aliceblue; z-index: 5;">{{ item.description }}</p>
                         <div class="ag-courses-item_date-box">
                       
-                            Начало: <span class="ag-courses-item_date">{{ formatDate(item.start_date) }}</span>
-                            Конец: <span class="ag-courses-item_date">{{ formatDate(item.end_date) }}</span>
+                            Начало: <span class="ag-courses-item_date">{{ formatDate(item.created_at) }}</span>
+                            Конец: <span class="ag-courses-item_date">{{ formatDate(item.updated_at) }}</span> 
                             <el-icon><Search /></el-icon>
                         </div>
                     </div>

@@ -17,38 +17,42 @@ axios.interceptors.request.use(config => {
 
 
 export const getDataApi = async (first_url, second_url) => {
+    try{
     const response = await axios.get(`${API_URL}${first_url}${second_url}`); 
-    
     return response.data;
+    }catch(error){
+        console.log('Проблема загрузки данных: ',error);
+        throw error;
+    }
 };
-export const getTask = async()=>{
+export const getTask = async()=>{   //Получаем задачи
     const response = await axios.get(`${API_URL_TASK}/`)
     // alert('Задачи загружены')
     return response.data
 };
-export const getProjects = async()=>{
+export const getProjects = async()=>{  //Получаем проектов
     const response = await axios.get(`${API_URL_PROJECTS}/`);
     return response.data;
 }
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 
-export const getStatusTask = async()=>{
+export const getStatusTask = async()=>{         //Получаем статус
     const response = await axios.get(`${API_URL_STATUS}/`) 
     console.log('status:', response.data)
     return response.data
 };
 
-export async function updateTaskStatus(taskId, statusId) {
+export async function updateTaskStatus(taskId, statusId) {  //Обновление статусов
     const response = await axios.patch(`${API_URL_TASK}/${taskId}/`, { status: statusId }); // 👈 Меняем `statusesId` на `status`
     return response.data;
 }
-export async function addTask(taskData) {
+export async function addTask(taskData) {           //Добавляем Задачи
     const response = await axios.post(`${API_URL_TASK}/`,taskData);
     return response.data;
 }
 
 
-export async function addColumn(newStatus){
+export async function addColumn(newStatus){             //Добавляем Колонку статусов
     const response = await axios.post(`${API_URL_STATUS}/`,newStatus);
     return response.data;
     // await axios.get(`${API_URL_USERS}/`)

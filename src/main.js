@@ -10,6 +10,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'  // Import Element Plus styles
 // import axios from "axios";
 // // Функция для получения CSRF-токена из куков
+// //Без этой функции console выдает 403 запрещает 
 // function getCsrfToken() {
 //     return document.cookie
 //         .split('; ')

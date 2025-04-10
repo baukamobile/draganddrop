@@ -49,7 +49,7 @@ const isCurrentPath = (path) => {
         />
         <SidebarLink class="Business_process-sidebar"
             title="Бизнес Процессы"
-            :to="{ name: 'business_process' }"
+            :to="{ name: 'processes' }"
             :active="isCurrentRoute('business_process')"
             icon="tabler--progress-check"
         />
