@@ -53,7 +53,7 @@ export const getProcessStageTemplate = async()=>{   //Получаем зада�
     return response.data
 };
 export const getProcessStage = async()=>{   //Получаем задачи
-    const response = await axios.get(`${API_BPM_PROCESS_STAGE}`)
+    const response = await axios.get(`${API_BPM_PROCESS_STAGE}/`)
     console.log('Бизнес процесс колонки: ', response.data)
     return response.data
 };

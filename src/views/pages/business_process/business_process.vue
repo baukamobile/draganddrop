@@ -5,6 +5,7 @@ import './style/style.css';
 import PageWrapper from '@/components/PageWrapper.vue';
 import { EditFilled, DeleteOutlined, CommentOutlined } from "@ant-design/icons-vue";
 import { useRoute } from 'vue-router';
+import {DeleteFilled} from '@element-plus/icons-vue' 
 // import { useSortable } from '@vueuse/core';
 
 // C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
@@ -61,7 +62,8 @@ const selectedProjectId = ref(Number(route.params.process_id));
                             <h1 class="status-name">{{ status.name }}</h1>
                             <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
                             <a class="red-button" @click="handleClick(status.id)">
-                                <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
+                                <!-- <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" /> -->
+                                <el-icon style="font-size: 15px; color: red; cursor: pointer;"><DeleteFilled /></el-icon>
                             </a>
                         </div>
                         <transition-group name="fade">

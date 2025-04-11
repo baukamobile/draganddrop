@@ -135,9 +135,9 @@ export function UserAuthManager(){
             console.log('Ошибка с logout: ', error);
         }
 
-        localStorage.removeItem('authToken');
+        // localStorage.removeItem('authToken');
         localStorage.removeItem('refresh_token');
-        localStorage.removeItem('acces_token');
+        localStorage.removeItem('access_token');
         delete axios.defaults.headers.common['Authorization'];
         window.location.reload(); // Перезагрузим страницу, чтобы сбросить состояние
     };

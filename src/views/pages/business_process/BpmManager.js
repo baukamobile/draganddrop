@@ -83,7 +83,7 @@ const process_stages = ref([]);
 //Удаление Колонок
     const handleClick = async (process_stage_id) => {
         try {
-            await axios.delete(`${API_BPM_PROCESS_STAGE}/${process_stage_id}/`);
+            await axios.delete(`${API_BPM_PROCESS_STAGE}${process_stage_id}/`);
             console.log('Удаление колонок')
             process_stages.value = process_stages.value.filter(process_stage => process_stage.id !== process_stage_id);
         } catch (error) {
@@ -93,7 +93,7 @@ const process_stages = ref([]);
 //Удаление Задач
     const handleClickTask = async (bpm_taskID) => {
         try {
-            await axios.delete(`${API_BPM_TASK}${taskID}/`);
+            await axios.delete(`${API_BPM_TASK}${taskID}`);
             bpm_tasks.value = bpm_tasks.value.filter(bpm_task => bpm_task.id !== bpm_taskID);
             console.log('Удаление задач')
         } catch (error) {

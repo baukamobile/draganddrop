@@ -5,9 +5,7 @@ import './styles/dashboard.css';
 import PageWrapper from '@/components/PageWrapper.vue';
 import { EditFilled, DeleteOutlined, CommentOutlined } from "@ant-design/icons-vue";
 import { useRoute } from 'vue-router';
-// import { useSortable } from '@vueuse/core';
-
-// C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
+import {DeleteFilled,EditPen} from '@element-plus/icons-vue' 
 const {
     tasks,
     statuses,
@@ -31,8 +29,6 @@ const {
     onColumnDragOver,
 
 } = useTaskManager();
-// const el = useTemplateRef<HTMLElement>('el')
-// useSortable(el, list)
 const showTaskForm = ref({});
 const toggleTaskForm = (statusId) => {
     showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
@@ -61,7 +57,8 @@ const selectedProjectId = ref(Number(route.params.projectId));
                             <h1 class="status-name">{{ status.status_name }}</h1>
                             <!-- <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку -->
                             <a class="red-button" @click="handleClick(status.id)">
-                                <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
+                                
+                                <el-icon style="font-size: 15px; color: red; cursor: pointer;"><DeleteFilled /></el-icon>
                             </a>
                         </div>
                         <transition-group name="fade">
@@ -77,9 +74,10 @@ const selectedProjectId = ref(Number(route.params.projectId));
                                     </p>
                                     <div style="display: flex;">
                                         <a @click.prevent="handleClickTask(task.id)" class="delete-task">
-                                            <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
+                                            <el-icon style="font-size: 15px; color: red; cursor: pointer;"><DeleteFilled /></el-icon>
                                         </a>
-                                        <EditFilled style="font-size: 15px; color: green;" @click="editTask(task)" />
+                                        <el-icon style="font-size: 15px; color: green;" @click="editTask(task)" ><EditPen /></el-icon>
+                                        <!-- <EditFilled style="font-size: 15px; color: green;" @click="editTask(task)" /> -->
                                     </div>
                                 </div>
                                 <div class="time-part">

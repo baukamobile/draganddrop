@@ -18,7 +18,7 @@ import 'element-plus/dist/index.css'  // Import Element Plus styles
 //         ?.split('=')[1];
 // }
 
-// // Добавляем CSRF-токен во все POST/PUT/PATCH/DELETE-запросы
+// // Добавляем CSRF-токен во все POST/PUT/PATCH/DELETE-запросы  dsfsdf
 // axios.defaults.headers.common['X-CSRFToken'] = getCsrfToken();
 
 // // Если используешь сессии, включи withCredentials

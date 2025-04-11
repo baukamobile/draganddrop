@@ -20,7 +20,10 @@ const {
 <template>
     <PageWrapper>
         <div class="ag-format-container">
-<a href="#"><h1>Добавить проект + </h1></a>
+            <a href="#">
+
+<h1 class="text-xl font-semibold leading-tight">Добавить Проект + </h1  >
+</a>
             <div v-for="(item, index) in projects" :key="index">
                 <div class="ag-courses_item" @click="goToProject(item.id)">
                     <div class="ag-courses-item_link">
