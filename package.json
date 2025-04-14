@@ -30,6 +30,8 @@
     "ant-design-vue": "^4.2.6",
     "apexcharts": "^3.35.3",
     "axios": "^1.8.1",
+    "bpmn-js": "^18.4.0",
+    "bpmn-js-properties-panel": "^5.35.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "element-plus": "^2.9.7",
