@@ -309,7 +309,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full" style="display: flex; justify-content: space-between;">
+  <div class="flex flex-col h-full" >
     <div ref="bpmnContainer" class="w-full h-[700px] border" >
     <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
       Сохранить процесс
