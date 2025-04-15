@@ -235,18 +235,8 @@ const saveDiagram = async () => {
 
     // Отправка на сервер`${API_URL}
     const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
-      
-      // method: 'POST',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-      // body: JSON.stringify({ xml }),
       xml:xml
     });
-
-    // if (!response.ok) {
-    //   throw new Error('Ошибка отправки на сервер');
-    // }
 
     console.log('Диаграмма успешно сохранена на сервере');
   } catch (err) {

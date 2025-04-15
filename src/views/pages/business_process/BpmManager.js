@@ -70,7 +70,8 @@ const process_stages = ref([]);
             current_stage: 1,
             assigned_to: 17,
             created_by: null,
-            parent_task: null
+            parent_task: null,
+            bpmn_xml: null,
     });
     
 //Приорите  задач
@@ -208,6 +209,7 @@ const submitColumn = async () => {
     assigned_to: null,
     created_by: null,
     parent_task: null,
+    bpmn_xml: null,
             });
     
         } catch (error) {
@@ -228,6 +230,7 @@ const submitColumn = async () => {
         newTask.assigned_to = task.assigned_to;
         newTask.created_by = task.created_by;
         newTask.parent_task = task.parent_task;
+        newTask.bpmn_xml = task.bpm_task;
         // newTask.task_name = task.task_name;
         // newTask.description = task.description;
         // newTask.documents = task.documents;
