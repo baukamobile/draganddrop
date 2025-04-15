@@ -1,10 +1,8 @@
 <script setup>
-
-    import { ref, watch, reactive } from "vue";
-    import { useTaskManager } from "./useTaskManger";
-    import './styles/dashboard.css';
+import { ref, watch, reactive } from "vue";
+import { useTaskManager } from "./useTaskManger";
+import './styles/dashboard.css';
 import { onMounted, computed } from 'vue';
-
 import PageWrapper from '@/components/PageWrapper.vue';
 import { DeleteFilled, EditPen } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';

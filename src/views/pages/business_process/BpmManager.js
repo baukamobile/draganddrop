@@ -17,6 +17,7 @@ const API_BPM_TASK =import.meta.env.VITE_API_BPM_TASK
 const API_BPM_TASK_STAGE_HISTORY = import.meta.env.VITE_API_TASK_STAGE_HISTORY
 const API_BPM_COMMENT = import.meta.env.VITE_API_BPM_COMMENT
 const API_BPM_NOTIFICATION =import.meta.env.VITE_API_NOTIFICATION
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_BPM_PROCESS}`);
@@ -74,14 +75,6 @@ const process_stages = ref([]);
             bpmn_xml: null,
     });
     
-//Приорите  задач
-    // const priority = {
-    //     1: { priority_name: "НИЗКИЙ", color: "green" },
-    //     2: { priority_name: "СРЕДНИЙ", color: "blue" },
-    //     3: { priority_name: "ВЫСОКИЙ", color: "orange" },
-    //     4: { priority_name: "Срочный", color: "red" },
-    // };
-//Удаление Колонок
     const handleClick = async (process_stage_id) => {
         try {
             await axios.delete(`${API_BPM_PROCESS_STAGE}${process_stage_id}/`);
@@ -231,16 +224,7 @@ const submitColumn = async () => {
         newTask.created_by = task.created_by;
         newTask.parent_task = task.parent_task;
         newTask.bpmn_xml = task.bpm_task;
-        // newTask.task_name = task.task_name;
-        // newTask.description = task.description;
-        // newTask.documents = task.documents;
-        // newTask.end_date = task.end_date;
-        // newTask.assigned = task.assigned;
-        // newTask.agreed_with_managers=task.agreed_with_managers;
-        // newTask.status=task.status;
-        // newTask.priority = task.priority;
-        // newTask.projects = task.projects;
-        // newTask.department = task.department;
+
         showTaskForm.value = {...showTaskForm.value,[task.current_stage]: true};
 
     };

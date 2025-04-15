@@ -12,6 +12,7 @@ const router = useRouter();
 const goToProject = (projectId) => {
     router.push({ name: 'ProjectTasks', params: { projectId } });
 };
+
 const {
     formatDate,
 } = useTaskManager();

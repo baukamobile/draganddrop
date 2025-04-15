@@ -11,6 +11,7 @@ const API_BPM_TASK =import.meta.env.VITE_API_BPM_TASK
 const API_BPM_TASK_STAGE_HISTORY = import.meta.env.VITE_API_TASK_STAGE_HISTORY
 const API_BPM_COMMENT = import.meta.env.VITE_API_BPM_COMMENT
 const API_BPM_NOTIFICATION =import.meta.env.VITE_API_NOTIFICATION
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 axios.interceptors.request.use(config => {
     // Добавляем интерцептор для всех запросов Axios
     const token = localStorage.getItem('access_token'); // Получаем токен из локального хранилища

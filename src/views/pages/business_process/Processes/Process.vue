@@ -12,6 +12,9 @@ const router = useRouter();
 const goToProcess = (processId) => {
     router.push({ name: 'Processtasks', params: { processId } });
 };
+// const gotoProcess = (processId) => {
+//     router.push({name: 'ProcessBpmn', params: {processId} });
+// }
 const {
     formatDate,
 } = useTaskManager();
@@ -30,6 +33,7 @@ const {
                         <div class="ag-courses-item_bg"></div>
                         <div class="ag-courses-item_title">
                             Процесс: {{ item.name }}
+                            
                         </div>
                         <div class="ag-courses-item_title2">
 
