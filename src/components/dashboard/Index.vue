@@ -35,11 +35,11 @@ const {
 const showTaskForm = ref({});
 const route = useRoute();
 const selectedProjectId = ref(Number(route.params.projectId));
-
-// Отладка
 onMounted(() => {
   console.log('Project ID:', selectedProjectId.value);
-  console.log('Statuses:', statuses.value); // Убедись, что statuses — ref
+  console.log('Projects:', projects.value);
+  console.log('Projects type:', Array.isArray(projects.value) ? 'Array' : typeof projects.value);
+  console.log('Statuses:', statuses.value);
   console.log('Filtered Statuses:', filteredStatuses.value);
 });
 
@@ -49,7 +49,16 @@ const filteredStatuses = computed(() => {
     console.warn('Statuses is not an array:', statuses.value);
     return [];
   }
-  return statuses.value.filter(s => s.project === selectedProjectId.value); // project вместо project_id
+  return statuses.value.filter(s => s.project === selectedProjectId.value);
+});
+
+// Безопасное получение проекта
+const selectedProject = computed(() => {
+  if (!Array.isArray(projects.value)) {
+    console.warn('Projects is not an array:', projects.value);
+    return {};
+  }
+  return projects.value.find(p => p.id === selectedProjectId.value) || {};
 });
 
 const toggleTaskForm = (statusId) => {
@@ -58,19 +67,21 @@ const toggleTaskForm = (statusId) => {
     newTask.status = statusId;
   }
 };
+
+// Устанавливаем начальное значение для newStatus.project
+onMounted(() => {
+  newStatus.project = selectedProjectId.value;
+});
 </script>
 
 <template>
   <PageWrapper>
-    <!-- Для отладки: выведем, что рендерится -->
-    <div v-if="filteredStatuses.length === 0">
-      <p>Нет статусов для проекта {{ projects.project_name }}</p>
-    </div>
-    <!-- Заголовок с отфильтрованными статусами -->
-    <!-- <h1 v-for="status in filteredStatuses" :key="status.id">
-      {{ status.status_name }}
-    </h1> -->
+
+    <div class="project-name">
+        <h1>{{ selectedProject.project_name || 'Проект не выбран'  }}</h1>
+    </div> 
     <div class="flex flex-col gap-4 md:flex-row md:items-center">
+       
       <div class="dashboard">
         <div class="center">
           <div v-for="status in filteredStatuses" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"

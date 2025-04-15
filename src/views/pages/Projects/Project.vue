@@ -1,6 +1,6 @@
 <script setup>
 import PageWrapper from '@/components/PageWrapper.vue'
-import './styles/style.css'
+import './styles/styles.css'
 import { ProjectsManager } from './Report_manager'
 import { useRouter } from 'vue-router'
 import { useTaskManager } from '@/components/dashboard/useTaskManger';

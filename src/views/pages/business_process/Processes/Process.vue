@@ -31,7 +31,10 @@ const {
                         <div class="ag-courses-item_title">
                             Процесс: {{ item.name }}
                         </div>
-                        <p style="color: aliceblue; z-index: 5;">{{ item.description }}</p>
+                        <div class="ag-courses-item_title2">
+
+                            <p style="color: aliceblue; z-index: 5;">{{ item.description }}</p>
+                        </div>
                         <div class="ag-courses-item_date-box">
                       
                             Начало: <span class="ag-courses-item_date">{{ formatDate(item.created_at) }}</span>
