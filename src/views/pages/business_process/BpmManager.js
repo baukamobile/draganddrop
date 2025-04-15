@@ -41,7 +41,20 @@ export const getDepartment = async () => {
 }
 export function useTaskManager() {
     const bpm_tasks = ref([]);
-    const processes = ref({});
+    const processes = ref({
+        id: null,
+        name: "",
+        description: "",
+        created_at: "",
+        updated_at: "",
+        is_completed: false,
+        is_recurring: false,
+        recurring_interval: null,
+        template: null,
+        owner: null,
+        department: null,
+        // bpmn_xml: null,
+    });
     const department = ref([]);
     const users = ref([]);
     const newProcessStage = ref({ 
@@ -72,7 +85,7 @@ const process_stages = ref([]);
             assigned_to: 17,
             created_by: null,
             parent_task: null,
-            bpmn_xml: null,
+            // bpmn_xml: null,
     });
     
     const handleClick = async (process_stage_id) => {
@@ -223,7 +236,7 @@ const submitColumn = async () => {
         newTask.assigned_to = task.assigned_to;
         newTask.created_by = task.created_by;
         newTask.parent_task = task.parent_task;
-        newTask.bpmn_xml = task.bpm_task;
+        // newTask.bpmn_xml = task.bpm_task;
 
         showTaskForm.value = {...showTaskForm.value,[task.current_stage]: true};
 

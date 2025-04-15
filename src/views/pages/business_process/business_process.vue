@@ -7,7 +7,8 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import axios from 'axios';
 import PageWrapper from '@/components/PageWrapper.vue';
 
-const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
+const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
 const bpmnContainer = ref(null);
 const modeler = ref(null);
 const route = useRoute();
@@ -19,8 +20,8 @@ const processes = ref([]);
 // Загрузка процессов
 const loadProcesses = async () => {
   try {
-    const response = await axios.get(`${API_BPMNXML_PROCESS}`);
-    processes.value = response.data;
+    const response = await axios.get(`${API_BPM_PROCESS}`);
+    processes.value = Array.isArray(response.data) ? response.data : [];
     console.log('Processes loaded:', processes.value);
   } catch (err) {
     console.error('Ошибка загрузки процессов:', err);
@@ -28,40 +29,39 @@ const loadProcesses = async () => {
   }
 };
 
-// Фильтрация процессов с bpmn_xml
-const filteredProcesses = computed(() => {
-  if (!Array.isArray(processes.value)) {
-    console.warn('Processes is not an array:', processes.value);
-    return [];
-  }
-  return processes.value.filter(p => p.bpmn_xml && p.bpmn_xml.xml);
-});
-
-// Выбранный процесс
-const selectedProcess = computed(() => {
-  if (!Array.isArray(processes.value)) {
-    console.warn('Processes is not an array:', processes.value);
-    return {};
-  }
-  const process = processes.value.find(p => p.id === selectedProcessId.value);
-  console.log('Selected Process:', process);
-  return process || {};
-});
-
-// Загрузка BPMN XML
+// Загрузка BPMN XML по ID диаграммы
 const loadBpmnXml = async () => {
-  if (!selectedProcessId.value || !selectedProcess.value.bpmn_xml) {
-    console.warn('Процесс или bpmn_xml не найден:', {
-      selectedProcessId: selectedProcessId.value,
-      selectedProcess: selectedProcess.value,
-    });
+  if (!selectedProcessId.value) {
+    console.warn('Process ID не указан:', selectedProcessId.value);
     return false;
   }
 
   try {
-    const xml = selectedProcess.value.bpmn_xml.xml;
+    // Получаем процесс
+    const processResponse = await axios.get(`${API_BPM_PROCESS}${selectedProcessId.value}/`);
+    const process = processResponse.data;
+    if (!process.bpmn_xml) {
+      throw new Error('bpmn_xml ID не найден');
+    }
+
+    // Получаем XML по ID диаграммы
+    const diagramResponse = await axios.get(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`);
+    const xml = diagramResponse.data.xml;
+    if (!xml) {
+      throw new Error('bpmn_xml.xml не найден');
+    }
+
     await modeler.value.importXML(xml);
     console.log('BPMN загружен для процесса:', selectedProcessId.value);
+
+    // Обновляем processes
+    const existingProcess = processes.value.find(p => p.id === selectedProcessId.value);
+    if (existingProcess) {
+      existingProcess.bpmn_xml = process.bpmn_xml; // Сохраняем ID
+    } else {
+      processes.value.push(process);
+    }
+
     modeler.value.get('canvas').zoom('fit-viewport');
     return true;
   } catch (err) {
@@ -90,6 +90,26 @@ const loadInitialDiagram = async () => {
   modeler.value.get('canvas').zoom('fit-viewport');
 };
 
+// Фильтрация процессов с bpmn_xml
+const filteredProcesses = computed(() => {
+  if (!Array.isArray(processes.value)) {
+    console.warn('Processes is not an array:', processes.value);
+    return [];
+  }
+  return processes.value.filter(p => p.bpmn_xml); // Фильтруем по наличию bpmn_xml ID
+});
+
+// Выбранный процесс
+const selectedProcess = computed(() => {
+  if (!Array.isArray(processes.value)) {
+    console.warn('Processes is not an array:', processes.value);
+    return {};
+  }
+  const process = processes.value.find(p => p.id === selectedProcessId.value);
+  console.log('Selected Process:', process);
+  return process || {};
+});
+
 onMounted(async () => {
   // Инициализация BPMN-моделера
   modeler.value = new BpmnModeler({
@@ -100,7 +120,7 @@ onMounted(async () => {
   // Загрузка процессов
   await loadProcesses();
 
-  // Попытка загрузки BPMN XML
+  // Загрузка BPMN XML
   const loaded = await loadBpmnXml();
   if (!loaded) {
     await loadInitialDiagram();
@@ -143,7 +163,7 @@ const saveDiagram = async () => {
     // Обновляем локальный processes
     const process = processes.value.find(p => p.id === selectedProcessId.value);
     if (process) {
-      process.bpmn_xml.xml = xml;
+      process.bpmn_xml = response.data.id; // Предполагаем, что сервер возвращает ID новой диаграммы
     }
   } catch (err) {
     console.error('Ошибка сохранения:', err);
