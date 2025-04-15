@@ -9,13 +9,6 @@ const API_URL_USERS = import.meta.env.VITE_API_URL_USERS;
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 const API_URL_DEPARTMENT = import.meta.env.VITE_API_DEPARTMENT;
-
-
-
-
-
-
-
 export const getProject = async () => {
     try {
         const response = await axios.get(`${API_URL_PROJECTS}/`);
