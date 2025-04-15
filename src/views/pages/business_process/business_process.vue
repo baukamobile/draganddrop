@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
 import { ref, watch, reactive } from "vue";
 import { useTaskManager } from "./BpmManager";
 import './style/style.css';
@@ -57,10 +57,10 @@ const selectedProjectId = ref(Number(route.params.process_id));
                 <div class="center">
                     <div v-for="status in process_stages" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
     @dragover.prevent @dragenter.prevent>
-                        Разрешение для перетаскивание -->
-                        <!-- <div class="status"> 
+                        <!-- Разрешение для перетаскивание  -->
+                        <div class="status"> 
                             <h1 class="status-name">{{ status.name }}</h1>
-                            <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку 
+                            <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку</a-button> 
                             <a class="red-button" @click="handleClick(status.id)">
                                  <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" /> 
                                 <el-icon style="font-size: 15px; color: red; cursor: pointer;"><DeleteFilled /></el-icon>
@@ -97,12 +97,12 @@ const selectedProjectId = ref(Number(route.params.process_id));
                             </div>
                         </transition-group>
                         <!-- Здсь форма для добавление задач с вводимым данными -->
-                        <!-- <div class="add-task-container"> 
+                        <div class="add-task-container"> 
                             <a @click="toggleTaskForm(status.id)" href="#" class="add-task">Добавить Задачу</a>
-                             порма открывается только выбранного колонки с помошью id -->
-                            <!-- <div v-if="showTaskForm[status.id]"> 
+                             <!-- порма открывается только выбранного колонки с помошью id  -->
+                            <div v-if="showTaskForm[status.id]"> 
                                 <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
-                                <!-- <h2>Форма</h2>
+                                <h2>Форма</h2>
                                 <form @submit.prevent="newTask.id ? updateTask() : submitTask();">
 
                                     <label class="label-name">Название:</label>
@@ -121,20 +121,20 @@ const selectedProjectId = ref(Number(route.params.process_id));
                                     <br><br>
                                     <label class="label-name">Конец:</label>
                                     <input type="date" v-model="newTask.due_date">
-                                    <!-- @input="newTask.end_date = $event.target.value || null"> -->
-                                    <!-- <br><br> -->
-                                    <!-- <label>Отдел</label> -->
-                                    <!-- <select v-model="newTask.department" 
+                                    @input="newTask.end_date = $event.target.value || null">
+                                     <br><br> 
+                                    <label>Отдел</label> 
+                                    <select v-model="newTask.department" 
                                         @change="console.log('отдел: ', newTask.department)">
                                         <option v-for="dep in department" :key="dep.id" :value="dep.id">
                                             {{ dep.department_name }}
                                         </option>
-                                    </select> -->
-                                    <!-- <label class="label-name">Согласовано с руководством:</label>
-                                    <input type="checkbox" v-model="newTask.agreed_with_managers"> -->
-                                    <!-- <br><br> -->
-                                    <!-- <label class="label-name">Подписан с :</label> -->
-                                    <!-- <label class="label-name">Название проекта:</label> 
+                                    </select> 
+                                     <label class="label-name">Согласовано с руководством:</label>
+                                    <input type="checkbox" v-model="newTask.agreed_with_managers"> 
+                                     <br><br> 
+                                    <label class="label-name">Подписан с :</label>
+                                     <label class="label-name">Название проекта:</label> 
                                     <select id="users" v-model="newTask.created_by">
                                         <option v-for="user in users" :key="user.id" :value="Number(user.id)">
                                             {{ user.first_name }}
@@ -148,37 +148,37 @@ const selectedProjectId = ref(Number(route.params.process_id));
                                     </select>
                                     <br><br>
                                     <label for="">Приоритет</label>
-                                    <!-- <select v-model="newTask.priority">
+                                    <select v-model="newTask.priority">
                                         <option v-for="(priority_value, priority_key) in priority" :key="priority_key"
                                             :value="priority_key">{{ priority_value.priority_name }}</option>
-                                    </select> -->
-                                    <!-- <br><br>
+                                    </select> 
+                                    <br><br>
                                     <select v-model="newTask.status">
                                         <option v-for="status in statuses" :key="status.id" :value="status.id">
                                             {{ status.status_name }}</option>
-                                    </select> -->
+                                    </select>
 
                                     <!-- <a href="#">Добавить</a> -->
-                                    <!-- <button type="submit ">Добавить</button>
+                                    <button type="submit ">Добавить</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                     <div class="add-list">
-                          форма для доавление колонок -->
-                        <!-- <h2>Добавить колонку</h2>
+                          <!-- форма для доавление колонок  -->
+                         <h2>Добавить колонку</h2>
                         <form @submit.prevent="submitColumn">
                             <input v-model="newProcessStage.name" placeholder="Название колонки" required />
                             <div><label for="users">Сотрудник:</label><br>
                                 <select id="users" v-model="newProcessStage.owner">
                                     <option v-for="owners in newProcessStage.owner" :key="owners.id" :value="Number(owners.id)">
                                         {{ owners.first_name }} 
-                                        {{ user.last_name }} -->
-                                        <!-- {{ user.department.department_name }} -->
-                                        <!-- {{ user.department ? user.department.department_name : 'No department' }} 
+                                        {{ user.last_name }} 
+                                         {{ user.department.department_name }} 
+                                         {{ user.department ? user.department.department_name : 'No department' }} 
                                     </option>
-                                </select> -->
-                            <!-- </div>
+                                </select> 
+                            </div>
                             <button type="submit">Добавить</button>
                         </form>
                     </div>
@@ -186,98 +186,7 @@ const selectedProjectId = ref(Number(route.params.process_id));
                 </div>
 
             </div>
-        </div> -->
+        </div> 
         <!-- </div> -->
-    <!-- </PageWrapper> 
-</template> --> 
-
-<script setup>
-import { onMounted, ref } from 'vue';
-import BpmnModeler from 'bpmn-js/lib/Modeler';
-import 'bpmn-js/dist/assets/diagram-js.css';
-import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
-import axios from 'axios';
-
-const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
-const bpmnContainer = ref(null);
-const modeler = ref(null); // Сохраняем modeler
-
-onMounted(() => {
-  modeler.value = new BpmnModeler({
-    container: bpmnContainer.value,
-    keyboard: { bindTo: document },
-  });
-
-  const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="true">
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
-
-  modeler.value.importXML(initialDiagram).then(() => {
-    console.log('BPMN загружен!');
-    modeler.value.get('canvas').zoom('fit-viewport');
-  }).catch(err => {
-    console.error('Ошибка загрузки BPMN:', err);
-  });
-});
-
-const saveDiagram = async () => {
-  try {
-    const { xml } = await modeler.value.saveXML({ format: true });
-    console.log('Сохранённый XML:', xml);
-
-    // Отправка на сервер`${API_URL}
-    const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
-      xml:xml
-    });
-
-    console.log('Диаграмма успешно сохранена на сервере');
-  } catch (err) {
-    console.error('Ошибка сохранения:', err);
-  }
-};
-
-const startProcess = () => {
-  console.log('Запуск процесса...');
-  // Логика для запуска процесса
-};
-</script>
-
-<template>
-  <div class="flex flex-col h-full">
-    <div ref="bpmnContainer" class="w-full h-[600px] border"></div>
-    <div class="btn">
-      <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
-        Сохранить процесс
-      </button>
-      <br />
-      <button @click="startProcess" class="mt-2 p-2 bg-green-500 text-white self-start">
-        Запустить процесс
-      </button>
-    </div>
-  </div>
-</template>
-
-<style scoped>
-:deep(.bjs-container) {
-  height: 100%;
-  width: 100%;
-}
-button {
-  border-radius: 4px;
-}
-.w-full {
-  background-color: rgb(234, 234, 235);
-}
-.btn {
-  padding: 10px;
-}
-</style>
+    </PageWrapper> 
+</template> 
