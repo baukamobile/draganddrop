@@ -25,7 +25,7 @@ const {
         <div class="ag-format-container">
 <a href="#">
 
-    <h1 class="text-xl font-semibold leading-tight">Добавить Процесс + </h1  >
+    <h1 class="text-xl font-semibold leading-tight" style="display: flex; justify-content: right; padding: 10px;">Добавить Процесс + </h1  >
 </a>
             <div v-for="(item, index) in processes" :key="index">
                 <div class="ag-courses_item" @click="goToProcess(item.id)">
