@@ -6,6 +6,9 @@ import { onMounted, computed } from 'vue';
 import PageWrapper from '@/components/PageWrapper.vue';
 import { DeleteFilled, EditPen } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
+import { EditFilled, DeleteOutlined,CommentOutlined } from "@ant-design/icons-vue";
+import SidebarContent from "@/components/sidebar/SidebarContent.vue";
+import { stringify } from "postcss";
 
 const {
   tasks,
@@ -29,6 +32,7 @@ const {
   onColumnDrop,
   onColumnDragOver,
 } = useTaskManager();
+
 
 const showTaskForm = ref({});
 const route = useRoute();
@@ -70,6 +74,31 @@ const toggleTaskForm = (statusId) => {
 onMounted(() => {
   newStatus.project = selectedProjectId.value;
 });
+
+// const el = useTemplateRef<HTMLElement>('el')
+// useSortable(el, list)
+
+const toggleTaskForm = (statusId) => {
+    showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
+    if (showTaskForm.value[statusId]) {
+        newTask.status = statusId; // Автоматически устанавливаем статус
+    }
+};
+const route = useRoute();
+const selectedProjectId = ref(Number(route.params.projectId));
+// watch(() => newTask, (val) => {
+//     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
+// }, { deep: true });
+
+
+const showTaskForm = ref(false);
+
+watch(() => newTask, (val) => {
+    console.log('newtask изменился: ',JSON,stringify(val,null,2) );
+
+},{deep: true});
+
+
 </script>
 
 <template>
