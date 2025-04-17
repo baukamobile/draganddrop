@@ -27,6 +27,13 @@ const statuses = ref([
     // { id: 2, status_name: "В процессе", user: 2 },
     // { id: 3, status_name: "Готово", user: 3 }
 ]);
+const newProject = reactive({
+    project_name: "",
+    description: "",
+    department: null,
+    assigned: null,
+    end_date: ""
+});
     const newTask = reactive({
         task_name: "",
         description: "",

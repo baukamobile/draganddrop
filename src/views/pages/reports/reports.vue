@@ -1,224 +1,134 @@
-<!-- <script setup>
-import { ref, watch, reactive } from "vue";
-import { useTaskManager } from "./BpmManager";
-import './style/style.css';
-import PageWrapper from '@/components/PageWrapper.vue';
-import { EditFilled, DeleteOutlined, CommentOutlined } from "@ant-design/icons-vue";
-import { useRoute } from 'vue-router';
-import {DeleteFilled} from '@element-plus/icons-vue' 
-// import { useSortable } from '@vueuse/core';
-
-// C:\Users\User\Desktop\docs\vue-task-manager\src\components\PageWrapper.vue
-const {
-    bpm_tasks,
-        process_stages,
-        processes,
-        users,
-        newProcessStage,
-        newTask,
-        department,
-        updateTask,
-        editTask,
-        handleClick,
-        handleClickTask,
-        ondragstart,
-        onDrop,
-        formatDate,
-        formatDateForBackend,
-        submitColumn,
-        submitTask,
-        onColumnDrag,
-        onColumnDrop,
-        onColumnDragOver,
-
-} = useTaskManager();
-// const el = useTemplateRef<HTMLElement>('el')
-// useSortable(el, list)
-const showTaskForm = ref({});
-const toggleTaskForm = (statusId) => {
-    showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
-    if (showTaskForm.value[statusId]) {
-        newTask.status = statusId; // Автоматически устанавливаем статус
-    }
-};
-const route = useRoute();
-const selectedProjectId = ref(Number(route.params.process_id));
-// watch(() => newTask, (val) => {
-//     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
-// }, { deep: true });
-</script>
-<template>
-    <PageWrapper>
-        <h1 v-for="status in process_stages.filter(s => s.process_id === selectedProjectId)" :key="status.id">
-    {{ status.status_name }}
-</h1>
-        <div class="flex flex-col gap-4 md:flex-row md:items-center">
-            <div class="dashboard">
-                <div class="center">
-                    <div v-for="status in process_stages" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
-    @dragover.prevent @dragenter.prevent>
-                        Разрешение для перетаскивание -->
-                        <!-- <div class="status"> 
-                            <h1 class="status-name">{{ status.name }}</h1>
-                            <a-button class="red-button" @click="handleClick(status.id)">Удалить колонку 
-                            <a class="red-button" @click="handleClick(status.id)">
-                                 <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" /> 
-                                <el-icon style="font-size: 15px; color: red; cursor: pointer;"><DeleteFilled /></el-icon>
-                            </a>
-                        </div>
-                        <transition-group name="fade">
-                            <div v-for="task in bpm_tasks.filter(x => x.current_stage == status.id && new Date(x.due_date) > new Date())"
-                                :key="task.id" @dragstart="ondragstart($event, task)" draggable="true"
-                                class="draggable">
-                                <div class="form1">
-                                    <p style="margin: 0;">
-                                        {{ task.title }}
-                                        <span :style="{ color: priority[task.priority]?.color }">
-                                            ({{ priority[task.priority]?.priority_name || 'Неизвестный' }})
-                                        </span> 
-                                    </p>
-                                    <div style="display: flex;">
-                                        <a @click.prevent="handleClickTask(task.id)" class="delete-task">
-                                            <DeleteOutlined style="font-size: 15px; color: red; cursor: pointer;" />
-                                        </a>
-                                        <EditFilled style="font-size: 15px; color: green;" @click="editTask(task)" />
-                                    </div>
-                                </div>
-                                <div class="time-part">
-                                    <p>от {{ formatDate(task.created_at) }}</p>
-                                    <p>до {{ formatDate(task.due_date) }}</p>
-                                </div>
-                                <p>
-                                    {{ task.description }}
-                                <p>Создано с {{users.find(user => user.id === task.created_by)?.first_name ||
-                                    'Неизвестно'}}</p>
-                                </p>
-                                <CommentOutlined style="color: green; cursor: pointer;" />
-                            </div>
-                        </transition-group>
-                        <!-- Здсь форма для добавление задач с вводимым данными -->
-                        <!-- <div class="add-task-container"> 
-                            <a @click="toggleTaskForm(status.id)" href="#" class="add-task">Добавить Задачу</a>
-                             порма открывается только выбранного колонки с помошью id -->
-                            <!-- <div v-if="showTaskForm[status.id]"> 
-                                <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
-                                <!-- <h2>Форма</h2>
-                                <form @submit.prevent="newTask.id ? updateTask() : submitTask();">
-
-                                    <label class="label-name">Название:</label>
-                                    <input v-model="newTask.title" placeholder="Название задачи" required>>
-                                    <input v-model="newTask.task_name" placeholder="Название задачи" required> 
-                                    <br><br>
-                                    <label class="label-name">Описание:</label>
-                                    <input v-model="newTask.description" placeholder="Описание задачи">
-                                    <br><br>
-                                    <label class="label-name">Прикрепить Файл: </label>
-                                    <input type="file" @input="console.log('файл изменилось:')">
-                                    <br>
-                                    <br>
-                                    <label class="label-name">Начало:</label>
-                                    <input type="date" v-model="newTask.created_at">
-                                    <br><br>
-                                    <label class="label-name">Конец:</label>
-                                    <input type="date" v-model="newTask.due_date">
-                                    <!-- @input="newTask.end_date = $event.target.value || null"> -->
-                                    <!-- <br><br> -->
-                                    <!-- <label>Отдел</label> -->
-                                    <!-- <select v-model="newTask.department" 
-                                        @change="console.log('отдел: ', newTask.department)">
-                                        <option v-for="dep in department" :key="dep.id" :value="dep.id">
-                                            {{ dep.department_name }}
-                                        </option>
-                                    </select> -->
-                                    <!-- <label class="label-name">Согласовано с руководством:</label>
-                                    <input type="checkbox" v-model="newTask.agreed_with_managers"> -->
-                                    <!-- <br><br> -->
-                                    <!-- <label class="label-name">Подписан с :</label> -->
-                                    <!-- <label class="label-name">Название проекта:</label> 
-                                    <select id="users" v-model="newTask.created_by">
-                                        <option v-for="user in users" :key="user.id" :value="Number(user.id)">
-                                            {{ user.first_name }}
-                                        </option>
-                                    </select>
-                                    <br><br>
-                                    <label class="label-name">Название проекта:</label>
-                                    <select v-model="newTask.process">
-                                        <option v-for="processes in process" :key="processes.id" :value="processes.id">{{
-                                            processes.name }}</option>
-                                    </select>
-                                    <br><br>
-                                    <label for="">Приоритет</label>
-                                    <!-- <select v-model="newTask.priority">
-                                        <option v-for="(priority_value, priority_key) in priority" :key="priority_key"
-                                            :value="priority_key">{{ priority_value.priority_name }}</option>
-                                    </select> -->
-                                    <!-- <br><br>
-                                    <select v-model="newTask.status">
-                                        <option v-for="status in statuses" :key="status.id" :value="status.id">
-                                            {{ status.status_name }}</option>
-                                    </select> -->
-
-                                    <!-- <a href="#">Добавить</a> -->
-                                    <!-- <button type="submit ">Добавить</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="add-list">
-                          форма для доавление колонок -->
-                        <!-- <h2>Добавить колонку</h2>
-                        <form @submit.prevent="submitColumn">
-                            <input v-model="newProcessStage.name" placeholder="Название колонки" required />
-                            <div><label for="users">Сотрудник:</label><br>
-                                <select id="users" v-model="newProcessStage.owner">
-                                    <option v-for="owners in newProcessStage.owner" :key="owners.id" :value="Number(owners.id)">
-                                        {{ owners.first_name }} 
-                                        {{ user.last_name }} -->
-                                        <!-- {{ user.department.department_name }} -->
-                                        <!-- {{ user.department ? user.department.department_name : 'No department' }} 
-                                    </option>
-                                </select> -->
-                            <!-- </div>
-                            <button type="submit">Добавить</button>
-                        </form>
-                    </div>
-
-                </div>
-
-            </div>
-        </div> -->
-        <!-- </div> -->
-    <!-- </PageWrapper> 
-</template> --> 
 <script setup>
 import { onMounted, ref } from 'vue';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import axios from 'axios';
-
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 const bpmnContainer = ref(null);
 const modeler = ref(null); // Сохраняем modeler
-
+const selectedProcessId = ref(Number(route.params.processId));
 onMounted(() => {
   modeler.value = new BpmnModeler({
     container: bpmnContainer.value,
     keyboard: { bindTo: document },
   });
+// Загрузка процессов
+const loadProcesses = async () => {
+  try {
+    const response = await axios.get(`${API_BPM_PROCESS}`);
+    processes.value = Array.isArray(response.data) ? response.data : [];
+    console.log('Processes loaded:', processes.value);
+  } catch (err) {
+    console.error('Ошибка загрузки процессов:', err);
+    processes.value = [];
+  }
+};
+
+// Загрузка BPMN XML по ID диаграммы
+const loadBpmnXml = async () => {
+  if (!selectedProcessId.value) {
+    console.warn('Process ID не указан:', selectedProcessId.value);
+    return false;
+  }
+
+  try {
+    // Получаем процесс
+    const processResponse = await axios.get(`${API_BPM_PROCESS}${selectedProcessId.value}/`);
+    const process = processResponse.data;
+    if (!process.bpmn_xml) {
+      throw new Error('bpmn_xml ID не найден');
+    }
+
+    // Получаем XML по ID диаграммы
+    const diagramResponse = await axios.get(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`);
+    const xml = diagramResponse.data.xml;
+    if (!xml) {
+      throw new Error('bpmn_xml.xml не найден');
+    }
+
+    await modeler.value.importXML(xml);
+    console.log('BPMN загружен для процесса:', selectedProcessId.value);
+
+    // Обновляем processes
+    const existingProcess = processes.value.find(p => p.id === selectedProcessId.value);
+    if (existingProcess) {
+      existingProcess.bpmn_xml = process.bpmn_xml; // Сохраняем ID
+    } else {
+      processes.value.push(process);
+    }
+
+    modeler.value.get('canvas').zoom('fit-viewport');
+    return true;
+  } catch (err) {
+    console.error('Ошибка загрузки XML:', err);
+    return false;
+  }
+};
 
   const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="true">
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0dtfz8f" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="Process_038d7qw" isExecutable="false">
+    <bpmn:sequenceFlow id="Flow_19zgnv4" />
+    <bpmn:startEvent id="Event_07yykgk">
+      <bpmn:outgoing>Flow_0fd914e</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_05y6hjc" name="helo">
+      <bpmn:incoming>Flow_0fd914e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fd914q</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_05y6hjv" name="helo12">
+      <bpmn:incoming>Flow_0fd914q</bpmn:incoming>
+      <bpmn:incoming>Flow_0fd914q</bpmn:incoming>
+      <bpmn:outgoing>Flow_065gxk2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_05iptkn">
+      <bpmn:incoming>Flow_065gxk2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0fd914e" sourceRef="Event_07yykgk" targetRef="Activity_05y6hjc" />
+    <bpmn:sequenceFlow id="Flow_0fd914q" sourceRef="Activity_05y6hjc" targetRef="Activity_05y6hjv" />
+    <bpmn:sequenceFlow id="Flow_065gxk2" sourceRef="Activity_05y6hjv" targetRef="Event_05iptkn" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_038d7qw" >
+      <bpmndi:BPMNShape id="Event_07yykgk_di" bpmnElement="Event_07yykgk" bioc:stroke="rgb(255, 254, 252)" bioc:fill="rgb(4, 255, 11)">
+        <dc:Bounds x="152" y="122" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05iptkn_di" bpmnElement="Event_05iptkn" bioc:stroke="rgb(255, 254, 252)" bioc:fill="rgb(245, 174, 228)">
+        <dc:Bounds x="542" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05y6hjc_di" bpmnElement="Activity_05y6hjc" bioc:stroke="rgb(255, 254, 252)" bioc:fill="rgb(80, 98, 235)">
+        <dc:Bounds x="250" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+         <bpmndi:BPMNStyle fill="#04FF0B"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05y6hjv_di" bpmnElement="Activity_05y6hjv" bioc:stroke="rgb(255, 254, 252)" bioc:fill="rgb(212, 142, 72)">
+        <dc:Bounds x="440" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0fd914e_di" bpmnElement="Flow_0fd914e">
+        <di:waypoint x="188" y="140" />
+        <di:waypoint x="219" y="140" />
+        <di:waypoint x="219" y="170" />
+        <di:waypoint x="250" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fd914q_di" bpmnElement="Flow_0fd914q">
+        <di:waypoint x="350" y="170" />
+        <di:waypoint x="371" y="170" />
+        <di:waypoint x="371" y="300" />
+        <di:waypoint x="440" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_065gxk2_di" bpmnElement="Flow_065gxk2">
+        <di:waypoint x="490" y="230" />
+        <di:waypoint x="490" y="90" />
+        <di:waypoint x="542" y="90" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+`;
 
   modeler.value.importXML(initialDiagram).then(() => {
     console.log('BPMN загружен!');
@@ -275,8 +185,17 @@ button {
 }
 .w-full {
   background-color: rgb(234, 234, 235);
+  color: black;
 }
 .btn {
   padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.bpmnContainer{
+  display: flex; 
+  background-color: blueviolet;
+  
+  justify-content: right;
 }
 </style>

@@ -2,10 +2,12 @@
 import PageWrapper from "@/components/PageWrapper.vue";
 import { DepartmentManager } from '@/views/pages/department/Department_Manager.js';
 import './style/style.css';
+import { onMounted } from "vue";
 
 const {
   department,
 } = DepartmentManager();
+
 </script>
 <template>
   <PageWrapper>

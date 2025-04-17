@@ -153,17 +153,28 @@ const saveDiagram = async () => {
     const { xml } = await modeler.value.saveXML({ format: true });
     console.log('Сохранённый XML:', xml);
 
-    // Отправка на сервер
-    const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
-      process_id: selectedProcessId.value,
-      xml,
-    });
-    console.log('Диаграмма успешно сохранена на сервере');
-
-    // Обновляем локальный processes
+    // Находим текущий процесс
     const process = processes.value.find(p => p.id === selectedProcessId.value);
-    if (process) {
-      process.bpmn_xml = response.data.id; // Предполагаем, что сервер возвращает ID новой диаграммы
+    if (!process) {
+      throw new Error('Процесс не найден');
+    }
+
+    // Если у процесса уже есть bpmn_xml, обновляем существующую запись
+    if (process.bpmn_xml) {
+      const response = await axios.patch(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`, {
+        xml,
+      });
+      console.log('Диаграмма обновлена на сервере:', response.data);
+    } else {
+      // Если bpmn_xml отсутствует, создаём новую запись
+      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
+        process_id: selectedProcessId.value,
+        xml,
+      });
+      console.log('Диаграмма создана на сервере:', response.data);
+
+      // Обновляем локальный processes с новым bpmn_xml ID
+      process.bpmn_xml = response.data.id;
     }
   } catch (err) {
     console.error('Ошибка сохранения:', err);
@@ -180,7 +191,7 @@ const startProcess = () => {
   <PageWrapper>
     <div class="flex flex-col h-full">
       <h1>{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
-      <div ref="bpmnContainer" class="w-full h-[600px] border"></div>
+      <div ref="bpmnContainer" class="w-full h-[600px]  border"></div>
       <div class="btn">
         <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
           Сохранить процесс
@@ -204,8 +215,11 @@ button {
 }
 .w-full {
   background-color: rgb(234, 234, 235);
+  color: black;
 }
 .btn {
   padding: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

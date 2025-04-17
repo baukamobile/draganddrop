@@ -2,6 +2,7 @@ import axios from "axios";
 const API_URL_TASK = import.meta.env.VITE_API_URL;
 const API_URL_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 const API_URL = import.meta.env.VITE_API_BASE_URL;  
+const API_URL_PROCESS = import.meta.env.VITE_API_PROCESS;
 axios.interceptors.request.use(config => {
     // Добавляем интерцептор для всех запросов Axios
     const token = localStorage.getItem('access_token'); // Получаем токен из локального хранилища
@@ -34,6 +35,10 @@ export const getProjects = async()=>{  //Получаем проектов
     const response = await axios.get(`${API_URL_PROJECTS}/`);
     return response.data;
 }
+export const getProcess = async()=>{  //Получаем проектов
+    const response = await axios.get(`${API_URL_PROCESS}/`);
+    return response.data;
+}
 const API_URL_STATUS = import.meta.env.VITE_API_URL_STATUS;
 
 export const getStatusTask = async()=>{         //Получаем статус
@@ -56,4 +61,12 @@ export async function addColumn(newStatus){             //Добавляем К�
     const response = await axios.post(`${API_URL_STATUS}/`,newStatus);
     return response.data;
     // await axios.get(`${API_URL_USERS}/`)
+}
+export async function addProject(newProject){
+    const response = await axios.post(`${API_URL_PROJECTS}/`,newProject);
+    return response.data;
+}
+export async function addProcess(newProcess){
+    const response = await axios.post(`${API_URL_PROCESS}`,newProcess);
+    return response.data;
 }

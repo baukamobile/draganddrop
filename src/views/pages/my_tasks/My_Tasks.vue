@@ -30,10 +30,9 @@ const {
 <template>
     <PageWrapper>
         <div class="ag-format-container">
-<a href="#">
+
 
     <h1 class="text-xl font-semibold leading-tight" style="display: flex; justify-content: center;">Мои Задачи и процессы</h1  >
-</a>
             <div v-for="(item, index) in processes.slice(0, 2)" :key="index"> 
                 <!-- Это для тестов типа на странице мои процессы отображается именно те процессы где он указан -->
                 <div class="ag-courses_item" @click="goToProcess(item.id)">
