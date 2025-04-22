@@ -80,6 +80,7 @@ const initialDiagram =` <?xml version="1.0" encoding="UTF-8"?>
           <option value="view2">user 2</option>
           <option value="view3">user 3</option>
         </select>
+        <div id="" class="">Нажмите <b>правую кнопку мыши</b> чтобы редактировать свойство.</div>
                   `
       ,
     });

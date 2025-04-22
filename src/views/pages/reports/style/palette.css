@@ -1,29 +1,43 @@
 /* Переопределяем стили для ExclusiveGateway */
 
 .red {
-    background-color: red;
+    background-color: #dc6f8e;
     /* или другие стили, например, цвет иконки */
-    fill: red;
-    color: black;
+
 }
 .yellow {
-    background-color: yellow;
-    fill: yellow;
-    color: black;
+    background-color: #ffffbf;
+
 }
 .orange {
-    background-color: rgb(255, 136, 0);
-    fill: rgb(217, 161, 9);
-    color: rgb(255, 255, 255);
+    background-color: #f46d43;
+  
+    /* color: rgb(255, 255, 255); */
 }
 .white {
-    background-color: rgb(255, 252, 252);
-    fill: rgb(0, 0, 0);
-    color: black;
+    background-color: #3288bd;
+   
+    /* color: black; */
 }
 .green {
-    background-color: rgb(24, 232, 24);
-    fill: rgb(0, 0, 0);
-    color: black;
+    background-color: #abdda4;
+ 
+    /* color: black; */
 }
-
+.white-green{
+    background-color: #39ed39;
+    
+}
+.white-green2{
+    background-color: #c145ee;
+    
+}
+.blue{
+    background-color: #30b0e0;
+}
+.dark-green{
+    background-color: #e0ac69;
+}
+.grey{
+ background-color: #d2d2cb;
+}

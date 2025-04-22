@@ -130,10 +130,10 @@ const logout = () => {
             
             <!-- Режим редактирования -->
             <div v-else class="edit-section">
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label>Email:</label>
                 <input type="email" v-model="editData.email" />
-              </div>
+              </div> -->
               <div class="form-group">
                 <label>Имя:</label>
                 <input type="text" v-model="editData.first_name" />
@@ -146,7 +146,7 @@ const logout = () => {
                 <label>Телефон:</label>
                 <input type="text" v-model="editData.phone_number" inputmode="numeric" />
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label>Должность:</label>
                 <input type="text" v-model="editData.position" />
               </div>
@@ -157,7 +157,7 @@ const logout = () => {
               <div class="form-group">
                 <label>Организация:</label>
                 <input type="text" v-model="editData.company" />
-              </div>
+              </div> -->
               
               <div class="form-buttons">
                 <button type="submit" class="save-button" :disabled="isLoading">

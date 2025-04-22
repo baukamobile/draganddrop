@@ -45,7 +45,7 @@ export default function CustomPaletteProvider(palette, create, elementFactory, h
   
     return {
       'create.start-event': createAction(
-        'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none green',
+        'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none white-green',
       ),
       'create.task': createAction(
         'bpmn:Task', 'activity', 'bpmn-icon-task green', 'Задача'
@@ -63,7 +63,7 @@ export default function CustomPaletteProvider(palette, create, elementFactory, h
       // Инструменты: их вручную добавляешь, потому что они не через factory
       'hand-tool': {
         group: 'tools',
-        className: 'bpmn-icon-hand-tool',
+        className: 'bpmn-icon-hand-tool dark-green',
         title: 'Ручной режим',
         action: {
           click: (event) => {
@@ -74,7 +74,7 @@ export default function CustomPaletteProvider(palette, create, elementFactory, h
       
       'lasso-tool': {
         group: 'tools',
-        className: 'bpmn-icon-lasso-tool',
+        className: 'bpmn-icon-lasso-tool blue',
         title: 'Выделение рамкой',
         action: {
           click: (event) => {
@@ -85,7 +85,7 @@ export default function CustomPaletteProvider(palette, create, elementFactory, h
   
       'space-tool': {
         group: 'tools',
-        className: 'bpmn-icon-space-tool',
+        className: 'bpmn-icon-space-tool grey',
         title: 'Передвигать пространство',
         action: {
           click: (event) => {
@@ -96,7 +96,7 @@ export default function CustomPaletteProvider(palette, create, elementFactory, h
   
       'global-connect-tool': {
         group: 'tools',
-        className: 'bpmn-icon-connection-multi',
+        className: 'bpmn-icon-connection-multi white-green2',
         title: 'Связать элементы',
         action: {
           click: (event) => {
