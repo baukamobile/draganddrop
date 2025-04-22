@@ -1,0 +1,29 @@
+/* Переопределяем стили для ExclusiveGateway */
+
+.red {
+    background-color: red;
+    /* или другие стили, например, цвет иконки */
+    fill: red;
+    color: black;
+}
+.yellow {
+    background-color: yellow;
+    fill: yellow;
+    color: black;
+}
+.orange {
+    background-color: rgb(255, 136, 0);
+    fill: rgb(217, 161, 9);
+    color: rgb(255, 255, 255);
+}
+.white {
+    background-color: rgb(255, 252, 252);
+    fill: rgb(0, 0, 0);
+    color: black;
+}
+.green {
+    background-color: rgb(24, 232, 24);
+    fill: rgb(0, 0, 0);
+    color: black;
+}
+

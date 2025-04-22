@@ -6,6 +6,7 @@ import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import axios from 'axios';
 import PageWrapper from '@/components/PageWrapper.vue';
+import CustomPaletteProvider from '../reports/CustomPaletteProvider';
 
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
 const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
@@ -115,6 +116,17 @@ onMounted(async () => {
   modeler.value = new BpmnModeler({
     container: bpmnContainer.value,
     keyboard: { bindTo: document },
+    additionalModules: [
+    {
+      // ТУТ МЫ УБИВАЕМ ДЕФОЛТНЫЙ ПРОВАЙДЕР
+      paletteProvider: ['value', null]
+    },
+    {
+      // ТУТ ПОДКЛЮЧАЕМ СВОЙ
+      __init__: ['customPaletteProvider'],
+      customPaletteProvider: ['type', CustomPaletteProvider]
+    }
+  ]
   });
 
   // Загрузка процессов
@@ -190,7 +202,10 @@ const startProcess = () => {
 <template>
   <PageWrapper>
     <div class="flex flex-col h-full">
-      <h1>{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
+     <div style="display: flex; justify-content: center;">
+      
+       <h1 style="font-size: 20px; font-weight: bold;">{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
+     </div> 
       <div ref="bpmnContainer" class="w-full h-[600px]  border"></div>
       <div class="btn">
         <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
@@ -213,6 +228,14 @@ const startProcess = () => {
 button {
   border-radius: 4px;
 }
+.bpmn-icon-start-event {
+  color: red !important;
+}
+
+.bpmn-icon-end-event {
+  color: yellow !important;
+}
+
 .w-full {
   background-color: rgb(234, 234, 235);
   color: black;
