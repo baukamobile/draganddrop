@@ -136,10 +136,10 @@ const startProcess = () => {
     <div ref="bpmnContainer" class="w-full h-[600px] border"></div>
     <div class="btn">
       <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
-        Save Process
+        Сохранить Процесс
       </button>
       <button @click="startProcess" class="mt-2 p-2 bg-green-500 text-white self-start">
-        Start Process
+        Запустить Процесс
       </button>
     </div>
   </div>
@@ -164,3 +164,5 @@ button {
   gap: 10px;
 }
 </style>
+
+

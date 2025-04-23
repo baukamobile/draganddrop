@@ -3,10 +3,14 @@ import PageWrapper from "@/components/PageWrapper.vue";
 import { DepartmentManager } from '@/views/pages/department/Department_Manager.js';
 import './style/style.css';
 import { onMounted } from "vue";
+import { useTaskManager } from "@/components/dashboard/useTaskManger";
 
 const {
   department,
 } = DepartmentManager();
+const{
+  newTask
+} = useTaskManager();
 
 </script>
 <template>
@@ -15,7 +19,10 @@ const {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="grid-card">
       <div v-for="(person, index) in department" :key="index" class="card">
-        <img :src="person.image" alt="" class="img-department">
+        <div v-for="person in newTask.image" :key="index" class="card">
+
+          <img :src="person.image" alt="" class="img-department">
+        </div>
         <h1>{{ person.first_name }} {{ person.last_name }}</h1>
         <!-- <pre>{{ JSON.stringify(person, null, 2) }}</pre> -->
         <p >Должность: {{ person.position ? person.position.position_name : "Не указано" }}</p>

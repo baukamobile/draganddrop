@@ -146,6 +146,7 @@ onMounted(() => {
                   <select id="users" v-model="newTask.assigned">
                     <option v-for="user in users" :key="user.id" :value="Number(user.id)">
                       {{ user.first_name }}
+                      {{user.image }}
                     </option>
                   </select>
                   <br /><br />

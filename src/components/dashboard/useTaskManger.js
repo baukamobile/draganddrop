@@ -52,7 +52,8 @@ const statuses = ref([
         status: 1,
         priority: 1,
         projects: 2,
-        department: 1 });
+        department: 1,
+    image: null, });
 //Приорите  задач
     const priority = {
         1: { priority_name: "НИЗКИЙ", color: "green" },
@@ -184,7 +185,8 @@ console.log(" Тип end_date:", typeof newTask.end_date);
                 projects: null,
                 assigned: null,
                 status: 1,
-                priority: 1
+                priority: 1,
+                image: null,
             });
     
         } catch (error) {
@@ -204,6 +206,7 @@ console.log(" Тип end_date:", typeof newTask.end_date);
         newTask.priority = task.priority;
         newTask.projects = task.projects;
         newTask.department = task.department;
+        newTask.image = task.image;
         showTaskForm.value = {...showTaskForm.value,[task.status]: true};
 
     };
