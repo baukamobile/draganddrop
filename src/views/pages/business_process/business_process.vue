@@ -237,7 +237,7 @@ button {
 }
 
 .w-full {
-  background-color: rgb(234, 234, 235);
+  background-color: rgb(120, 207, 112);
   color: black;
 }
 .btn {
