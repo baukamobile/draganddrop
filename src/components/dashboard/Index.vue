@@ -36,7 +36,6 @@ const {
 
 const showTaskForm = ref({});
 const route = useRoute();
-const selectedProjectId = ref(Number(route.params.projectId));
 onMounted(() => {
   console.log('Project ID:', selectedProjectId.value);
   console.log('Projects:', projects.value);
@@ -78,20 +77,13 @@ onMounted(() => {
 // const el = useTemplateRef<HTMLElement>('el')
 // useSortable(el, list)
 
-const toggleTaskForm = (statusId) => {
-    showTaskForm.value = { ...showTaskForm.value, [statusId]: !showTaskForm.value[statusId] };
-    if (showTaskForm.value[statusId]) {
-        newTask.status = statusId; // Автоматически устанавливаем статус
-    }
-};
-const route = useRoute();
-const selectedProjectId = ref(Number(route.params.projectId));
+
 // watch(() => newTask, (val) => {
 //     console.log('newtask изменился: ', JSON.stringify(val, null, 2));
 // }, { deep: true });
 
 
-const showTaskForm = ref(false);
+
 
 watch(() => newTask, (val) => {
     console.log('newtask изменился: ',JSON,stringify(val,null,2) );
