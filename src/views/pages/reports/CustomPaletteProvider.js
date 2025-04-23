@@ -1,5 +1,5 @@
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
-import '@/views/pages/reports/style/palette.css';
+import '@/views/pages/reports/css/palette.css';
 export default function CustomPaletteProvider(palette, create, elementFactory, handTool, lassoTool, spaceTool, globalConnect) {
     this._create = create;
     this._elementFactory = elementFactory;

@@ -7,7 +7,7 @@ import Antd from 'ant-design-vue';
 import { AntDesignOutlined } from "@ant-design/icons-vue";
 import { createPinia } from 'pinia';
 import ElementPlus from 'element-plus';
-import '@/views/pages/reports/style/palette.css';
+import '@/views/pages/reports/css/palette.css';
 import 'element-plus/dist/index.css'  // Import Element Plus styles
 // import axios from "axios";
 // // Функция для получения CSRF-токена из куков
