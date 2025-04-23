@@ -94,9 +94,7 @@ watch(() => newTask, (val) => {
 </script>
 
 <template>
-<<<<<<< HEAD
-  <PageWrapper>
-=======
+
     <PageWrapper>
         <h1 v-for="status in statuses.filter(s => s.project_id === selectedProjectId)" :key="status.id">
     {{ status.status_name }}
@@ -105,7 +103,7 @@ watch(() => newTask, (val) => {
             <div class="dashboard">
                 <div class="center">
                     <div v-for="status in statuses" :key="status.id" @drop="onDrop($event, status.id)" class="droppable"
-    @dragover.prevent @dragenter.prevent>
+                   @dragover.prevent @dragenter.prevent>
                         <!-- Разрешение для перетаскивание -->
                         <div class="status">
                             <h1 class="status-name">{{ status.status_name }}</h1>
@@ -151,7 +149,7 @@ watch(() => newTask, (val) => {
                             <div v-if="showTaskForm[status.id]">
                                 <!-- <a @click="showTaskForm = !showTaskForm" href="#" class="add-task">Скрыть</a> -->
                                 <h2>Форма</h2>
-<<<<<<< HEAD
+
                                 <form @submit.prevent="newTask.id ? updateTask() : submitTask();">
 
                                     <label class="label-name">Название:</label>
@@ -210,7 +208,7 @@ watch(() => newTask, (val) => {
                                     <!-- <a href="#">Добавить</a> -->
                                     <button type="submit ">Добавить</button>
                                 </form>
-=======
+
                                 <form @submit.prevent="console.log('Форма отправлена!'); submitTask();">
                                    
                                    <label class="label-name">Название:</label>
@@ -263,7 +261,7 @@ watch(() => newTask, (val) => {
                                <!-- <a href="#">Добавить</a> -->
                                    <button type="submit ">Добавить</button>
                                </form>
->>>>>>> 9a656e8 (d)
+
                             </div>
                         </div>
                     </div>
@@ -286,7 +284,8 @@ watch(() => newTask, (val) => {
                     </div>
 
                 </div>
->>>>>>> 509d512 (sd)
+        </div>
+
 
     <div class="project-name">
         <h1>{{ selectedProject.project_name || 'Проект не выбран'  }}</h1>
