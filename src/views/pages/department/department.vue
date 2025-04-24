@@ -18,16 +18,12 @@ const{
     <h2 class="text-center">Мой отдел</h2>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="grid-card">
-      <div v-for="(person, index) in department" :key="index" class="card">
-        <div v-for="person in newTask.image" :key="index" class="card">
-
-          <img :src="person.image" alt="" class="img-department">
-        </div>
-        <h1>{{ person.first_name }} {{ person.last_name }}</h1>
-        <!-- <pre>{{ JSON.stringify(person, null, 2) }}</pre> -->
-        <p >Должность: {{ person.position ? person.position.position_name : "Не указано" }}</p>
-        <p >Отдел: {{ person.department ? person.department.department_name :"Не указано" }}</p> 
-        <p>{{ person.status }}</p>
+  <div v-for="(person, index) in department" :key="index" class="card">
+    <img :src="person.image" alt="" class="img-department">
+    <h1>{{ person.first_name }} {{ person.last_name }}</h1>
+    <p>Должность: {{ person.position ? person.position.position_name : "Не указано" }}</p>
+    <p>Отдел: {{ person.department ? person.department.department_name : "Не указано" }}</p> 
+    <p>{{ person.status }}</p>
         <!-- <p class="title" v-for="(item_pos,index) in department" :key="index">Должность: {{ item_pos.position_name }}</p> -->
         <!-- <p v-for="(item_dep, index) in department" :key="index">Отдел: {{ item_dep.department_name }}</p> -->
         <div style="display: flex; justify-content: center;">

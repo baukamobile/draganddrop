@@ -71,6 +71,7 @@ const statuses = ref([
             console.error("Ошибка удаления колонки", error);
         }
     };
+    
 //Удаление Задач
     const handleClickTask = async (taskID) => {
         try {

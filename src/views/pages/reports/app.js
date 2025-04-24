@@ -42,7 +42,7 @@ bpmnModeler.importXML(_resources_diagram_bpmn__WEBPACK_IMPORTED_MODULE_0__["defa
       suitabilityScore;
 
 // validate suitability score
-export function validate() {
+function validate() {
     const { value } = suitabilityScoreEl;
 
     if (isNaN(value)) {
