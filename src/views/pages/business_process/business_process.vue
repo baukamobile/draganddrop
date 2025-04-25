@@ -7,16 +7,59 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import axios from 'axios';
 import PageWrapper from '@/components/PageWrapper.vue';
 import CustomPaletteProvider from '../reports/CustomPaletteProvider';
-
+import { useTaskManager } from '@/components/dashboard/useTaskManger';
+import qaModdleExtension from '@/views/pages/reports/qa';
+import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+const{
+  newTask, users
+}= useTaskManager();
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
 const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
 const bpmnContainer = ref(null);
 const modeler = ref(null);
 const route = useRoute();
 const selectedProcessId = ref(Number(route.params.processId));
-
+const qualityAssuranceEl = ref(null);
+const suitabilityScoreEl = ref(null);
+const lastCheckedEl = ref(null);
+const warningEl = ref(null);
+const okayEl = ref(null);
+const formEl = ref(null);
+const value2 = ref('')
+// QA functionality
+const HIGH_PRIORITY = 1500;
+let analysisDetails = null;
+let businessObject = null;
+let currentElement = null;
+let suitabilityScore = null;
 // Локальное состояние для процессов
 const processes = ref([]);
+
+// Validate suitability score
+const validate = () => {
+  if (!suitabilityScoreEl.value) return;
+  
+  const value = suitabilityScoreEl.value.value;
+  
+  if (isNaN(value)) {
+    warningEl.value.classList.remove('hidden');
+    okayEl.value.disabled = true;
+  } else {
+    warningEl.value.classList.add('hidden');
+    okayEl.value.disabled = false;
+  }
+};
+
+// Get extension element helper function
+const getExtensionElement = (element, type) => {
+  if (!element.extensionElements) {
+    return;
+  }
+
+  return element.extensionElements.values.filter((extensionElement) => {
+    return extensionElement.$instanceOf(type);
+  })[0];
+};
 
 // Загрузка процессов
 const loadProcesses = async () => {
@@ -27,6 +70,50 @@ const loadProcesses = async () => {
   } catch (err) {
     console.error('Ошибка загрузки процессов:', err);
     processes.value = [];
+  }
+};
+
+
+
+// Form submit handler for QA panel
+const handleFormSubmit = (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (!modeler.value || !businessObject || !currentElement) return;
+
+  suitabilityScore = Number(suitabilityScoreEl.value.value);
+
+  if (isNaN(suitabilityScore)) {
+    return;
+  }
+  const moddle = modeler.value.get('moddle');
+  const modeling = modeler.value.get('modeling');
+  const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+
+  if (!analysisDetails) {
+    analysisDetails = moddle.create('qa:AnalysisDetails');
+    
+    if (!extensionElements.get('values')) {
+      extensionElements.values = [];
+    }
+    extensionElements.get('values').push(analysisDetails);
+  }
+
+  analysisDetails.lastChecked = new Date().toISOString();
+
+  modeling.updateProperties(currentElement, {
+    extensionElements,
+    suitable: suitabilityScore
+  });
+
+  qualityAssuranceEl.value.classList.add('hidden');
+};
+
+// Handle key events in the QA form
+const handleFormKeydown = (event) => {
+  if (event.key === 'Escape') {
+    qualityAssuranceEl.value.classList.add('hidden');
   }
 };
 
@@ -73,32 +160,25 @@ const loadBpmnXml = async () => {
 
 // Фаллбэк на пустую диаграмму
 const loadInitialDiagram = async () => {
-  const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="true">
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
+  // const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+  //   <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  //                     xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  //                     id="Definitions_1"
+  //                     targetNamespace="http://bpmn.io/schema/bpmn">
+  //     <bpmn:process id="Process_1" isExecutable="true">
+  //     </bpmn:process>
+  //     <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+  //       <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+  //       </bpmndi:BPMNPlane>
+  //     </bpmndi:BPMNDiagram>
+  //   </bpmn:definitions>`;
 
   await modeler.value.importXML(initialDiagram);
   console.log('Загружена пустая диаграмма');
   modeler.value.get('canvas').zoom('fit-viewport');
 };
 
-// Фильтрация процессов с bpmn_xml
-const filteredProcesses = computed(() => {
-  if (!Array.isArray(processes.value)) {
-    console.warn('Processes is not an array:', processes.value);
-    return [];
-  }
-  return processes.value.filter(p => p.bpmn_xml); // Фильтруем по наличию bpmn_xml ID
-});
+
 
 // Выбранный процесс
 const selectedProcess = computed(() => {
@@ -112,38 +192,110 @@ const selectedProcess = computed(() => {
 });
 
 onMounted(async () => {
+  // Проверка доступности контейнера
+  if (!bpmnContainer.value) {
+    console.error('bpmnContainer не найден!');
+    return;
+  }
+
   // Инициализация BPMN-моделера
   modeler.value = new BpmnModeler({
     container: bpmnContainer.value,
     keyboard: { bindTo: document },
     additionalModules: [
-    {
-      // ТУТ МЫ УБИВАЕМ ДЕФОЛТНЫЙ ПРОВАЙДЕР
-      paletteProvider: ['value', null]
-    },
-    {
-      // ТУТ ПОДКЛЮЧАЕМ СВОЙ
-      __init__: ['customPaletteProvider'],
-      customPaletteProvider: ['type', CustomPaletteProvider]
+      {
+        // Убираем дефолтный провайдер палитры
+        paletteProvider: ['value', null]
+      },
+      {
+        // Подключаем свой провайдер палитры
+        __init__: ['customPaletteProvider'],
+        customPaletteProvider: ['type', CustomPaletteProvider]
+      }
+    ],
+    // Добавляем QA модульное расширение
+    moddleExtensions: {
+      qa: qaModdleExtension
     }
-  ]
   });
 
   // Загрузка процессов
   await loadProcesses();
 
-  // Загрузка BPMN XML
+  // Загрузка BPMN XML для выбранного процесса
   const loaded = await loadBpmnXml();
   if (!loaded) {
     await loadInitialDiagram();
   }
 
-  // Отладка
-  console.log('Process ID:', selectedProcessId.value);
-  console.log('Processes:', processes.value);
-  console.log('Processes type:', Array.isArray(processes.value) ? 'Array' : typeof processes.value);
-  console.log('Selected Process:', selectedProcess.value);
-  console.log('Filtered Processes:', filteredProcesses.value);
+  // QA функциональность - контекстное меню элементов
+  modeler.value.on('element.contextmenu', HIGH_PRIORITY, (event) => {
+    event.originalEvent.preventDefault();
+    event.originalEvent.stopPropagation();
+
+    // Игнорировать, если QA элементы недоступны
+    if (!qualityAssuranceEl.value) return;
+    
+    qualityAssuranceEl.value.classList.remove('hidden');
+
+    currentElement = event.element;
+
+    // Игнорировать корневой элемент
+    if (!currentElement.parent) {
+      return;
+    }
+
+    // Используем getBusinessObject для получения бизнес-объекта
+    businessObject = getBusinessObject(currentElement);
+
+    let { suitable } = businessObject;
+
+    suitabilityScoreEl.value.value = suitable ? suitable : '';
+    suitabilityScoreEl.value.focus();
+
+    analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
+    lastCheckedEl.value.textContent = analysisDetails ? analysisDetails.lastChecked : '-';
+
+    validate();
+  });
+
+  // Закрытие панели QA при клике вне панели
+  window.addEventListener('click', (event) => {
+    if (!qualityAssuranceEl.value) return;
+    
+    const { target } = event;
+
+    if (target === qualityAssuranceEl.value || qualityAssuranceEl.value.contains(target)) {
+      return;
+    }
+
+    qualityAssuranceEl.value.classList.add('hidden');
+  });
+  
+  // Add dropdown overlay - если это нужно
+  setTimeout(() => {
+    if (modeler.value) {
+      const overlays = modeler.value.get('overlays');
+      overlays.add('Process_1', 'note', {
+        position: {
+          top: -30,
+          right: 10,
+        },
+        html: `<div class=""></div>`
+      });
+      
+      // Add event listener for dropdown
+      const dropdown = document.querySelector('.dropdown');
+      if (dropdown) {
+        dropdown.addEventListener('change', (event) => {
+          console.log('Selected view:', event.target.value);
+          // Add your view change logic here
+        });
+      }
+      
+      modeler.value.get('canvas').zoom('fit-viewport');
+    }
+  }, 100);
 });
 
 // Следим за изменением selectedProcessId
@@ -206,7 +358,7 @@ const startProcess = () => {
       
        <h1 style="font-size: 20px; font-weight: bold;">{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
      </div> 
-      <div ref="bpmnContainer" class="w-full h-[600px]  border"></div>
+      <div ref="bpmnContainer" class="w-full h-[750px]  border"></div>
       <div class="btn">
         <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
           Сохранить процесс
@@ -216,6 +368,58 @@ const startProcess = () => {
           Запустить процесс
         </button>
       </div>
+      <div ref="qualityAssuranceEl" id="quality-assurance" class="panel hidden">
+      <form ref="formEl" id="form" @submit="handleFormSubmit" @keydown="handleFormKeydown">
+        <p>
+          <b>Suitability Score</b>
+        </p>
+        <br />
+        <input ref="suitabilityScoreEl" id="suitability-score" type="text" placeholder="100" autocomplete="off" @input="validate">
+        <br />
+        <br />
+        <p ref="warningEl" id="warning" class="hidden">
+          Suitability Score must be a number
+        </p>
+        <br />
+        <div class="overlay-content">
+          <div class="box">
+        <!-- <br> -->
+        <select id="users" v-model="newTask.assigned">
+                    <option v-for="u in users" :key="u.id" :value="u.id">
+                      {{ u.first_name }}
+                      {{ u.last_name }}
+                      {{ u.position.position_name }}
+                      👨
+                    </option>
+                  </select><br>
+                  <img src="" alt="12#">
+      </div>
+        </div>
+        <div class="demo-datetime-picker">
+    <div class="line" />
+    <div class="block">
+      <el-date-picker
+        v-model="value2"
+        type="datetimerange"
+        start-placeholder="Start date"
+        end-placeholder="End date"
+        format="YYYY-MM-DD HH:mm:ss"
+        date-format="YYYY/MM/DD ddd"
+        time-format="A hh:mm:ss"
+      />
+    </div>
+  </div><br>
+        <p>
+          <b>Last Checked</b>
+        </p>
+        <br />
+        <p ref="lastCheckedEl" id="last-checked">
+          -
+        </p>
+        <br />
+        <input ref="okayEl" id="okay" type="submit" value="Okay">
+      </form>
+    </div>
     </div>
   </PageWrapper>
 </template>
@@ -245,4 +449,116 @@ button {
   display: flex;
   justify-content: space-between;
 }
+.demo-datetime-picker {
+  display: flex;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  
+}
+.demo-datetime-picker .block {
+  padding: 30px 0;
+  text-align: center;
+}
+.line {
+  /* width: 1px; */
+  background-color: var(--el-border-color);
+}
+
+/* Quality Assurance Panel styles */
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+#form input[type="text"] {
+  padding: 5px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#form input[type="submit"] {
+  padding: 5px 15px;
+  background-color: #337ab7;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#form input[type="submit"]:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#warning {
+  color: red;
+  font-size: 12px;
+}
+
+.overlay-content {
+  background: white;
+  padding: 8px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.box {
+  /* position: absolute; */
+   top: 50%;
+  left: 50%; 
+  /* transform: translate(-50%, -50%); */
+}
+
+.box select {
+  background-color: #0563af;
+  color: white;
+  padding: 10px;
+  width: 250px;
+  border: none;
+  font-size: 20px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  -webkit-appearance: button;
+  appearance: button;
+  outline: none;
+}
+
+.box::before {
+  content: "\f13a";
+  font-family: FontAwesome;
+  position: absolute;
+   top: 0;
+  right: 0; 
+  width: 20%;
+  height: 100%;
+  text-align: center;
+  font-size: 28px;
+  line-height: 45px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.box:hover::before {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+p,b,input,form,select{
+  color: #000;
+}
+
 </style>
