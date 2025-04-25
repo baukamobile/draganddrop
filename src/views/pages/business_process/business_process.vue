@@ -371,14 +371,14 @@ const startProcess = () => {
       <div ref="qualityAssuranceEl" id="quality-assurance" class="panel hidden">
       <form ref="formEl" id="form" @submit="handleFormSubmit" @keydown="handleFormKeydown">
         <p>
-          <b>Suitability Score</b>
+          
         </p>
         <br />
         <input ref="suitabilityScoreEl" id="suitability-score" type="text" placeholder="100" autocomplete="off" @input="validate">
         <br />
         <br />
         <p ref="warningEl" id="warning" class="hidden">
-          Suitability Score must be a number
+          только цифры
         </p>
         <br />
         <div class="overlay-content">
@@ -387,12 +387,15 @@ const startProcess = () => {
         <select id="users" v-model="newTask.assigned">
                     <option v-for="u in users" :key="u.id" :value="u.id">
                       {{ u.first_name }}
+                      👨
                       {{ u.last_name }}
                       {{ u.position.position_name }}
-                      👨
                     </option>
-                  </select><br>
-                  <img src="" alt="12#">
+                  </select></br>
+                  <br>
+                  <input type="file">Прикрепите файл
+                </br>
+                  <img src="" alt="">
       </div>
         </div>
         <div class="demo-datetime-picker">
@@ -559,6 +562,119 @@ button {
 }
 p,b,input,form,select{
   color: #000;
+}
+/* Общие стили для контейнера формы */
+#quality-assurance {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+/* Панель скрытия */
+.hidden {
+  display: none;
+}
+
+/* Стили для полей ввода */
+#suitability-score {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#suitability-score:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+#warning {
+  color: #ff0000;
+  font-size: 14px;
+  display: none; /* скрыто по умолчанию */
+}
+
+/* Стили для кнопок и submit */
+#okay {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#okay:hover {
+  background-color: #0056b3;
+}
+
+/* Стили для выпадающего списка пользователей */
+select#users {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+select#users:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+/* Стили для выбора даты */
+.demo-datetime-picker {
+  margin-top: 20px;
+}
+
+.el-date-picker {
+  width: 100%;
+}
+
+.overlay-content {
+  margin-top: 20px;
+}
+
+/* Стили для файлового поля */
+input[type="file"] {
+  margin-top: 10px;
+  font-size: 14px;
+  padding: 5px;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #0056b3;
+}
+
+/* Стиль для изображения */
+img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+/* Стиль для текста "Last Checked" */
+#last-checked {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
 }
 
 </style>
