@@ -224,7 +224,7 @@ const startProcess = () => {
 
 <template>
   <div class="flex flex-col h-full">
-    <div ref="bpmnContainer" class="w-full h-[750px] border"></div>
+    <div ref="bpmnContainer" class="w-full h-[650px] w-[950px] border" style="display: flex; justify-content: center;"></div>
     
     <!-- Controls -->
     <div class="btn" style="display: flex; justify-content: space-between;">
