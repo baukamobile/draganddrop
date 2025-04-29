@@ -333,7 +333,7 @@ const saveDiagram = async () => {
     if (process.bpmn_xml) {
       // Update existing process with new XML
       const response = await axios.patch(`${API_PROCESS}${process.id}/update-xml/`, {
-        bpmn_xml: process.bpmn_xml, // Send the existing bpmn_xml ID
+        bpmn_xml: null, // Send the existing bpmn_xml ID
         xml, // Send only the XML string
       });
       console.log('Diagram updated on server:', response.data);
