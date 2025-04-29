@@ -1,12 +1,20 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
+
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
-import axios from 'axios';
+
 import PageWrapper from '@/components/PageWrapper.vue';
 import CustomPaletteProvider from '../reports/CustomPaletteProvider';
+
+import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+import 'bpmn-js/dist/assets/diagram-js.css';
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
+
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+
 import { useTaskManager } from '@/components/dashboard/useTaskManger';
 import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
