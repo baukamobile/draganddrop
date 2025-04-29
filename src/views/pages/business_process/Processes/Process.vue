@@ -99,7 +99,7 @@ onMounted(() => {
     <PageWrapper>
         <div class="ag-format-container">
             <a href="#" @click.prevent="toggleProcessForm">
-                <h1 class="text-xl font-semibold leading-tight" style="display: flex; justify-content: right; padding: 10px;">Добавить Процесс + </h1>
+                <h1 class="text-xl font-semibold leading-tight" style="padding: 10px; background-color: green;">Добавить Процесс + </h1>
             </a>
             
             <!-- Форма добавления процесса -->

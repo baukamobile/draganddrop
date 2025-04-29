@@ -160,18 +160,18 @@ const loadBpmnXml = async () => {
 
 // Фаллбэк на пустую диаграмму
 const loadInitialDiagram = async () => {
-  // const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-  //   <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  //                     xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  //                     id="Definitions_1"
-  //                     targetNamespace="http://bpmn.io/schema/bpmn">
-  //     <bpmn:process id="Process_1" isExecutable="true">
-  //     </bpmn:process>
-  //     <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-  //       <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-  //       </bpmndi:BPMNPlane>
-  //     </bpmndi:BPMNDiagram>
-  //   </bpmn:definitions>`;
+  const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+    <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                      id="Definitions_1"
+                      targetNamespace="http://bpmn.io/schema/bpmn">
+      <bpmn:process id="Process_1" isExecutable="true">
+      </bpmn:process>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+        </bpmndi:BPMNPlane>
+      </bpmndi:BPMNDiagram>
+    </bpmn:definitions>`;
 
   await modeler.value.importXML(initialDiagram);
   console.log('Загружена пустая диаграмма');
@@ -322,11 +322,12 @@ const saveDiagram = async () => {
     if (!process) {
       throw new Error('Процесс не найден');
     }
-
+    
     // Если у процесса уже есть bpmn_xml, обновляем существующую запись
     if (process.bpmn_xml) {
-      const response = await axios.patch(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`, {
-        xml,
+      const response = await axios.patch(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
+        bpmn_xml: process.bpmn_xml, // это ID bpmn_xml
+        xml: xml, // сам XML как строка
       });
       console.log('Диаграмма обновлена на сервере:', response.data);
     } else {
@@ -390,6 +391,8 @@ const startProcess = () => {
                       👨
                       {{ u.last_name }}
                       {{ u.position.position_name }}
+                      {{ u.department.department_name }}
+
                     </option>
                   </select></br>
                   <br>
@@ -524,6 +527,7 @@ button {
   /* position: absolute; */
    top: 50%;
   left: 50%; 
+  width: 270px;
   /* transform: translate(-50%, -50%); */
 }
 
