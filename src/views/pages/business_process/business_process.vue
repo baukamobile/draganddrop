@@ -1,26 +1,20 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-
+import { useRoute } from 'vue-router';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
-
+import axios from 'axios';
 import PageWrapper from '@/components/PageWrapper.vue';
 import CustomPaletteProvider from '../reports/CustomPaletteProvider';
-
-import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-import 'bpmn-js/dist/assets/diagram-js.css';
-import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
-
-import axios from 'axios';
-import { useRoute } from 'vue-router';
-
 import { useTaskManager } from '@/components/dashboard/useTaskManger';
 import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-
-const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
-const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
+const{
+  newTask, users
+}= useTaskManager();
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; 
+const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; 
 const bpmnContainer = ref(null);
 const modeler = ref(null);
 const route = useRoute();
@@ -321,34 +315,41 @@ watch(() => route.params.processId, (newId) => {
 const saveDiagram = async () => {
   try {
     const { xml } = await modeler.value.saveXML({ format: true });
-    console.log('Сохранённый XML:', xml);
+    console.log('Saved XML:', xml); // Check if <bpmn:documentation> is present
 
-    // Находим текущий процесс
+    // Verify XML contains comments
+    if (!xml.includes('<bpmn:documentation>')) {
+      console.warn('No comments found in XML. Ensure comments are set in the modeler.');
+    }
+
+    // Find the current process
     const process = processes.value.find(p => p.id === selectedProcessId.value);
     if (!process) {
-      throw new Error('Процесс не найден');
+      throw new Error('Process not found');
     }
-    
-    // Если у процесса уже есть bpmn_xml, обновляем существующую запись
+
+    // API endpoint for updating/creating the process
+    const API_PROCESS = 'http://127.0.0.1:8000/bpm/process/';
     if (process.bpmn_xml) {
-      const response = await axios.patch(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
-        bpmn_xml: process.bpmn_xml, // это ID bpmn_xml
-        xml: xml, // сам XML как строка
+      // Update existing process with new XML
+      const response = await axios.patch(`${API_PROCESS}${process.id}/update-xml/`, {
+        bpmn_xml: process.bpmn_xml, // Send the existing bpmn_xml ID
+        xml, // Send only the XML string
       });
-      console.log('Диаграмма обновлена на сервере:', response.data);
+      console.log('Diagram updated on server:', response.data);
     } else {
-      // Если bpmn_xml отсутствует, создаём новую запись
-      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
+      // Create new process with XML
+      const response = await axios.post(`${API_PROCESS}`, {
         process_id: selectedProcessId.value,
         xml,
       });
-      console.log('Диаграмма создана на сервере:', response.data);
+      console.log('Diagram created on server:', response.data);
 
-      // Обновляем локальный processes с новым bpmn_xml ID
-      process.bpmn_xml = response.data.id;
+      // Update local processes with new bpmn_xml ID
+      process.bpmn_xml = response.data.bpmn_xml; // Adjust based on backend response
     }
   } catch (err) {
-    console.error('Ошибка сохранения:', err);
+    console.error('Error saving diagram:', err);
   }
 };
 
