@@ -399,6 +399,6 @@ watch(() => newTask, (val) => {
           </div>
         </div>
       </div>
-    </div>
+    </div></div>
   </PageWrapper>
 </template>

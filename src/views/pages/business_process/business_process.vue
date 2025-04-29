@@ -10,9 +10,7 @@ import CustomPaletteProvider from '../reports/CustomPaletteProvider';
 import { useTaskManager } from '@/components/dashboard/useTaskManger';
 import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-const{
-  newTask, users
-}= useTaskManager();
+
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
 const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
 const bpmnContainer = ref(null);
