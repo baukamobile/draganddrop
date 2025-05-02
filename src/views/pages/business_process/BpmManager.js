@@ -9,14 +9,8 @@ const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS;
 const API_BPM_DASHBOARD_WIDGET = import.meta.env.VITE_API_DASHBOARD;
 const API_BPM_DASHBOARDS = import.meta.env.API_BPM_DASHBOARDS;
 const API_BPM_ATTACHMENT = import.meta.env.VITE_API_ATTACHMENT;
-const API_BPM_AUTO_TASK_RULE = import.meta.env.VITE_API_AUTO_TASK_RULE
-const API_BPM_PROCESS_TEMPLATE = import.meta.env.VITE_API_PROCESS_TEMPLATE
-const API_BPM_PROCESS_STAGE_TEMPLATE =import.meta.env.VITE_API_PROCESS_STAGE_TEMPLATE
 const API_BPM_PROCESS_STAGE =import.meta.env.VITE_API_PROCESS_STAGE
 const API_BPM_TASK =import.meta.env.VITE_API_BPM_TASK
-const API_BPM_TASK_STAGE_HISTORY = import.meta.env.VITE_API_TASK_STAGE_HISTORY
-const API_BPM_COMMENT = import.meta.env.VITE_API_BPM_COMMENT
-const API_BPM_NOTIFICATION =import.meta.env.VITE_API_NOTIFICATION
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 export const getProject = async () => {
     try {

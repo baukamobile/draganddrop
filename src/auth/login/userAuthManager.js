@@ -185,29 +185,29 @@ const handleLoginClick = async () => {
 
 
 onMounted(async () => { //Код внутри выполняется, когда компонент уже вставлен в DOM.
-    const userDataFromStorage = localStorage.getItem('user');
-    if (userDataFromStorage) {
-        try {
-          const parsedUserData = JSON.parse(userDataFromStorage);
+//     const userDataFromStorage = localStorage.getItem('user');
+//     if (userDataFromStorage) {
+//         try {
+//           const parsedUserData = JSON.parse(userDataFromStorage);
             
-      // Обновляем данные профиля данными из API
-      userData.value = {
-        email: parsedUserData.email || userData.value.email,
-        first_name: parsedUserData.first_name || userData.value.first_name,
-        last_name: parsedUserData.last_name || userData.value.last_name,
-        phone_number: parsedUserData.phone_number || userData.value.phone_number,
-        position: parsedUserData.position || userData.value.position,
-        department: parsedUserData.department || userData.value.department,
-        company: parsedUserData.company || userData.value.company,
-        image: parsedUserData.image || userData.value.image
-      };
+//       // Обновляем данные профиля данными из API
+//       userData.value = {
+//         email: parsedUserData.email || userData.value.email,
+//         first_name: parsedUserData.first_name || userData.value.first_name,
+//         last_name: parsedUserData.last_name || userData.value.last_name,
+//         phone_number: parsedUserData.phone_number || userData.value.phone_number,
+//         position: parsedUserData.position || userData.value.position,
+//         department: parsedUserData.department || userData.value.department,
+//         company: parsedUserData.company || userData.value.company,
+//         image: parsedUserData.image || userData.value.image
+//       };
       
-      // Обновляем также данные для редактирования
-      editData.value = {...userData.value};
-    } catch (e) {
-      console.error('Ошибка при разборе данных пользователя:', e);
-    }
-  }
+//       // Обновляем также данные для редактирования
+//       editData.value = {...userData.value};
+//     } catch (e) {
+//       console.error('Ошибка при разборе данных пользователя:', e);
+//     }
+//   }
 
     try {
         const [positionData, departmentData,companyData] = await Promise.allSettled([ //Мы используем Promise.allSettled() вместо Promise.all().

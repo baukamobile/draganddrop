@@ -13,8 +13,8 @@ import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 const{
   newTask, users
 }= useTaskManager();
-const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; 
-const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; 
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
+const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
 const bpmnContainer = ref(null);
 const modeler = ref(null);
 const route = useRoute();
@@ -315,41 +315,34 @@ watch(() => route.params.processId, (newId) => {
 const saveDiagram = async () => {
   try {
     const { xml } = await modeler.value.saveXML({ format: true });
-    console.log('Saved XML:', xml); // Check if <bpmn:documentation> is present
+    console.log('Сохранённый XML:', xml);
 
-    // Verify XML contains comments
-    if (!xml.includes('<bpmn:documentation>')) {
-      console.warn('No comments found in XML. Ensure comments are set in the modeler.');
-    }
-
-    // Find the current process
+    // Находим текущий процесс
     const process = processes.value.find(p => p.id === selectedProcessId.value);
     if (!process) {
-      throw new Error('Process not found');
+      throw new Error('Процесс не найден');
     }
-
-    // API endpoint for updating/creating the process
-    const API_PROCESS = 'http://127.0.0.1:8000/bpm/process/';
+    
+    // Если у процесса уже есть bpmn_xml, обновляем существующую запись
     if (process.bpmn_xml) {
-      // Update existing process with new XML
-      const response = await axios.patch(`${API_PROCESS}${process.id}/update-xml/`, {
-        bpmn_xml: null, // Send the existing bpmn_xml ID
-        xml, // Send only the XML string
+      const response = await axios.patch(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
+        bpmn_xml: process.bpmn_xml, // это ID bpmn_xml
+        xml: xml, // сам XML как строка
       });
-      console.log('Diagram updated on server:', response.data);
+      console.log('Диаграмма обновлена на сервере:', response.data);
     } else {
-      // Create new process with XML
-      const response = await axios.post(`${API_PROCESS}`, {
+      // Если bpmn_xml отсутствует, создаём новую запись
+      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
         process_id: selectedProcessId.value,
         xml,
       });
-      console.log('Diagram created on server:', response.data);
+      console.log('Диаграмма создана на сервере:', response.data);
 
-      // Update local processes with new bpmn_xml ID
-      process.bpmn_xml = response.data.bpmn_xml; // Adjust based on backend response
+      // Обновляем локальный processes с новым bpmn_xml ID
+      process.bpmn_xml = response.data.id;
     }
   } catch (err) {
-    console.error('Error saving diagram:', err);
+    console.error('Ошибка сохранения:', err);
   }
 };
 
@@ -366,7 +359,12 @@ const startProcess = () => {
       
        <h1 style="font-size: 20px; font-weight: bold;">{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
      </div> 
-      <div ref="bpmnContainer" class="w-full h-[750px]  border"></div>
+      <div ref="bpmnContainer" class="w-full h-[750px]  border">
+      <div>
+    <div id="js-canvas"></div>
+    <div id="js-properties-panel"></div>
+  </div>
+      </div>
       <div class="btn">
         <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
           Сохранить процесс

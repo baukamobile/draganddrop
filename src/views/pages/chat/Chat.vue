@@ -244,7 +244,7 @@ body{
 }
 
 .chat .chat-history .message-data-time {
-    color: #434651;
+    color: #fcfcfc;
     padding-left: 6px
 }
 
