@@ -291,7 +291,7 @@ const startProcess = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 
 :deep(.bjs-container) {
   height: 100%;

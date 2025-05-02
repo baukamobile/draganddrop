@@ -109,7 +109,7 @@ const saveProject = () => {
     </PageWrapper>
 </template>
 
-<style>
+<style scoped>
 select,option,form,input,textarea{
     color: black;
 }
