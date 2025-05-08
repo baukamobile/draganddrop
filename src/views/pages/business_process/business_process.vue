@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch,reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
+import './style/style.css';
 import axios from 'axios';
 import PageWrapper from '@/components/PageWrapper.vue';
 import CustomPaletteProvider from '../reports/CustomPaletteProvider';
@@ -11,10 +12,12 @@ import { useTaskManager } from '@/components/dashboard/useTaskManger';
 import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 const{
-  newTask, users
+  newTask, users,formatDate
 }= useTaskManager();
-const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS; // http://127.0.0.1:8000/bpm/xml-process/
-const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS; // http://127.0.0.1:8000/bpm/process/
+
+const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
+const API_BPM_TASK = import.meta.env.VITE_API_BPM_TASK;
+const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS;
 const bpmnContainer = ref(null);
 const modeler = ref(null);
 const route = useRoute();
@@ -25,7 +28,39 @@ const lastCheckedEl = ref(null);
 const warningEl = ref(null);
 const okayEl = ref(null);
 const formEl = ref(null);
-const value2 = ref('')
+
+
+
+
+const assignedTo = ref(null);
+const status = ref(null);
+const createdAt = ref(null);
+const deadline = ref(null);
+const updatedAt = ref(null);
+const isComplete = ref(null);
+const returnReason = ref(null);
+const bpmstatuses = {
+  1: { status_name: "Не начата"},
+  2: { status_name: "В работе"},
+  3: { status_name: "Заблокирована"},
+  4: { status_name: "Выполнена"},
+  5: { status_name: "Возвращена на доработку"},
+}
+// Хранилище для формы
+const formData = reactive({
+  suitabilityScore: '',
+  assignedTo: '',
+  status: 1,
+  return_reason: '',
+  created_at: null,
+  deadline: null,
+  updated_at: null,
+  is_complete: false,
+  bpmn_task_id: null,
+});
+const currentStatusName = computed(() => {
+  return bpmstatuses[formData.status]?.status_name || 'Неизвестный статус'
+})
 // QA functionality
 const HIGH_PRIORITY = 1500;
 let analysisDetails = null;
@@ -352,330 +387,82 @@ const startProcess = () => {
 };
 </script>
 
+
 <template>
   <PageWrapper>
     <div class="flex flex-col h-full">
-     <div style="display: flex; justify-content: center;">
+      <div style="display: flex; justify-content: center;">
       
-       <h1 style="font-size: 20px; font-weight: bold;">{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
-     </div> 
-      <div ref="bpmnContainer" class="w-full h-[750px]  border">
-      <div>
-    <div id="js-canvas"></div>
-    <div id="js-properties-panel"></div>
-  </div>
+      <h1 style="font-size: 20px; font-weight: bold;">{{ selectedProcess.name || 'Процесс не выбран' }}</h1>
+    </div> 
+      <div ref="bpmnContainer" class="w-full h-[650px] border flex justify-center"></div>
+      
+      <!-- Controls -->
+      <div class="flex justify-between mt-2">
+        <button @click="saveDiagram" class="p-2 bg-blue-500 text-white rounded">Save Process</button>
+        <button @click="startProcess" class="p-2 bg-green-500 text-white rounded">Start Process</button>
       </div>
-      <div class="btn">
-        <button @click="saveDiagram" class="mt-2 p-2 bg-blue-500 text-white self-start">
-          Сохранить процесс
-        </button>
-        <br />
-        <button @click="startProcess" class="mt-2 p-2 bg-green-500 text-white self-start">
-          Запустить процесс
-        </button>
-      </div>
-      <div ref="qualityAssuranceEl" id="quality-assurance" class="panel hidden">
-      <form ref="formEl" id="form" @submit="handleFormSubmit" @keydown="handleFormKeydown">
-        <p>
-          
-        </p>
-        <br />
-        <input ref="suitabilityScoreEl" id="suitability-score" type="text" placeholder="100" autocomplete="off" @input="validate">
-        <br />
-        <br />
-        <p ref="warningEl" id="warning" class="hidden">
-          только цифры
-        </p>
-        <br />
-        <div class="overlay-content">
-          <div class="box">
-        <!-- <br> -->
-        <select id="users" v-model="newTask.assigned">
-                    <option v-for="u in users" :key="u.id" :value="u.id">
-                      {{ u.first_name }}
-                      👨
-                      {{ u.last_name }}
-                      {{ u.position.position_name }}
-                      {{ u.department.department_name }}
+      
+      <!-- Quality Assurance Panel -->
+      <div ref="qualityAssuranceEl" id="quality-assurance" class="panel hidden fixed top-20 right-2 bg-white shadow-lg rounded-lg p-4 w-50">
+        <form ref="formEl" id="form" @submit="handleFormSubmit" @keydown="handleFormKeydown" class="space-y-1">
+          <div>
+            <label class="block font-bold">Suitability Score</label>
+            <input ref="suitabilityScoreEl" id="suitability-score" v-model="formData.suitabilityScore" type="text" placeholder="100" class="w-full p-2 border rounded" autocomplete="off" @input="validate">
+            <p ref="warningEl" id="warning" class="hidden text-red-500 text-sm mt-1">Suitability Score must be a number</p>
+          </div>
 
-                    </option>
-                  </select></br>
-                  <br>
-                  <input type="file">Прикрепите файл
-                </br>
-                  <img src="" alt="">
+          <div>
+            <label class="block font-bold">Assigned To</label>
+            <select id="assigned-to" v-model="formData.assignedTo" class="w-full p-2 border rounded">
+              <option v-for="u in users" :key="u.id" :value="u.id">{{ u.first_name }} {{ u.last_name }} ({{ u.position.position_name }})</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold">Status</label>
+            <select id="status" v-model="formData.status" class="w-full p-2 border rounded">
+              <option v-for="(status, id) in bpmstatuses" :key="id" :value="parseInt(id)">{{ status.status_name }}</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold">Created At</label>
+              <el-date-picker v-model="formData.created_at" type="datetime" format="YYYY-MM-DD HH:mm:ss" placeholder="Select date" class="w-full" />
+            </div>
+            <div>
+              <label class="block font-bold">Deadline</label>
+              <el-date-picker v-model="formData.deadline" type="datetime" format="YYYY-MM-DD HH:mm:ss" placeholder="Select date" class="w-full" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold">Updated At</label>
+              <p ref="updatedAt" id="updated-at" class="text-gray-600">{{ formData.updated_at ? formatDate(formData.updated_at) : '-' }}</p>
+            </div>
+            <div>
+              <label class="block font-bold">Last Checked</label>
+              <p ref="lastCheckedEl" id="last-checked" class="text-gray-600">{{ formatDate(lastCheckedEl?.value?.textContent) }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center mb-2">
+            <input id="is-complete" type="checkbox" v-model="formData.is_complete" class="h-5 w-5 mr-2">
+            <label class="font-bold">Is Complete</label>
+          </div>
+
+          <div>
+            <label class="block font-bold">Return Reason</label>
+            <textarea id="return-reason" v-model="formData.return_reason" placeholder="e.g. Needs revision" class="w-full p-2 border rounded" autocomplete="off" rows="2"></textarea>
+          </div>
+
+          <input ref="okayEl" id="okay" type="submit" value="Okay" class="w-full p-2 bg-blue-500 text-white rounded cursor-pointer mt-2">
+        </form>
       </div>
-        </div>
-        <div class="demo-datetime-picker">
-    <div class="line" />
-    <div class="block">
-      <input type="date">
-    </div>
-  </div><br>
-        <p>
-          <b>Last Checked</b>
-        </p>
-        <br />
-        <p ref="lastCheckedEl" id="last-checked">
-          -
-        </p>
-        <br />
-        <input ref="okayEl" id="okay" type="submit" value="Okay">
-      </form>
-    </div>
     </div>
   </PageWrapper>
 </template>
 
-<style scoped>
-:deep(.bjs-container) {
-  height: 100%;
-  width: 100%;
-}
-button {
-  border-radius: 4px;
-}
-.bpmn-icon-start-event {
-  color: red !important;
-}
 
-.bpmn-icon-end-event {
-  color: yellow !important;
-}
-
-.w-full {
-  background-color: rgb(120, 207, 112);
-  color: black;
-}
-.btn {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-.demo-datetime-picker {
-  display: flex;
-  width: 100%;
-  padding: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
-  
-}
-.demo-datetime-picker .block {
-  padding: 30px 0;
-  text-align: center;
-}
-.line {
-  /* width: 1px; */
-  background-color: var(--el-border-color);
-}
-
-/* Quality Assurance Panel styles */
-.panel {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 20px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-}
-
-.hidden {
-  display: none;
-}
-
-#form input[type="text"] {
-  padding: 5px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-#form input[type="submit"] {
-  padding: 5px 15px;
-  background-color: #337ab7;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-#form input[type="submit"]:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-#warning {
-  color: red;
-  font-size: 12px;
-}
-
-.overlay-content {
-  background: white;
-  padding: 8px;
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-.box {
-  /* position: absolute; */
-   top: 50%;
-  left: 50%; 
-  width: 270px;
-  /* transform: translate(-50%, -50%); */
-}
-
-.box select {
-  background-color: #0563af;
-  color: white;
-  padding: 10px;
-  width: 250px;
-  border: none;
-  font-size: 20px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-  -webkit-appearance: button;
-  appearance: button;
-  outline: none;
-}
-
-.box::before {
-  content: "\f13a";
-  font-family: FontAwesome;
-  position: absolute;
-   top: 0;
-  right: 0; 
-  width: 20%;
-  height: 100%;
-  text-align: center;
-  font-size: 28px;
-  line-height: 45px;
-  color: rgba(255, 255, 255, 0.5);
-  background-color: rgba(255, 255, 255, 0.1);
-  pointer-events: none;
-}
-
-.box:hover::before {
-  color: rgba(255, 255, 255, 0.6);
-  background-color: rgba(255, 255, 255, 0.2);
-}
-p,b,input,form,select{
-  color: #000;
-}
-/* Общие стили для контейнера формы */
-#quality-assurance {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-/* Панель скрытия */
-.hidden {
-  display: none;
-}
-
-/* Стили для полей ввода */
-#suitability-score {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-#suitability-score:focus {
-  border-color: #007BFF;
-  outline: none;
-}
-
-#warning {
-  color: #ff0000;
-  font-size: 14px;
-  display: none; /* скрыто по умолчанию */
-}
-
-/* Стили для кнопок и submit */
-#okay {
-  background-color: #007BFF;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#okay:hover {
-  background-color: #0056b3;
-}
-
-/* Стили для выпадающего списка пользователей */
-select#users {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-select#users:focus {
-  border-color: #007BFF;
-  outline: none;
-}
-
-/* Стили для выбора даты */
-.demo-datetime-picker {
-  margin-top: 20px;
-}
-
-.el-date-picker {
-  width: 100%;
-}
-
-.overlay-content {
-  margin-top: 20px;
-}
-
-/* Стили для файлового поля */
-input[type="file"] {
-  margin-top: 10px;
-  font-size: 14px;
-  padding: 5px;
-}
-
-input[type="file"]::file-selector-button {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type="file"]::file-selector-button:hover {
-  background-color: #0056b3;
-}
-
-/* Стиль для изображения */
-img {
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-}
-
-/* Стиль для текста "Last Checked" */
-#last-checked {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-top: 10px;
-}
-
-</style>

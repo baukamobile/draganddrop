@@ -1,171 +1,384 @@
-.dashboard {
-    min-width: max(80%, 140vh); /* Ширина адаптируется ко всем браузерам */
-    height: 85vh;
-    background: rgb(2,0,36);
-    background: linear-gradient(55deg,rgb(185, 93, 178) 0%, rgb(222, 107, 226) 48%, rgb(76, 12, 102) 100%);
-    /* (90deg, rgb(34, 122, 238) 0%, rgb(14, 68, 174) 48%, rgb(13, 203, 236) 100%); */
-    overflow-x: scroll; /* Горизонтальный скролл */
-    display: flex; /* Растянет внутренние элементы в строку */
-    white-space: nowrap; /* Запретит перенос элементов */
 
-}
-* { 
-    margin : 0;
-    padding: 0;
-    box-sizing : border-box;
-    font-familly : "Poppins", sans-serif;
+:deep(.bjs-container) {
+    height: 100%;
+    width: 100%;
   }
-
-.form1{
-    display: flex; 
-    justify-content: space-between; gap: 8px;
-}
-
-.add-task-container{
-    display: unset;
-    /* justify-content: center; */
-}
-.columns {
-    display: flex;
-    gap: 20px;
-}
-.column {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 250px;
-}
-.draggable {
-    padding: 5px;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    cursor: grab;
-}
-
-/* Анимация для transition-group */
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s;
-}
-.fade-enter-from, .fade-leave-to {
-    opacity: 0;
-}
-
-.add-task{
-    color: rgb(0, 0, 0);
-    padding: 5px;
-    border-radius: 8px;
-    margin: 10px;
-    background-color: white;
-}.add-task:hover{
-    color: rgb(0, 0, 0);
-    padding: 5px;
-    border-radius: 8px;
-    margin: 10px;
-    /* border: solid; */
-    /* border-color: white; */
-    background-color: #d0d4db;
-}
-/* .flex{
-    min-width: 90%;
-} */
-
-
-.time-part p{
-    /* background-color: rgb(232, 127, 0); */
-    line-height: 1;
-    font-size: 10px;
-    color: rgb(194, 16, 16);
-}
-.center {
-    display: flex;
-    gap: 20px; 
-    padding: 20px;
-}
-.droppable {
-    padding: 5px;
-    border-radius: 10px;
-    background-color: #f1f2f4;
-    width: 300px; 
-    height: fit-content;
-    text-align: center;
-    cursor: grabbing;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    user-select: none;
-    overflow-wrap: break-word;
-}
-.droppable h1, p {
+  button {
+    border-radius: 4px;
+  }
+  .bpmn-icon-start-event {
+    color: red !important;
+  }
+  
+  .bpmn-icon-end-event {
+    color: yellow !important;
+  }
+  
+  .w-full {
+    background-color: rgb(120, 207, 112);
     color: black;
-    padding-bottom: 5px;
-    font-size: 15px;
-}
-.draggable {
-    background-color: white;
+  }
+  .btn {
     padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    cursor: grab;
-    height: auto;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-.draggable h5{
-    color: black;
-}
-.priority-critical{
-    color: red;
-    font-weight: bold;
-}
-.priority-high {
-  color: orange;
-  font-weight: bold;
-}
-.priority-medium {
-  color: rgb(51, 51, 143);
-}
-.priority-low {
-  color: green;
-}
-.status{
-    padding: 8px;
     display: flex;
     justify-content: space-between;
-}
-.add-list {
-    color: black;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgb(233, 229, 229);
-    width: 300px; 
-    height: fit-content;
-    opacity: 90%;
-    /* margin: 10px; */
-    text-align: center;
-    /* display: flex;
-    justify-content: space-around; */
-    /* cursor: grabbing; */
-    /* overflow-x: hidden; */
-    user-select: none;
+  }
+  .demo-datetime-picker {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
     
-    /* overflow-wrap: break-word; */
-}
-
-.status-name {
-    max-width: 150px;
-    display: inline-block;
-    white-space: normal; /* Позволяет переносить слова */
-    word-break: break-word;
-    overflow-wrap: break-word;
+  }
+  .demo-datetime-picker .block {
+    padding: 30px 0;
     text-align: center;
-}
-.add-task-container{
-    color: black;
-}
-.red-button{
+  }
+  .line {
+    /* width: 1px; */
+    background-color: var(--el-border-color);
+  }
+  
+  /* Quality Assurance Panel styles */
+  .panel {
+    /* position: absolute; */
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #form input[type="text"] {
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  #form input[type="submit"] {
+    padding: 5px 15px;
+    background-color: #337ab7;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  #form input[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  #warning {
     color: red;
-}
-.task-form{
+    font-size: 12px;
+  }
+  
+  .overlay-content {
+    background: white;
+    padding: 8px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  .box {
+    /* position: absolute; */
+     top: 50%;
+    left: 50%; 
+    width: 270px;
+    /* transform: translate(-50%, -50%); */
+  }
+  
+  .box select {
+    background-color: #0563af;
+    color: white;
+    padding: 10px;
+    width: 250px;
+    border: none;
+    font-size: 20px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    -webkit-appearance: button;
+    appearance: button;
+    outline: none;
+  }
+  
+  .box::before {
+    content: "\f13a";
+    font-family: FontAwesome;
+    position: absolute;
+     top: 0;
+    right: 0; 
+    width: 20%;
+    height: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 45px;
+    color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+  
+  .box:hover::before {
+    color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  p,b,input,form,select{
+    color: #000;
+  }
+  /* Общие стили для контейнера формы */
+  #quality-assurance {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  
+  /* Панель скрытия */
+  .hidden {
+    display: none;
+  }
+  
+  /* Стили для полей ввода */
+  #suitability-score {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  #suitability-score:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+  
+  #warning {
+    color: #ff0000;
+    font-size: 14px;
+    display: none; /* скрыто по умолчанию */
+  }
+  
+  /* Стили для кнопок и submit */
+  #okay {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #okay:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Стили для выпадающего списка пользователей */
+  select#users {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  select#users:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+  
+  /* Стили для выбора даты */
+  .demo-datetime-picker {
+    margin-top: 20px;
+  }
+  
+  .el-date-picker {
+    width: 100%;
+  }
+  
+  .overlay-content {
+    margin-top: 20px;
+  }
+  
+  /* Стили для файлового поля */
+  input[type="file"] {
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 5px;
+  }
+  
+  input[type="file"]::file-selector-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type="file"]::file-selector-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Стиль для изображения */
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  /* Стиль для текста "Last Checked" */
+  #last-checked {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+  }
+
+  
+:deep(.bjs-container) {
+    height: 100%;
+    width: 100%;
+  }
+  .demo-datetime-picker {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    
+  }
+  .demo-datetime-picker .block {
+    padding: 30px 0;
+    text-align: center;
+  }
+  .line {
+    /* width: 1px; */
+    background-color: var(--el-border-color);
+  }
+  button {
+    border-radius: 4px;
+  }
+  
+  .w-full {
+    background-color: rgb(120, 207, 112);
     color: black;
-}
-
-
+  }
+  
+  .btn {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  p,b,input,form,select{
+    color: #000;
+  }
+  /* Quality Assurance Panel styles */
+  .panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #form input[type="text"] {
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  #form input[type="submit"] {
+    padding: 5px 15px;
+    background-color: #337ab7;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  #form input[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  #warning {
+    color: red;
+    font-size: 12px;
+  }
+  
+  .overlay-content {
+    background: white;
+    padding: 8px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  .box {
+    /* position: absolute; */
+     top: 50%;
+    left: 50%; 
+    /* transform: translate(-50%, -50%); */
+  }
+  
+  .box select {
+    background-color: #0563af;
+    color: white;
+    padding: 10px;
+    width: 250px;
+    border: none;
+    font-size: 20px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    -webkit-appearance: button;
+    appearance: button;
+    outline: none;
+  }
+  
+  .box::before {
+    content: "\f13a";
+    font-family: FontAwesome;
+    position: absolute;
+     top: 0;
+    right: 0; 
+    width: 20%;
+    height: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 45px;
+    color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+  
+  .box:hover::before {
+    color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .box select option {
+    /* padding: 30px; */
+  }
