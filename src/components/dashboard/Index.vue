@@ -28,14 +28,12 @@ const {
   formatDate,
   submitColumn,
   submitTask,
-  onColumnDrag,
-  onColumnDrop,
-  onColumnDragOver,
+
 } = useTaskManager();
 
 
 const showTaskForm = ref({});
-const route = useRoute();
+
 onMounted(() => {
   console.log('Project ID:', selectedProjectId.value);
   console.log('Projects:', projects.value);

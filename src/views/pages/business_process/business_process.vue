@@ -325,7 +325,7 @@ const saveDiagram = async () => {
     
     // Если у процесса уже есть bpmn_xml, обновляем существующую запись
     if (process.bpmn_xml) {
-      const response = await axios.patch(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
+      const response = await axios.put(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
         bpmn_xml: process.bpmn_xml, // это ID bpmn_xml
         xml: xml, // сам XML как строка
       });
@@ -409,15 +409,7 @@ const startProcess = () => {
         <div class="demo-datetime-picker">
     <div class="line" />
     <div class="block">
-      <el-date-picker
-        v-model="value2"
-        type="datetimerange"
-        start-placeholder="Start date"
-        end-placeholder="End date"
-        format="YYYY-MM-DD HH:mm:ss"
-        date-format="YYYY/MM/DD ddd"
-        time-format="A hh:mm:ss"
-      />
+      <input type="date">
     </div>
   </div><br>
         <p>
