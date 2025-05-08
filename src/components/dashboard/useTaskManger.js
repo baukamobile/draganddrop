@@ -41,6 +41,18 @@ const statuses = ref([
     // { id: 2, status_name: "В процессе", user: 2 },
     // { id: 3, status_name: "Готово", user: 3 }
 ]);
+    const newBpmnTask = reactive({
+        process: '',
+  assigned_to: '',
+  assigned_department: '',
+  status: '',
+  return_reason: '',
+  deadline: '',
+  created_at: '',
+  updated_at: '',
+  completed_at: '',
+  bpmn_task_id: 'Activity_0worhk0',
+  is_complete: false,});
     const newTask = reactive({
         task_name: "",
         description: "",
@@ -281,6 +293,8 @@ onMounted(async () => { //Код внутри выполняется, когда
         projects,
         users,
         newStatus,
+        newBpmnTask,
+        nerw
         newTask,
         priority,
         department,

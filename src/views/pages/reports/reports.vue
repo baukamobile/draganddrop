@@ -12,7 +12,7 @@ import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBpmTask } from '@/api/bpm_data';
 import { computed } from 'vue';
 
-const { newTask, users, formatDate } = useTaskManager();
+const { newTask, users, formatDate,newBpmnTask } = useTaskManager();
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 const API_BPM_TASK = import.meta.env.VITE_API_BPM_TASK;
 const bpmnContainer = ref(null);
@@ -56,7 +56,7 @@ const HIGH_PRIORITY = 1500;
 let analysisDetails = null;
 let businessObject = null;
 let currentElement = null;
-
+let suitabilityScore = null;
 // Validate suitability score
 const validate = () => {
   if (!suitabilityScoreEl.value) return;

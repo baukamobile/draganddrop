@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, watch,reactive } from 'vue';
+import { ref, onMounted, computed, watch, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -11,10 +11,9 @@ import CustomPaletteProvider from '../reports/CustomPaletteProvider';
 import { useTaskManager } from '@/components/dashboard/useTaskManger';
 import qaModdleExtension from '@/views/pages/reports/qa';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-const{
-  newTask, users,formatDate
-}= useTaskManager();
-
+import { getBpmTask } from '@/api/bpm_data';
+import { getUsers } from '@/api/users';
+const { newTask, users, formatDate, newBpmnTask } = useTaskManager();
 const API_BPMNXML_PROCESS = import.meta.env.VITE_API_BPMNXML_PROCESS;
 const API_BPM_TASK = import.meta.env.VITE_API_BPM_TASK;
 const API_BPM_PROCESS = import.meta.env.VITE_API_PROCESS;
@@ -29,23 +28,6 @@ const warningEl = ref(null);
 const okayEl = ref(null);
 const formEl = ref(null);
 
-
-
-
-const assignedTo = ref(null);
-const status = ref(null);
-const createdAt = ref(null);
-const deadline = ref(null);
-const updatedAt = ref(null);
-const isComplete = ref(null);
-const returnReason = ref(null);
-const bpmstatuses = {
-  1: { status_name: "Не начата"},
-  2: { status_name: "В работе"},
-  3: { status_name: "Заблокирована"},
-  4: { status_name: "Выполнена"},
-  5: { status_name: "Возвращена на доработку"},
-}
 // Хранилище для формы
 const formData = reactive({
   suitabilityScore: '',
@@ -58,15 +40,27 @@ const formData = reactive({
   is_complete: false,
   bpmn_task_id: null,
 });
+
+// Статусы
+const bpmstatuses = {
+  1: { status_name: "Не начата" },
+  2: { status_name: "В работе" },
+  3: { status_name: "Заблокирована" },
+  4: { status_name: "Выполнена" },
+  5: { status_name: "Возвращена на доработку" },
+};
+
 const currentStatusName = computed(() => {
-  return bpmstatuses[formData.status]?.status_name || 'Неизвестный статус'
-})
+  return bpmstatuses[formData.status]?.status_name || 'Неизвестный статус';
+});
+
 // QA functionality
 const HIGH_PRIORITY = 1500;
 let analysisDetails = null;
 let businessObject = null;
 let currentElement = null;
 let suitabilityScore = null;
+
 // Локальное состояние для процессов
 const processes = ref([]);
 
@@ -108,20 +102,121 @@ const loadProcesses = async () => {
   }
 };
 
+// Загрузка задач
+const loadTasks = async () => {
+  const tasks = await getBpmTask();
+  console.log('Loaded tasks:', tasks);
 
+  if (!modeler.value) return;
+
+  const elementRegistry = modeler.value.get('elementRegistry');
+  
+  tasks.forEach(task => {
+    const element = elementRegistry.get(task.bpmn_task_id);
+    if (element) {
+      const businessObject = getBusinessObject(element);
+      const extensionElements = businessObject.extensionElements || modeler.value.get('moddle').create('bpmn:ExtensionElements');
+      
+      let analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
+      if (!analysisDetails) {
+        analysisDetails = modeler.value.get('moddle').create('qa:AnalysisDetails');
+        extensionElements.get('values').push(analysisDetails);
+      }
+
+      analysisDetails.assignedTo = task.assigned_to;
+      analysisDetails.status = task.status.toString();
+      analysisDetails.return_reason = task.return_reason;
+      analysisDetails.created_at = task.created_at;
+      analysisDetails.deadline = task.deadline;
+      analysisDetails.updated_at = task.updated_at;
+      analysisDetails.is_complete = task.is_complete;
+
+      modeler.value.get('modeling').updateProperties(element, { extensionElements });
+    }
+  });
+};
+
+// Загрузка начальной диаграммы
+const loadInitialDiagram = async () => {
+  const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0">
+  <bpmn:process id="Process_1" isExecutable="true" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
+  try {
+    await modeler.value.importXML(initialDiagram);
+    console.log('Initial diagram loaded');
+    modeler.value.get('canvas').zoom('fit-viewport');
+  } catch (err) {
+    console.error('Error loading initial diagram:', err);
+  }
+};
+
+// Загрузка BPMN XML по ID диаграммы
+const loadBpmnXml = async () => {
+  if (!selectedProcessId.value) {
+    console.warn('Process ID не указан:', selectedProcessId.value);
+    return false;
+  }
+
+  try {
+    const processResponse = await axios.get(`${API_BPM_PROCESS}${selectedProcessId.value}/`);
+    const process = processResponse.data;
+    if (!process.bpmn_xml) {
+      throw new Error('bpmn_xml ID не найден');
+    }
+
+    const diagramResponse = await axios.get(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`);
+    const xml = diagramResponse.data.xml;
+    if (!xml) {
+      throw new Error('bpmn_xml.xml не найден');
+    }
+
+    await modeler.value.importXML(xml);
+    console.log('BPMN загружен для процесса:', selectedProcessId.value);
+
+    const existingProcess = processes.value.find(p => p.id === selectedProcessId.value);
+    if (existingProcess) {
+      existingProcess.bpmn_xml = process.bpmn_xml;
+    } else {
+      processes.value.push(process);
+    }
+
+    modeler.value.get('canvas').zoom('fit-viewport');
+    await loadTasks(); // Загружаем задачи после загрузки диаграммы
+    return true;
+  } catch (err) {
+    console.error('Ошибка загрузки XML:', err);
+    return false;
+  }
+};
+
+// Выбранный процесс
+const selectedProcess = computed(() => {
+  if (!Array.isArray(processes.value)) {
+    console.warn('Processes is not an array:', processes.value);
+    return {};
+  }
+  const process = processes.value.find(p => p.id === selectedProcessId.value);
+  console.log('Selected Process:', process);
+  return process || {};
+});
 
 // Form submit handler for QA panel
-const handleFormSubmit = (event) => {
+const handleFormSubmit = async (event) => {
   event.preventDefault();
   event.stopPropagation();
 
   if (!modeler.value || !businessObject || !currentElement) return;
 
-  suitabilityScore = Number(suitabilityScoreEl.value.value);
+  const suitabilityScore = Number(formData.suitabilityScore);
 
   if (isNaN(suitabilityScore)) {
     return;
   }
+
   const moddle = modeler.value.get('moddle');
   const modeling = modeler.value.get('modeling');
   const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
@@ -136,11 +231,37 @@ const handleFormSubmit = (event) => {
   }
 
   analysisDetails.lastChecked = new Date().toISOString();
+  analysisDetails.assignedTo = formData.assignedTo;
+  analysisDetails.status = formData.status.toString();
+  analysisDetails.return_reason = formData.return_reason;
+  analysisDetails.created_at = formData.created_at ? new Date(formData.created_at).toISOString() : null;
+  analysisDetails.deadline = formData.deadline ? new Date(formData.deadline).toISOString() : null;
+  analysisDetails.updated_at = new Date().toISOString();
+  analysisDetails.is_complete = formData.is_complete;
 
   modeling.updateProperties(currentElement, {
     extensionElements,
     suitable: suitabilityScore
   });
+
+  // Синхронизируем с newBpmnTask
+  newBpmnTask.bpmn_task_id = currentElement.id;
+  newBpmnTask.assigned_to = formData.assignedTo;
+  newBpmnTask.status = formData.status;
+  newBpmnTask.return_reason = formData.return_reason;
+  newBpmnTask.created_at = formData.created_at ? new Date(formData.created_at).toISOString() : '';
+  newBpmnTask.deadline = formData.deadline ? new Date(formData.deadline).toISOString() : '';
+  newBpmnTask.updated_at = analysisDetails.updated_at;
+  newBpmnTask.is_complete = formData.is_complete;
+  newBpmnTask.process = selectedProcessId.value.toString();
+
+  // Отправляем задачу на бэкенд
+  try {
+    await axios.post(API_BPM_TASK, newBpmnTask);
+    console.log('Task saved to backend');
+  } catch (err) {
+    console.error('Error saving task:', err);
+  }
 
   qualityAssuranceEl.value.classList.add('hidden');
 };
@@ -152,149 +273,49 @@ const handleFormKeydown = (event) => {
   }
 };
 
-// Загрузка BPMN XML по ID диаграммы
-const loadBpmnXml = async () => {
-  if (!selectedProcessId.value) {
-    console.warn('Process ID не указан:', selectedProcessId.value);
-    return false;
-  }
-
-  try {
-    // Получаем процесс
-    const processResponse = await axios.get(`${API_BPM_PROCESS}${selectedProcessId.value}/`);
-    const process = processResponse.data;
-    if (!process.bpmn_xml) {
-      throw new Error('bpmn_xml ID не найден');
-    }
-
-    // Получаем XML по ID диаграммы
-    const diagramResponse = await axios.get(`${API_BPMNXML_PROCESS}${process.bpmn_xml}/`);
-    const xml = diagramResponse.data.xml;
-    if (!xml) {
-      throw new Error('bpmn_xml.xml не найден');
-    }
-
-    await modeler.value.importXML(xml);
-    console.log('BPMN загружен для процесса:', selectedProcessId.value);
-
-    // Обновляем processes
-    const existingProcess = processes.value.find(p => p.id === selectedProcessId.value);
-    if (existingProcess) {
-      existingProcess.bpmn_xml = process.bpmn_xml; // Сохраняем ID
-    } else {
-      processes.value.push(process);
-    }
-
-    modeler.value.get('canvas').zoom('fit-viewport');
-    return true;
-  } catch (err) {
-    console.error('Ошибка загрузки XML:', err);
-    return false;
-  }
-};
-
-// Фаллбэк на пустую диаграмму
-const loadInitialDiagram = async () => {
-  const initialDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="true">
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
-
-  await modeler.value.importXML(initialDiagram);
-  console.log('Загружена пустая диаграмма');
-  modeler.value.get('canvas').zoom('fit-viewport');
-};
-
-
-
-// Выбранный процесс
-const selectedProcess = computed(() => {
-  if (!Array.isArray(processes.value)) {
-    console.warn('Processes is not an array:', processes.value);
-    return {};
-  }
-  const process = processes.value.find(p => p.id === selectedProcessId.value);
-  console.log('Selected Process:', process);
-  return process || {};
-});
-
-onMounted(async () => {
-  // Проверка доступности контейнера
-  if (!bpmnContainer.value) {
-    console.error('bpmnContainer не найден!');
-    return;
-  }
-
-  // Инициализация BPMN-моделера
-  modeler.value = new BpmnModeler({
-    container: bpmnContainer.value,
-    keyboard: { bindTo: document },
-    additionalModules: [
-      {
-        // Убираем дефолтный провайдер палитры
-        paletteProvider: ['value', null]
-      },
-      {
-        // Подключаем свой провайдер палитры
-        __init__: ['customPaletteProvider'],
-        customPaletteProvider: ['type', CustomPaletteProvider]
-      }
-    ],
-    // Добавляем QA модульное расширение
-    moddleExtensions: {
-      qa: qaModdleExtension
-    }
-  });
-
-  // Загрузка процессов
-  await loadProcesses();
-
-  // Загрузка BPMN XML для выбранного процесса
-  const loaded = await loadBpmnXml();
-  if (!loaded) {
-    await loadInitialDiagram();
-  }
-
-  // QA функциональность - контекстное меню элементов
+// QA функциональность - контекстное меню элементов
+const setupContextMenu = () => {
+  if (!modeler.value) return;
   modeler.value.on('element.contextmenu', HIGH_PRIORITY, (event) => {
     event.originalEvent.preventDefault();
     event.originalEvent.stopPropagation();
 
-    // Игнорировать, если QA элементы недоступны
     if (!qualityAssuranceEl.value) return;
     
     qualityAssuranceEl.value.classList.remove('hidden');
 
     currentElement = event.element;
 
-    // Игнорировать корневой элемент
     if (!currentElement.parent) {
       return;
     }
 
-    // Используем getBusinessObject для получения бизнес-объекта
     businessObject = getBusinessObject(currentElement);
 
     let { suitable } = businessObject;
 
+    formData.suitabilityScore = suitable ? suitable : '';
     suitabilityScoreEl.value.value = suitable ? suitable : '';
     suitabilityScoreEl.value.focus();
 
     analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
-    lastCheckedEl.value.textContent = analysisDetails ? analysisDetails.lastChecked : '-';
 
+    formData.assignedTo = analysisDetails ? analysisDetails.assignedTo : '';
+    formData.status = analysisDetails ? parseInt(analysisDetails.status) || 1 : 1;
+    formData.return_reason = analysisDetails ? analysisDetails.return_reason : '';
+    formData.created_at = analysisDetails ? analysisDetails.created_at : null;
+    formData.deadline = analysisDetails ? analysisDetails.deadline : null;
+    formData.updated_at = analysisDetails ? analysisDetails.updated_at : null;
+    formData.is_complete = analysisDetails ? analysisDetails.is_complete : false;
+    formData.bpmn_task_id = currentElement.id;
+
+    lastCheckedEl.value.textContent = analysisDetails ? analysisDetails.lastChecked : '-';
     validate();
   });
+};
 
-  // Закрытие панели QA при клике вне панели
+// Закрытие панели QA при клике вне панели
+const setupClickOutside = () => {
   window.addEventListener('click', (event) => {
     if (!qualityAssuranceEl.value) return;
     
@@ -306,8 +327,77 @@ onMounted(async () => {
 
     qualityAssuranceEl.value.classList.add('hidden');
   });
-  
-  // Add dropdown overlay - если это нужно
+};
+
+// Сохранение диаграммы
+const saveDiagram = async () => {
+  try {
+    const { xml } = await modeler.value.saveXML({ format: true });
+    console.log('Сохранённый XML:', xml);
+
+    const process = processes.value.find(p => p.id === selectedProcessId.value);
+    if (!process) {
+      throw new Error('Процесс не найден');
+    }
+    
+    if (process.bpmn_xml) {
+      const response = await axios.put(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
+        bpmn_xml: process.bpmn_xml,
+        xml,
+      });
+      console.log('Диаграмма обновлена на сервере:', response.data);
+    } else {
+      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
+        process_id: selectedProcessId.value,
+        xml,
+      });
+      console.log('Диаграмма создана на сервере:', response.data);
+      process.bpmn_xml = response.data.id;
+    }
+  } catch (err) {
+    console.error('Ошибка сохранения:', err);
+  }
+};
+
+// Запуск процесса
+const startProcess = () => {
+  console.log('Запуск процесса...');
+};
+
+// Инициализация
+onMounted(async () => {
+  if (!bpmnContainer.value) {
+    console.error('bpmnContainer не найден!');
+    return;
+  }
+
+  modeler.value = new BpmnModeler({
+    container: bpmnContainer.value,
+    keyboard: { bindTo: document },
+    additionalModules: [
+      {
+        paletteProvider: ['value', null]
+      },
+      {
+        __init__: ['customPaletteProvider'],
+        customPaletteProvider: ['type', CustomPaletteProvider]
+      }
+    ],
+    moddleExtensions: {
+      qa: qaModdleExtension
+    }
+  });
+
+  await loadProcesses();
+  await getUsers();
+  const loaded = await loadBpmnXml();
+  if (!loaded) {
+    await loadInitialDiagram();
+  }
+
+  setupContextMenu();
+  setupClickOutside();
+
   setTimeout(() => {
     if (modeler.value) {
       const overlays = modeler.value.get('overlays');
@@ -319,12 +409,10 @@ onMounted(async () => {
         html: `<div class=""></div>`
       });
       
-      // Add event listener for dropdown
       const dropdown = document.querySelector('.dropdown');
       if (dropdown) {
         dropdown.addEventListener('change', (event) => {
           console.log('Selected view:', event.target.value);
-          // Add your view change logic here
         });
       }
       
@@ -346,45 +434,6 @@ watch(selectedProcessId, async (newId) => {
 watch(() => route.params.processId, (newId) => {
   selectedProcessId.value = Number(newId);
 });
-
-const saveDiagram = async () => {
-  try {
-    const { xml } = await modeler.value.saveXML({ format: true });
-    console.log('Сохранённый XML:', xml);
-
-    // Находим текущий процесс
-    const process = processes.value.find(p => p.id === selectedProcessId.value);
-    if (!process) {
-      throw new Error('Процесс не найден');
-    }
-    
-    // Если у процесса уже есть bpmn_xml, обновляем существующую запись
-    if (process.bpmn_xml) {
-      const response = await axios.put(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
-        bpmn_xml: process.bpmn_xml, // это ID bpmn_xml
-        xml: xml, // сам XML как строка
-      });
-      console.log('Диаграмма обновлена на сервере:', response.data);
-    } else {
-      // Если bpmn_xml отсутствует, создаём новую запись
-      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
-        process_id: selectedProcessId.value,
-        xml,
-      });
-      console.log('Диаграмма создана на сервере:', response.data);
-
-      // Обновляем локальный processes с новым bpmn_xml ID
-      process.bpmn_xml = response.data.id;
-    }
-  } catch (err) {
-    console.error('Ошибка сохранения:', err);
-  }
-};
-
-const startProcess = () => {
-  console.log('Запуск процесса...');
-  // Логика для запуска процесса
-};
 </script>
 
 
@@ -414,16 +463,17 @@ const startProcess = () => {
 
           <div>
             <label class="block font-bold">Assigned To</label>
-            <select id="assigned-to" v-model="formData.assignedTo" class="w-full p-2 border rounded">
+            <select id="assigned-to" v-model="formData.assignedTo" class="w-full p-1 border rounded">
               <option v-for="u in users" :key="u.id" :value="u.id">{{ u.first_name }} {{ u.last_name }} ({{ u.position.position_name }})</option>
             </select>
           </div>
 
           <div>
             <label class="block font-bold">Status</label>
-            <select id="status" v-model="formData.status" class="w-full p-2 border rounded">
+            <!-- <select id="status" v-model="formData.status" class="w-full p-2 border rounded">
               <option v-for="(status, id) in bpmstatuses" :key="id" :value="parseInt(id)">{{ status.status_name }}</option>
-            </select>
+            </select> -->
+            {{ formData.status.status_name }}
           </div>
 
           <div class="grid grid-cols-2 gap-2">
