@@ -294,7 +294,6 @@ onMounted(async () => { //Код внутри выполняется, когда
         users,
         newStatus,
         newBpmnTask,
-        nerw
         newTask,
         priority,
         department,

@@ -209,42 +209,47 @@ const handleFormSubmit = async (event) => {
   event.preventDefault();
   event.stopPropagation();
 
-  if (!modeler.value || !businessObject || !currentElement) return;
+  if (!modeler.value || !businessObject || !currentElement) {
+    console.error('You forgot the modeler, businessObject, or currentElement, genius!');
+    return;
+  }
 
   const suitabilityScore = Number(formData.suitabilityScore);
-
   if (isNaN(suitabilityScore)) {
+    console.error('Suitability Score ain’t a number, you clown!');
     return;
   }
 
   const moddle = modeler.value.get('moddle');
   const modeling = modeler.value.get('modeling');
-  const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+  let extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
 
   if (!analysisDetails) {
     analysisDetails = moddle.create('qa:AnalysisDetails');
-    
     if (!extensionElements.get('values')) {
       extensionElements.values = [];
     }
     extensionElements.get('values').push(analysisDetails);
   }
 
-  analysisDetails.lastChecked = new Date().toISOString();
-  analysisDetails.assignedTo = formData.assignedTo;
+  // Set all QA properties in analysisDetails
+  analysisDetails.suitabilityScoreEl = suitabilityScore; // Per qa.js schema
+  analysisDetails.assignedTo = formData.assignedTo || '';
   analysisDetails.status = formData.status.toString();
-  analysisDetails.return_reason = formData.return_reason;
+  analysisDetails.lastChecked = new Date().toISOString();
+  analysisDetails.return_reason = formData.return_reason || '';
   analysisDetails.created_at = formData.created_at ? new Date(formData.created_at).toISOString() : null;
   analysisDetails.deadline = formData.deadline ? new Date(formData.deadline).toISOString() : null;
   analysisDetails.updated_at = new Date().toISOString();
-  analysisDetails.is_complete = formData.is_complete;
+  analysisDetails.is_complete = formData.is_complete || false;
 
+  // Update businessObject with extensionElements and suitabilityScore
   modeling.updateProperties(currentElement, {
     extensionElements,
-    suitable: suitabilityScore
+    suitable: suitabilityScore, // Keep this for backward compatibility
   });
 
-  // Синхронизируем с newBpmnTask
+  // Sync with newBpmnTask for backend
   newBpmnTask.bpmn_task_id = currentElement.id;
   newBpmnTask.assigned_to = formData.assignedTo;
   newBpmnTask.status = formData.status;
@@ -255,13 +260,16 @@ const handleFormSubmit = async (event) => {
   newBpmnTask.is_complete = formData.is_complete;
   newBpmnTask.process = selectedProcessId.value.toString();
 
-  // Отправляем задачу на бэкенд
+  // Save to backend
   try {
-    await axios.post(API_BPM_TASK, newBpmnTask);
-    console.log('Task saved to backend');
+    await axios.put(API_BPM_TASK, newBpmnTask);
+    console.log('Task saved to backend, you barely pulled it off!');
   } catch (err) {
-    console.error('Error saving task:', err);
+    console.error('Backend save failed, nice job breaking it:', err);
   }
+
+  // Save the diagram to ensure XML is updated
+  await saveDiagram();
 
   qualityAssuranceEl.value.classList.add('hidden');
 };
@@ -281,7 +289,7 @@ const setupContextMenu = () => {
     event.originalEvent.stopPropagation();
 
     if (!qualityAssuranceEl.value) return;
-    
+
     qualityAssuranceEl.value.classList.remove('hidden');
 
     currentElement = event.element;
@@ -300,16 +308,17 @@ const setupContextMenu = () => {
 
     analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
 
-    formData.assignedTo = analysisDetails ? analysisDetails.assignedTo : '';
+    formData.suitabilityScore = analysisDetails?.suitabilityScoreEl || suitable || '';
+    formData.assignedTo = analysisDetails?.assignedTo || '';
     formData.status = analysisDetails ? parseInt(analysisDetails.status) || 1 : 1;
-    formData.return_reason = analysisDetails ? analysisDetails.return_reason : '';
-    formData.created_at = analysisDetails ? analysisDetails.created_at : null;
-    formData.deadline = analysisDetails ? analysisDetails.deadline : null;
-    formData.updated_at = analysisDetails ? analysisDetails.updated_at : null;
-    formData.is_complete = analysisDetails ? analysisDetails.is_complete : false;
+    formData.return_reason = analysisDetails?.return_reason || '';
+    formData.created_at = analysisDetails?.created_at || null;
+    formData.deadline = analysisDetails?.deadline || null;
+    formData.updated_at = analysisDetails?.updated_at || null;
+    formData.is_complete = analysisDetails?.is_complete || false;
     formData.bpmn_task_id = currentElement.id;
 
-    lastCheckedEl.value.textContent = analysisDetails ? analysisDetails.lastChecked : '-';
+    lastCheckedEl.value.textContent = analysisDetails?.lastChecked || '-';
     validate();
   });
 };
@@ -333,29 +342,36 @@ const setupClickOutside = () => {
 const saveDiagram = async () => {
   try {
     const { xml } = await modeler.value.saveXML({ format: true });
-    console.log('Сохранённый XML:', xml);
+    console.log('Saved XML:', xml);
+
+    // Verify qa:AnalysisDetails in XML
+    if (xml.includes('qa:AnalysisDetails')) {
+      console.log('QA properties found in XML, you didn’t totally screw it up!');
+    } else {
+      console.warn('No qa:AnalysisDetails in XML, did you even set the properties?');
+    }
 
     const process = processes.value.find(p => p.id === selectedProcessId.value);
     if (!process) {
-      throw new Error('Процесс не найден');
+      throw new Error('Process not found, you lost it already?');
     }
-    
+
     if (process.bpmn_xml) {
       const response = await axios.put(`${API_BPM_PROCESS}${process.id}/update-xml/`, {
         bpmn_xml: process.bpmn_xml,
         xml,
       });
-      console.log('Диаграмма обновлена на сервере:', response.data);
+      console.log('Diagram updated on server:', response.data);
     } else {
-      const response = await axios.post(`${API_BPMNXML_PROCESS}`, {
+      const response = await axios.put(`${API_BPMNXML_PROCESS}`, {
         process_id: selectedProcessId.value,
         xml,
       });
-      console.log('Диаграмма создана на сервере:', response.data);
+      console.log('Diagram created on server:', response.data);
       process.bpmn_xml = response.data.id;
     }
   } catch (err) {
-    console.error('Ошибка сохранения:', err);
+    console.error('Failed to save diagram, you’re killing me:', err);
   }
 };
 
